@@ -10,6 +10,8 @@ import {WALL_HEIGHT,WALL_THICKNESS, walls} from "./measurement-data.js";
 export class ODC {
 	constructor() {
 
+		this.odcGroup = new THREE.Group();
+
 		this.renderer = this.initRender();
 
 		this.camera = this.initCamera();
@@ -32,6 +34,10 @@ export class ODC {
 
 		// 渲染 工作 左面
 		this.renderDesktop();
+
+		this.scene.add(this.odcGroup);
+
+		this.locationODC();
 	}
 	initEvent() {
 		window.addEventListener( 'resize', (event) => {
@@ -70,7 +76,6 @@ export class ODC {
 		const renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-
 		document.body.appendChild( renderer.domElement );
 		return renderer;
 	}
@@ -86,7 +91,7 @@ export class ODC {
 	}
 	renderWall() {
 		walls.forEach(({type, begin, end}) => {
-			this.scene.add(new Wall(
+			this.odcGroup.add(new Wall(
 				begin.map(item => this.scale(item)),
 				end.map(item => this.scale(item)),
 				this.scale(WALL_HEIGHT), this.scale(WALL_THICKNESS)));
@@ -98,6 +103,16 @@ export class ODC {
 	}
 	// TODO
 	renderDesktop() {
-		this.scene.add(new Desktop(2));
+		this.odcGroup.add(new Desktop(2));
+	}
+	locationODC() {
+		const box3 = new THREE.Box3();
+		box3.expandByObject(this.odcGroup);
+		const center = new THREE.Vector3();
+		box3.getCenter(center);
+
+		this.odcGroup.position.x = this.odcGroup.position.x - center.x
+		this.odcGroup.position.y = this.odcGroup.position.y - center.y
+		this.odcGroup.position.z = this.odcGroup.position.z - center.z
 	}
 }
