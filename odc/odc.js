@@ -2,9 +2,12 @@ import * as THREE from '../build/three.module.js';
 import { OrbitControls } from '../examples/jsm/controls/OrbitControls.js';
 import Stats from '../examples/jsm/libs/stats.module.js';
 
-import { Wall } from './model/wall/wall.js';
+import { Floor } from './model/floor/floor.js';
+import { GlassWall } from './model/wall/glass-wall.js';
+import { InnerWall } from './model/wall/inner-wall.js';
+import { ExternalWall } from './model/wall/external-wall.js';
 import { Desktop } from './model/desktop/desktop.js';
-import {WALL_HEIGHT,WALL_THICKNESS, walls} from "./measurement-data.js";
+import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from "./measurement-data.js";
 
 
 export class ODC {
@@ -28,6 +31,9 @@ export class ODC {
 
 		// 渲染墙体结构
 		this.renderWall();
+
+		// 渲染地面
+		this.renderFloor();
 
 		// 渲染 ODC 工位
 		this.renderStation();
@@ -91,10 +97,14 @@ export class ODC {
 	}
 	renderWall() {
 		walls.forEach(({type, begin, end}) => {
-			this.odcGroup.add(new Wall(
+			const theArguments = [
 				begin.map(item => this.scale(item)),
 				end.map(item => this.scale(item)),
-				this.scale(WALL_HEIGHT), this.scale(WALL_THICKNESS)));
+				this.scale(WALL_HEIGHT), this.scale(WALL_THICKNESS)];
+			const wall = type === 'external'
+				? new ExternalWall(...theArguments)
+				: (type === 'glass' ? new GlassWall(...theArguments) : new InnerWall(...theArguments))
+			this.odcGroup.add(wall);
 		});
 	}
 	// TODO
@@ -105,6 +115,10 @@ export class ODC {
 	renderDesktop() {
 		this.odcGroup.add(new Desktop(2));
 	}
+	// TODO
+	renderFloor() {
+		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));
+	}
 	locationODC() {
 		const box3 = new THREE.Box3();
 		box3.expandByObject(this.odcGroup);
@@ -112,7 +126,6 @@ export class ODC {
 		box3.getCenter(center);
 
 		this.odcGroup.position.x = this.odcGroup.position.x - center.x
-		this.odcGroup.position.y = this.odcGroup.position.y - center.y
 		this.odcGroup.position.z = this.odcGroup.position.z - center.z
 	}
 }
