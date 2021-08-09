@@ -2,7 +2,7 @@
  * 墙的高度
  * @type {number}
  */
-export const WALL_HEIGHT = 3200;
+export const WALL_HEIGHT = 2800;
 /**
  * 墙的厚度
  * @type {number}
