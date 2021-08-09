@@ -6,8 +6,6 @@ export class InnerWall extends Wall {
 		return super(begin, end, height, thickness);
 	}
 	initMaterial() {
-		return new THREE.MeshLambertMaterial( {
-			roughness: 1,
-		});
+		return new THREE.MeshLambertMaterial( {});
 	}
 }

@@ -2,12 +2,12 @@
  * 墙的高度
  * @type {number}
  */
-export const WALL_HEIGHT = 4200;
+export const WALL_HEIGHT = 3200;
 /**
  * 墙的厚度
  * @type {number}
  */
-export const WALL_THICKNESS = 200;
+export const WALL_THICKNESS = 100;
 /**
  * 地面参数
  * @type {{end: number[], begin: number[]}}
@@ -78,18 +78,23 @@ export const walls = [
 	// ODC 外会议室区域
 	{
 		type: 'inner',
-		begin: [16800, 14400],
-		end: [16800, 21600]
+		begin: [16800, 19200],
+		end: [16800, 26800]
 	},
 	{
 		type: 'glass',
-		begin: [16800, 14400],
-		end: [25200, 14400]
+		begin: [16800, 16800],
+		end: [16800, 19200]
+	},
+	{
+		type: 'glass',
+		begin: [16800, 19200],
+		end: [25200, 19200]
 	},
 	{
 		type: 'inner',
-		begin: [16800, 21600],
-		end: [25200, 21600]
+		begin: [16800, 26800],
+		end: [25200, 26800]
 	},
 	// ODC 中间隔断的大墙
 	{

@@ -2,12 +2,15 @@ import * as THREE from '../build/three.module.js';
 import { OrbitControls } from '../examples/jsm/controls/OrbitControls.js';
 import Stats from '../examples/jsm/libs/stats.module.js';
 
+
 import { Floor } from './model/floor/floor.js';
 import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
+import { Workstation } from './model/workstation/workstation.js';
 import { Desktop } from './model/desktop/desktop.js';
-import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from "./measurement-data.js";
+import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from './data/buildings-data.js';
+import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
 
 
 export class ODC {
@@ -109,7 +112,16 @@ export class ODC {
 	}
 	// TODO
 	renderStation() {
-
+		const {begin, end} = southWorkstationArea;
+		const [beginX, beginY] = begin;
+		const [endX, endY] = end;
+		const southX = this.scale((beginX + endX) / 2);
+		const southY = this.scale((beginY + endY) / 2);
+		console.log(southX, southY)
+		const theSouthWorkstation = new Workstation({begin: begin.map(this.scale), end: end.map(this.scale)}, southWorkstation);
+		theSouthWorkstation.position.x = 492;
+		theSouthWorkstation.position.z = 0;
+		this.odcGroup.add(theSouthWorkstation);
 	}
 	// TODO
 	renderDesktop() {
