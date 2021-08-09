@@ -58,6 +58,10 @@ export class ODC {
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 		this.controls.update();
+		// 坐标轴
+		const axesHelper = new THREE.AxesHelper(100)
+		axesHelper.position.set(0,100,0);
+		this.scene.add(axesHelper);
 		this.stats = new Stats();
 		document.body.appendChild(this.stats.dom);
 		this.scene.add(new THREE.GridHelper( 2000, 50 ));
@@ -113,14 +117,12 @@ export class ODC {
 	// TODO
 	renderStation() {
 		const {begin, end} = southWorkstationArea;
-		const [beginX, beginY] = begin;
-		const [endX, endY] = end;
-		const southX = this.scale((beginX + endX) / 2);
-		const southY = this.scale((beginY + endY) / 2);
-		console.log(southX, southY)
-		const theSouthWorkstation = new Workstation({begin: begin.map(this.scale), end: end.map(this.scale)}, southWorkstation);
-		theSouthWorkstation.position.x = 492;
-		theSouthWorkstation.position.z = 0;
+		const { x, z } = this.getCenterOfModelArea(begin, end);
+		const [beginX, beginY] = begin.map(this.scale);
+		const [endX, endY] = end.map(this.scale);
+		const theSouthWorkstation = new Workstation({xLength: (endY - beginY), zLength: (endX- beginX)}, southWorkstation);
+		theSouthWorkstation.position.x = x;
+		theSouthWorkstation.position.z = z;
 		this.odcGroup.add(theSouthWorkstation);
 	}
 	// TODO
@@ -139,5 +141,19 @@ export class ODC {
 
 		this.odcGroup.position.x = this.odcGroup.position.x - center.x
 		this.odcGroup.position.z = this.odcGroup.position.z - center.z
+	}
+	getOffsetX(x) {
+		// 建模图中的 x 轴对应的是坐标系的 y
+		const yLength = floor.end[1];
+		return this.scale(yLength) - x;
+	}
+	getCenterOfModelArea(begin, end) {
+		const [beginX, beginY] = begin.map(this.scale);
+		const [endX, endY] = end.map(this.scale);
+		// 模型的 x 对应 坐标系 z 轴
+		const centerZ = (beginX + endX) / 2;
+		// 模型的 y 对应 坐标系 x 轴
+		const centerX = (beginY + endY) / 2;
+		return { x: centerX, z: centerZ };
 	}
 }

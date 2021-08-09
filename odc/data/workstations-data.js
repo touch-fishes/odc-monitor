@@ -1,4 +1,4 @@
-const sideSpacing = 1800;
+const sideSpacing = 1200;
 /**
  * 南部工位区域
  * @type {{end: number[], begin: number[]}}
