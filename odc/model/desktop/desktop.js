@@ -5,30 +5,44 @@ import { HWHost } from '../computer-host/hw-host.js'
 import { AppleHost } from '../computer-host/Apple-host.js'
 
 export class Desktop {
-	constructor(monitorNumber) {
+	constructor(name, monitorNumber) {
 		this.group = new THREE.Group();
-		this.initMonitor(monitorNumber);
-		this.initAppleHost();
-		this.initHWHost();
+		this.initMonitor(name, monitorNumber);
+		this.initAppleHost(name);
+		this.initHWHost(name);
 		return this.group
 	}
-	initMonitor(number) {
-		for (let i = 0; i < number; i++) {
-			new MTLLoader().load('./model/monitor/monitor.mtl', (materials) => {
-				const objLoader = new OBJLoader();
-				objLoader.setMaterials(materials);
-				objLoader.load('./model/monitor/monitor.obj', (obj) => {
-					obj.rotation.y = - Math.PI
-					obj.position.z = (i * 40) ;
-					this.group.add(obj);
-				})
+	initMonitor(name, number) {
+		this.loaded = false;
+		new MTLLoader().load('./model/monitor/monitor.mtl', (materials) => {
+			const objLoader = new OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.load('./model/monitor/monitor.obj', (obj) => {
+				this.loaded = true;
+				for (let i = 0; i < number; i++) {
+					const monitorObj = obj.clone();
+					monitorObj.rotation.y = - Math.PI
+					monitorObj.position.z = (i * 40);
+					monitorObj.name = `${name}_monitor_${number}`;
+					monitorObj.userData.highlight = true;
+					monitorObj.userData.type = 'monitor';
+					this.group.add(monitorObj);
+				}
 			})
-		}
+		});
 	}
-	initHWHost() {
-		this.group.add(new HWHost({x:0, z:-8}));
+	initHWHost(name) {
+		const hwHost = new HWHost({x:0, z:-8});
+		hwHost.name = `${name}_pc`;
+		hwHost.userData.highlight = true;
+		hwHost.userData.type = 'pc';
+		this.group.add(hwHost);
 	}
-	initAppleHost() {
-		this.group.add(new AppleHost({x:0, z:-16}));
+	initAppleHost(name) {
+		const macmini = new AppleHost({x:0, z:-16});
+		macmini.name = `${name}_macmini`;
+		macmini.userData.highlight = true;
+		macmini.userData.type = 'macmini';
+		this.group.add(macmini);
 	}
 }

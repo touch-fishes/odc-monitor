@@ -17,62 +17,62 @@ export const southWorkstation = [
 	// 第一排
 	[
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'a',
+			rowCode: 'a',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -80,61 +80,61 @@ export const southWorkstation = [
 	// 第二排
 	[
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'b',
+			rowCode: 'b',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -143,61 +143,61 @@ export const southWorkstation = [
 	// 第三排
 	[
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'c',
+			rowCode: 'c',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -206,61 +206,61 @@ export const southWorkstation = [
 	// 第四排
 	[
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'd',
+			rowCode: 'd',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -269,61 +269,61 @@ export const southWorkstation = [
 	// 第五排
 	[
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'e',
+			rowCode: 'e',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -332,61 +332,61 @@ export const southWorkstation = [
 	// 第六排
 	[
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'f',
+			rowCode: 'f',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -395,61 +395,61 @@ export const southWorkstation = [
 	// 第七排
 	[
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'g',
+			rowCode: 'g',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -458,63 +458,63 @@ export const southWorkstation = [
 	// 第八排
 	[
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			people: 'Show Money King Rockefeller',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			people: '杨婷婷',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'h',
+			rowCode: 'h',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
@@ -523,66 +523,66 @@ export const southWorkstation = [
 	// 第九排
 	[
 		{
-			code: 'j',
+			rowCode: 'j',
 			people: '卞新欢',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			people: '张昊毅',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			people: '李登辉',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			people: '麻佳',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			people: '许喆子',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'
 		},
 		{
-			code: 'j',
+			rowCode: 'j',
 			monitor: ['29006360', '29006361'],
 			macmini: '29006362',
 			pc: '29006560'

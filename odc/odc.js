@@ -8,7 +8,6 @@ import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
-import { Desktop } from './model/desktop/desktop.js';
 import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from './data/buildings-data.js';
 import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
 
@@ -41,9 +40,6 @@ export class ODC {
 		// 渲染 ODC 工位
 		this.renderStation();
 
-		// 渲染 工作 左面
-		this.renderDesktop();
-
 		this.scene.add(this.odcGroup);
 
 		this.locationODC();
@@ -53,7 +49,7 @@ export class ODC {
 			this.camera.aspect = window.innerWidth / window.innerHeight;
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize( window.innerWidth, window.innerHeight );
-		} );
+		});
 	}
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -95,6 +91,9 @@ export class ODC {
 	animate() {
 		requestAnimationFrame( this.animate.bind(this) );
 		this.renderer.render( this.scene, this.camera );
+		if (this.southWorkstation) {
+			this.southWorkstation.renderActiveStation(this.camera);
+		}
 		this.stats.update();
 	}
 	scale(measurement) {
@@ -121,13 +120,10 @@ export class ODC {
 		const [beginX, beginY] = begin.map(this.scale);
 		const [endX, endY] = end.map(this.scale);
 		const theSouthWorkstation = new Workstation({xLength: (endY - beginY), zLength: (endX- beginX)}, southWorkstation);
-		theSouthWorkstation.position.x = x;
-		theSouthWorkstation.position.z = z;
-		this.odcGroup.add(theSouthWorkstation);
-	}
-	// TODO
-	renderDesktop() {
-		this.odcGroup.add(new Desktop(2));
+		theSouthWorkstation.group.position.x = x;
+		theSouthWorkstation.group.position.z = z;
+		this.southWorkstation = theSouthWorkstation;
+		this.odcGroup.add(this.southWorkstation.group);
 	}
 	// TODO
 	renderFloor() {
@@ -141,11 +137,6 @@ export class ODC {
 
 		this.odcGroup.position.x = this.odcGroup.position.x - center.x
 		this.odcGroup.position.z = this.odcGroup.position.z - center.z
-	}
-	getOffsetX(x) {
-		// 建模图中的 x 轴对应的是坐标系的 y
-		const yLength = floor.end[1];
-		return this.scale(yLength) - x;
 	}
 	getCenterOfModelArea(begin, end) {
 		const [beginX, beginY] = begin.map(this.scale);
