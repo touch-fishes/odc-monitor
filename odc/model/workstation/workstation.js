@@ -60,16 +60,18 @@ export class Workstation {
 	}
 	// TODO 添加资产
 	renderSeat(type, seatObject, seatInfo) {
-		const {y} = this.getSize(seatObject);
+		const {x, y, z} = this.getSize(seatObject);
 		const seatGroup = new THREE.Group();
 		const desktop = new Desktop(seatInfo.monitor.length);
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
-		desktop.position.z = seatObject.position.z;
 		seatGroup.add(seatObject);
 		if (type === 'west') {
+			desktop.position.z = seatObject.position.z - z/4;
 		}
 		if (type === 'east') {
+			desktop.position.z = seatObject.position.z + z/4;
+			// 东排电脑是反方向的
 			desktop.position.x = seatObject.position.x;
 			desktop.rotation.y = -Math.PI;
 		}
