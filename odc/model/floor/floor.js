@@ -20,7 +20,13 @@ export class Floor {
 	 * @returns {MeshLambertMaterial}
 	 */
 	initMaterial() {
-		return new THREE.MeshLambertMaterial( { color: '#67717b', shininess: 0, roughness: 1} );
+		const loader = new THREE.TextureLoader();
+		return new THREE.MeshLambertMaterial( {
+			shininess: 0,
+			roughness: 1,
+			map: loader.load( '../odc/texture/floor.jpeg', () => {
+			})
+		});
 	}
 
 	/**

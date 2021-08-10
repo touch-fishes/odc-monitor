@@ -7,7 +7,7 @@ export class ExternalWall extends Wall {
 	}
 	initMaterial() {
 		const loader = new THREE.TextureLoader();
-		const wallLoader = loader.load( './model/wall/texture/brick_diffuse.jpeg', () => {
+		const wallLoader = loader.load( '../odc/texture/brick_diffuse.png', () => {
 
 		});
 		return new THREE.MeshLambertMaterial( {
