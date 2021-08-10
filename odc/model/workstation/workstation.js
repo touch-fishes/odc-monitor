@@ -1,5 +1,6 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
+import { Desktop } from '../desktop/desktop.js';
 
 export class Workstation {
 	constructor({xLength, zLength}, seats) {
@@ -39,7 +40,7 @@ export class Workstation {
 	}
 	renderSeatGroup(tableObject, seats) {
 		// 按照南北 分为两排
-		const seatGroup = new THREE.Group();
+		const seatsGroup = new THREE.Group();
 		const seatsLength = seats.length;
 		const itemNumber = seatsLength / 2;
 		// 获取每张桌子的宽高，用于拼接
@@ -52,14 +53,28 @@ export class Workstation {
 			cloneWestObj.position.x = 0;
 			cloneEastObj.position.z = offset;
 			cloneEastObj.position.x = x;
-			seatGroup.add(this.renderSeat('west', cloneWestObj, seats[i]))
-			seatGroup.add(this.renderSeat('east', cloneEastObj, seats[seatsLength - i]));
+			seatsGroup.add(this.renderSeat('west', cloneWestObj, seats[i]))
+			seatsGroup.add(this.renderSeat('east', cloneEastObj, seats[seatsLength - i - 1]));
 		}
-		return seatGroup;
+		return seatsGroup;
 	}
 	// TODO 添加资产
 	renderSeat(type, seatObject, seatInfo) {
-		return seatObject;
+		const {y} = this.getSize(seatObject);
+		const seatGroup = new THREE.Group();
+		const desktop = new Desktop(seatInfo.monitor.length);
+		desktop.scale.set(0.25, 0.25, 0.25);
+		desktop.position.y = y;
+		desktop.position.z = seatObject.position.z;
+		seatGroup.add(seatObject);
+		if (type === 'west') {
+		}
+		if (type === 'east') {
+			desktop.position.x = seatObject.position.x;
+			desktop.rotation.y = -Math.PI;
+		}
+		seatGroup.add(desktop);
+		return seatGroup;
 	}
 	initFloor(xLength, zLength) {
 		const floor = new THREE.Mesh(new THREE.BoxGeometry(xLength, 2, zLength), new THREE.MeshLambertMaterial( { color: '#ccc' } ));
