@@ -2,33 +2,28 @@ export class StationInfo {
 	constructor() {
 		this.initContainer();
 		this.initStyle();
-		// // TODO 测试
-		this.show({
-			rowCode: 'h',
-			people: 'Show Money King Rockefeller',
-			monitor: ['29006360', '29006361'],
-			macmini: '29006362',
-			pc: '29006560'
-		});
 	}
-	formatInfo(seatInfo) {
+	formatInfo(seatInfo, type) {
 		const empty = 'NA';
 		return {
 			pc: {
 				label: '华为 PC 盒子 资产编号',
-				value: seatInfo.pc || empty
+				value: seatInfo.pc || empty,
+				highlight: type === 'pc'
 			},
 			macmini: {
 				label: 'Mac Mini 资产编号',
-				value: seatInfo.pc || empty
+				value: seatInfo.pc || empty,
+				highlight: type === 'macmini'
 			},
 			monitor: {
-				label: '显示器z 资产编号',
-				value: seatInfo.monitor
+				label: '显示器 资产编号',
+				value: seatInfo.monitor,
+				highlightIndex: type.includes('monitor') ? Number(type.split('.')[1]) : -1
 			},
 			people: {
 				label: '当前使用人',
-				value: seatInfo.people || empty
+				value: seatInfo.people || empty,
 			}
 		}
 	}
@@ -38,8 +33,8 @@ export class StationInfo {
 		container.id = this.domId;
 		document.body.appendChild(container)
 	}
-	show(seatData) {
-		const seatInfo = this.formatInfo(seatData);
+	show(seatData, type) {
+		const seatInfo = this.formatInfo(seatData, type);
 		const dom = `
 			<div class="seat-info">
 				<div class="info-block">
@@ -48,15 +43,19 @@ export class StationInfo {
 				</div>
 				<div class="info-block">
 					<p class="info-block-label">${seatInfo.pc.label}</p>
-					<p class="info-block-value">${seatInfo.pc.value}</p>
+					<p class="info-block-value${seatInfo.pc.highlight ? ' highlight-value' : '' }">${seatInfo.pc.value}</p>
 				</div>
 				<div class="info-block">
 					<p class="info-block-label">${seatInfo.macmini.label}</p>
-					<p class="info-block-value">${seatInfo.macmini.value}</p>
+					<p class="info-block-value${seatInfo.macmini.highlight ? ' highlight-value' : '' }">${seatInfo.macmini.value}</p>
 				</div>
 				<div class="info-block last">
 					<p class="info-block-label">${seatInfo.monitor.label}</p>
-					<p class="info-block-multiple-value">${seatInfo.monitor.value.map((item) => `<span>${item}</span>`)}</p>
+					<p class="info-block-multiple-value">
+						${seatInfo.monitor.value.map((item, idx) =>
+							`<span class="monitor-item${seatInfo.monitor.highlightIndex ===  idx ? ' highlight-value' : '' }">${item}</span>`
+						)}
+					</p>
 				</div>
 			<div>
 		`;
@@ -68,6 +67,7 @@ export class StationInfo {
 		styleContainer.id = this.styleId;
 		const styleText = document.createTextNode(`
 			.seat-info {
+				width: 260px;
 				position: absolute;
 				color: #C0C4CC;
 				top: 0px;
@@ -95,6 +95,10 @@ export class StationInfo {
 			.seat-info .info-block.last .info-block-multiple-value{
 				font-size: 12px;
 				margin: 2px 0 2px 0;
+			}
+			.seat-info .highlight-value{
+				color: #409EFF;
+				font-size: 14px;
 			}
 		`);
 		styleContainer.appendChild(styleText);

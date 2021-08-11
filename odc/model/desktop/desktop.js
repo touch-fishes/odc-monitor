@@ -7,26 +7,26 @@ import { AppleHost } from '../computer-host/Apple-host.js'
 export class Desktop {
 	constructor(name, seatInfo) {
 		this.group = new THREE.Group();
-		this.initMonitor(name, seatInfo.monitor);
-		this.initAppleHost(name, seatInfo.macmini);
-		this.initHWHost(name, seatInfo.pc);
+		this.initMonitor(name, seatInfo);
+		this.initAppleHost(name, seatInfo);
+		this.initHWHost(name, seatInfo);
 		return this.group
 	}
-	initMonitor(name, monitorInfo) {
+	initMonitor(name, seatInfo) {
 		this.loaded = false;
 		new MTLLoader().load('./model/monitor/monitor.mtl', (materials) => {
 			const objLoader = new OBJLoader();
 			objLoader.setMaterials(materials);
 			objLoader.load('./model/monitor/monitor.obj', (obj) => {
 				this.loaded = true;
-				for (let i = 0; i < monitorInfo.length; i++) {
+				for (let i = 0; i < seatInfo.monitor.length; i++) {
 					const monitorObj = obj.clone();
 					monitorObj.rotation.y = - Math.PI
 					monitorObj.position.z = (i * 40);
 					monitorObj.name = `${name}_monitor_${i}`;
 					monitorObj.userData.highlight = true;
-					monitorObj.userData.type = 'monitor';
-					monitorObj.userData.data = monitorInfo[i];
+					monitorObj.userData.type = `monitor.${i}`;
+					monitorObj.userData.data = seatInfo;
 					this.group.add(monitorObj);
 				}
 			})

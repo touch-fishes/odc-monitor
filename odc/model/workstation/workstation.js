@@ -2,11 +2,11 @@ import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
+import { clientX2X, clientY2Y } from '../../util/location.js';
 
 // TODO 融合 北区工作区域
 export class Workstation {
 	constructor({camera, scene, renderer, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
-		this.heightCatch = {};
 		this.group = new THREE.Group();
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
@@ -15,17 +15,21 @@ export class Workstation {
 	}
 
 	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass) {
-		this.movePointer = new THREE.Vector2();
 		this.moveRaycaster = new THREE.Raycaster();
 		this.activeStation = null;
-		document.addEventListener( 'mousemove', (event) => {
-			this.movePointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			this.movePointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		this.moveActiveGroup = null;
+		this.clickActiveGroup = null;
+		const renderActiveGroup = (type) => (event) => {
+			const x = clientX2X(event.clientX);
+			const y = clientY2Y(event.clientY);
 			// 鼠标移动时检测高亮
 			requestAnimationFrame(() => {
-				this.renderActiveMesh(camera, highlightComposer, highlightOutlinePass);
+				this.renderActiveMesh(type, {x,y}, {camera, highlightComposer, highlightOutlinePass}, );
 			});
-		});
+		}
+		// TODO 全局管理
+		document.addEventListener( 'mousemove', renderActiveGroup('move'));
+		document.addEventListener( 'click', renderActiveGroup('click'));
 	}
 
 	initSeats({xLength, zLength}, seats) {
@@ -88,7 +92,8 @@ export class Workstation {
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
 		seatObject.name = `table_${seatInfo.rowCode}_${index}`;
-		seatObject.userData.highlight = true;
+		// 桌子不需要高亮暂时关闭
+		// seatObject.userData.highlight = true;
 		seatObject.userData.type = 'table';
 		seatGroup.add(seatObject);
 		if (type === 'west') {
@@ -104,26 +109,47 @@ export class Workstation {
 		seatGroup.name = `seat_${seatInfo.rowCode}_${index}`
 		return seatGroup;
 	}
-	renderActiveMesh(camera, highlightComposer, highlightOutlinePass) {
-		if (!this.loaded) return;
+	getHighlightMesh(pointer, camera) {
 		const allSeats = this.getSeats();
 		// 更新射线
-		this.moveRaycaster.setFromCamera(this.movePointer, camera);
+		this.moveRaycaster.setFromCamera(pointer, camera);
 		// 计算物体和射线的交点（可能是 桌子 可能是 显示器 可能是 主机）
 		const intersects = this.moveRaycaster.intersectObjects(allSeats, true);
-
-		// 有交集
 		if (intersects.length > 0) {
-			// 第一个有交集的元素
-			const firstObject = intersects[0].object;
+			return intersects[0].object;
+		}
+		return null;
+	}
+	getSelectedObjects() {
+		if (this.clickActiveGroup && this.moveActiveGroup && this.moveActiveGroup === this.clickActiveGroup) {
+			return [this.clickActiveGroup];
+		}
+		return [this.clickActiveGroup, this.moveActiveGroup].filter((item) => item)
+	}
+	// TODO 职责过多
+	renderActiveMesh(type, pointer, {camera, highlightComposer, highlightOutlinePass}) {
+		if (!this.loaded) return;
+		// 获取激活 Mesh
+		const activeMesh = this.getHighlightMesh(pointer, camera);
+		// 有交集
+		if (activeMesh) {
 			// 是不是可以进行高亮操作
-			const isHighlightMesh = firstObject.parent.userData.highlight;
-			// 当前元素不是正高亮的元素
+			const isHighlightMesh = activeMesh.parent.userData.highlight;
+			// 属于可以高亮的元素
 			if (isHighlightMesh) {
-				highlightOutlinePass.selectedObjects = [firstObject.parent];
+				if (type === 'click') {
+					this.clickActiveGroup = activeMesh.parent;
+					this.seatInfoPlan.show(activeMesh.parent.userData.data, activeMesh.parent.userData.type);
+				}
+				if (type === 'move') this.moveActiveGroup = activeMesh.parent;
+				highlightOutlinePass.selectedObjects = this.getSelectedObjects();
+			} else {
+				this.moveActiveGroup = null;
+				highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 			}
 		} else {
-			highlightOutlinePass.selectedObjects = [];
+			this.moveActiveGroup = null;
+			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 		}
 		highlightComposer.render();
 	}
