@@ -12,6 +12,7 @@ import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation } from './data
 import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
+import { Robot } from './model/robot-expressive/robot.js'
 
 export class ODC {
 	constructor() {
@@ -45,6 +46,9 @@ export class ODC {
 
 		// 渲染厨房
 		this.renderKitchen();
+
+		// 渲染可爱的机器人
+		// this.renderRobot();
 
 		this.scene.add(this.odcGroup);
 
@@ -143,6 +147,14 @@ export class ODC {
 		kitchen.position.z = z;
 		kitchen.position.x = x;  
 		this.odcGroup.add(kitchen)
+	}
+	// todo
+	renderRobot() {
+		const robot = new Robot();
+		robot.position.z = 400;
+		robot.position.x = 400;
+		robot.position.y = 400;
+		this.odcGroup.add(robot);
 	}
 
 	// TODO
