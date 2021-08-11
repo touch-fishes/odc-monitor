@@ -1,6 +1,7 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
+import { setHex, getHex } from '../../util/object3D.js';
 
 export class Workstation {
 	constructor({xLength, zLength}, seats) {
@@ -107,20 +108,30 @@ export class Workstation {
 
 		// 有交集
 		if (intersects.length > 0) {
+			// 第一个有交集的元素
 			const firstObject = intersects[0].object;
+			// 是不是可以进行高亮操作
 			const isHighlightMesh = firstObject.parent.userData.highlight;
+			// 高亮类型
 			const elementType =  firstObject.parent.userData.type;
+			// 当前元素不是正高亮的元素
 			if (this.activeStation != firstObject && isHighlightMesh) {
-				if (this.activeStation) this.highlightElement(elementType, this.activeStation, this.activeStation.currentHex);
+				// 存在高亮元素 恢复高亮元素 颜色
+				if (this.activeStation) {
+					setHex(this.activeStation, this.activeStation.currentHex);
+				}
+				// 记录高亮元素以及原始色彩
 				this.activeStation = firstObject;
-				this.activeStation.currentHex = this.getHighlight(this.activeStation);
+				this.activeStation.currentHex = getHex(this.activeStation);
+				// 高亮
 				this.highlightElement(elementType, this.activeStation);
 			}
 		} else {
+			// 无交叉元素， 当前还有激活元素，恢复元素本色
 			if (this.activeStation) {
-				const elementType =  this.activeStation.parent.userData.type;
-				this.highlightElement(elementType, this.activeStation, this.activeStation.currentHex);
+				setHex(this.activeStation, this.activeStation.currentHex);
 			}
+			// 移除高亮元素
 			this.activeStation = null;
 		}
 	}
@@ -145,19 +156,8 @@ export class Workstation {
 		box3.setFromObject(obj);
 		return box3.getSize(v3);
 	}
-	getHighlight(object) {
-		if (object.material && object.material.emissive)
-		return object.material.emissive.getHex()
-		return '';
-	}
 	highlightElement(type, object, color) {
 		const theColor = color || 0xff0000
-		const setHex = (obj, content) => {
-			if (obj.material && obj.material.emissive) {
-				obj.material.emissive.setHex( content );
-			}
-		}
-		console.log('highlightElement', type, color);
 		if (type === 'table') {
 			setHex(object, theColor);
 		}
