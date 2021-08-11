@@ -1,7 +1,9 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
+import { StationInfo } from '../info/station-info.js';
 
+// TODO 融合 北区工作区域
 export class Workstation {
 	constructor({camera, scene, renderer, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
 		this.heightCatch = {};
@@ -9,6 +11,7 @@ export class Workstation {
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
 		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass);
+		this.seatInfoPlan = new StationInfo();
 	}
 
 	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass) {
