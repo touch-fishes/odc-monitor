@@ -616,9 +616,6 @@ class OrbitControls extends EventDispatcher {
 			// 	dollyOut( getZoomScale() );
 			//
 			// }
-
-			scope.update();
-
 		}
 
 		function handleKeyDown( event ) {
@@ -1039,7 +1036,7 @@ class OrbitControls extends EventDispatcher {
 			scope.dispatchEvent( _endEvent );
 
 			state = STATE.NONE;
-
+			event.preventDefault();
 		}
 
 		function onMouseWheel( event ) {
@@ -1052,6 +1049,29 @@ class OrbitControls extends EventDispatcher {
 
 			handleMouseWheel( event );
 
+			scope.dispatchEvent( _endEvent );
+		}
+
+		function onMouseClick( event ) {
+			if ( scope.enabled === false ) return;
+			event.preventDefault();
+
+			scope.dispatchEvent( _startEvent );
+
+			let factor = 200;
+			let glScreenX = (event.clientX / scope.domElement.width) * 2 - 1;
+			let glScreenY = -(event.clientY / scope.domElement.height) * 2 + 1;
+			let vector = new Vector3(glScreenX, glScreenY, 0);
+			vector.unproject(scope.object);
+			vector.sub(scope.object.position).setLength(factor);
+			if (event.button === 0) {
+				scope.object.position.add(vector);
+				scope.target.add(vector);
+			} else if(event.button === 2){
+				scope.object.position.sub( vector);
+				scope.target.sub(vector);
+			}
+			scope.update();
 			scope.dispatchEvent( _endEvent );
 
 		}
@@ -1213,11 +1233,7 @@ class OrbitControls extends EventDispatcher {
 		}
 
 		function onContextMenu( event ) {
-
-			if ( scope.enabled === false ) return;
-
-			event.preventDefault();
-
+			onMouseClick(event)
 		}
 
 		function addPointer( event ) {
@@ -1273,6 +1289,7 @@ class OrbitControls extends EventDispatcher {
 		scope.domElement.addEventListener( 'pointerdown', onPointerDown );
 		scope.domElement.addEventListener( 'pointercancel', onPointerCancel );
 		scope.domElement.addEventListener( 'wheel', onMouseWheel, { passive: false } );
+		scope.domElement.addEventListener( 'dblclick', onMouseClick);
 
 		// force an update at start
 
