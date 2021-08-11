@@ -1,5 +1,6 @@
 import * as THREE from '../../../build/three.module.js';
 import { GLTFLoader } from '../../../examples/jsm/loaders/GLTFLoader.js';
+import { GUI } from '../../../examples/jsm/libs/dat.gui.module.js';
 
 export class Robot {
 
@@ -12,11 +13,25 @@ export class Robot {
     initRobot() {
         const loader = new GLTFLoader();
         loader.load( './model/robot-expressive/robot-expressive.glb',  ( gltf ) => {
-			const scale = 50;
+			const scale = 12;
 			gltf.scene.scale.set(scale, scale, scale);
+			gltf.scene.rotation.y = Math.PI / 2;
             this.group.add( gltf.scene );
+			this.playRobotAction( gltf.scene, gltf.animations );
         }, undefined, function ( e ) {
             console.error( e );
         } );
     }
+
+	playRobotAction( model, animations ) {
+		this.mixer = new THREE.AnimationMixer( model );
+		const actions = {};
+		for ( let i = 0; i < animations.length; i ++ ) {
+			const clip = animations[ i ];
+			const action = this.mixer.clipAction( clip );
+			actions[ clip.name ] = action;
+		}
+		const activeAction = actions[ 'Walking' ];
+		activeAction.play();
+	}
 }

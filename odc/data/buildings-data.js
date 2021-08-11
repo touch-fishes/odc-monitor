@@ -145,10 +145,16 @@ export const walls = [
 		begin: [14400, 68000],
 		end: [25200, 66000]
 	},
-]
+];
 
 // 厨房参数
 export const kitchenStation = {
 	begin: [8400, 59200],
 	end: [8400, 66400]
+};
+
+// 机器人参数
+export const robotStation = {
+	begin: [15400, 16800],
+	end: [15400, 36000]
 }

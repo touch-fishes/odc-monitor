@@ -8,7 +8,7 @@ import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
-import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation } from './data/buildings-data.js';
+import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation, robotStation } from './data/buildings-data.js';
 import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
@@ -48,7 +48,7 @@ export class ODC {
 		this.renderKitchen();
 
 		// 渲染可爱的机器人
-		// this.renderRobot();
+		this.renderRobot();
 
 		this.scene.add(this.odcGroup);
 
@@ -64,6 +64,8 @@ export class ODC {
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 		this.controls.update();
+
+		this.clock = new THREE.Clock();
 		// 坐标轴
 		const axesHelper = new THREE.AxesHelper(100)
 		axesHelper.position.set(0,100,0);
@@ -104,6 +106,8 @@ export class ODC {
 		return renderer;
 	}
 	animate() {
+		const dt = this.clock.getDelta();
+		if ( this.mixer ) this.mixer.update( dt );
 		requestAnimationFrame( this.animate.bind(this) );
 		this.stats.update();
 	}
@@ -145,15 +149,17 @@ export class ODC {
 		const { x, z } = this.getCenterOfModelArea(begin, end);
 		const kitchen = new Kitchen();
 		kitchen.position.z = z;
-		kitchen.position.x = x;  
+		kitchen.position.x = x;
 		this.odcGroup.add(kitchen)
 	}
+
 	// todo
 	renderRobot() {
+		const {begin, end} = robotStation;
+		const { x, z } = this.getCenterOfModelArea(begin, end);
 		const robot = new Robot();
-		robot.position.z = 400;
-		robot.position.x = 400;
-		robot.position.y = 400;
+		robot.position.z = z;
+		robot.position.x = x;
 		this.odcGroup.add(robot);
 	}
 
