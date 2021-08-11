@@ -1,24 +1,27 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
-import { setHex, getHex } from '../../util/object3D.js';
 
 export class Workstation {
-	constructor({xLength, zLength}, seats) {
+	constructor({camera, scene, renderer, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
 		this.heightCatch = {};
 		this.group = new THREE.Group();
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
-		this.initMoveEvent();
+		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass);
 	}
 
-	initMoveEvent() {
+	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass) {
 		this.movePointer = new THREE.Vector2();
 		this.moveRaycaster = new THREE.Raycaster();
 		this.activeStation = null;
 		document.addEventListener( 'mousemove', (event) => {
 			this.movePointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 			this.movePointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			// 鼠标移动时检测高亮
+			requestAnimationFrame(() => {
+				this.renderActiveMesh(camera, highlightComposer, highlightOutlinePass);
+			});
 		});
 	}
 
@@ -98,7 +101,7 @@ export class Workstation {
 		seatGroup.name = `seat_${seatInfo.rowCode}_${index}`
 		return seatGroup;
 	}
-	renderActiveStation(camera) {
+	renderActiveMesh(camera, highlightComposer, highlightOutlinePass) {
 		if (!this.loaded) return;
 		const allSeats = this.getSeats();
 		// 更新射线
@@ -112,28 +115,14 @@ export class Workstation {
 			const firstObject = intersects[0].object;
 			// 是不是可以进行高亮操作
 			const isHighlightMesh = firstObject.parent.userData.highlight;
-			// 高亮类型
-			const elementType =  firstObject.parent.userData.type;
 			// 当前元素不是正高亮的元素
-			if (this.activeStation != firstObject && isHighlightMesh) {
-				// 存在高亮元素 恢复高亮元素 颜色
-				if (this.activeStation) {
-					setHex(this.activeStation, this.activeStation.currentHex);
-				}
-				// 记录高亮元素以及原始色彩
-				this.activeStation = firstObject;
-				this.activeStation.currentHex = getHex(this.activeStation);
-				// 高亮
-				this.highlightElement(elementType, this.activeStation);
+			if (isHighlightMesh) {
+				highlightOutlinePass.selectedObjects = [firstObject];
 			}
 		} else {
-			// 无交叉元素， 当前还有激活元素，恢复元素本色
-			if (this.activeStation) {
-				setHex(this.activeStation, this.activeStation.currentHex);
-			}
-			// 移除高亮元素
-			this.activeStation = null;
+			highlightOutlinePass.selectedObjects = [];
 		}
+		highlightComposer.render();
 	}
 	initFloor(xLength, zLength) {
 		const floor = new THREE.Mesh(new THREE.BoxGeometry(xLength, 2, zLength), new THREE.MeshLambertMaterial( { color: '#ccc' } ));
@@ -155,20 +144,5 @@ export class Workstation {
 		const v3 = new THREE.Vector3()
 		box3.setFromObject(obj);
 		return box3.getSize(v3);
-	}
-	highlightElement(type, object, color) {
-		const theColor = color || 0xff0000
-		if (type === 'table') {
-			setHex(object, theColor);
-		}
-		if (type === 'monitor') {
-			setHex(object, theColor);
-		}
-		if (type === 'macmini') {
-			setHex(object, theColor);
-		}
-		if (type === 'pc') {
-			setHex(object,theColor);
-		}
 	}
 }

@@ -10,6 +10,7 @@ import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
 import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from './data/buildings-data.js';
 import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
+import { createHighlightElement } from './util/highlight.js';
 
 
 export class ODC {
@@ -22,6 +23,8 @@ export class ODC {
 		this.camera = this.initCamera();
 
 		this.scene = this.initScene();
+
+		this.initHighlight(this.scene, this.camera, this.renderer);
 
 		this.initHelp()
 
@@ -70,6 +73,11 @@ export class ODC {
 		directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
 		this.scene.add( directionalLight );
 	}
+	initHighlight(scene, camera, renderer) {
+		const { composer, outlinePass } = createHighlightElement(scene, camera, renderer);
+		this.highlightComposer = composer;
+		this.highlightOutlinePass = outlinePass;
+	}
 	initCamera() {
 		const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
 		camera.position.set( 800, 800, 800 );
@@ -90,10 +98,6 @@ export class ODC {
 	}
 	animate() {
 		requestAnimationFrame( this.animate.bind(this) );
-		this.renderer.render( this.scene, this.camera );
-		if (this.southWorkstation) {
-			this.southWorkstation.renderActiveStation(this.camera);
-		}
 		this.stats.update();
 	}
 	scale(measurement) {
@@ -119,7 +123,10 @@ export class ODC {
 		const { x, z } = this.getCenterOfModelArea(begin, end);
 		const [beginX, beginY] = begin.map(this.scale);
 		const [endX, endY] = end.map(this.scale);
-		const theSouthWorkstation = new Workstation({xLength: (endY - beginY), zLength: (endX- beginX)}, southWorkstation);
+		const theSouthWorkstation = new Workstation(
+			{ camera: this.camera, scene: this.scene, renderer: this.renderer, highlightComposer: this.highlightComposer, highlightOutlinePass: this.highlightOutlinePass},
+			{xLength: (endY - beginY), zLength: (endX- beginX)},
+			southWorkstation);
 		theSouthWorkstation.group.position.x = x;
 		theSouthWorkstation.group.position.z = z;
 		this.southWorkstation = theSouthWorkstation;
