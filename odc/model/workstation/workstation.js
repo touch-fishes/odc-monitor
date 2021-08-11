@@ -80,7 +80,7 @@ export class Workstation {
 		const { y, z } = this.getSize(seatObject);
 		const seatGroup = new THREE.Group();
 		const desktopName = `desktop_${seatInfo.rowCode}_${index}`;
-		const desktop = new Desktop(desktopName, seatInfo.monitor.length);
+		const desktop = new Desktop(desktopName, seatInfo);
 		desktop.name = desktopName;
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
@@ -117,7 +117,7 @@ export class Workstation {
 			const isHighlightMesh = firstObject.parent.userData.highlight;
 			// 当前元素不是正高亮的元素
 			if (isHighlightMesh) {
-				highlightOutlinePass.selectedObjects = [firstObject];
+				highlightOutlinePass.selectedObjects = [firstObject.parent];
 			}
 		} else {
 			highlightOutlinePass.selectedObjects = [];
