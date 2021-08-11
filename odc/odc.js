@@ -8,10 +8,10 @@ import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
-import { WALL_HEIGHT,WALL_THICKNESS, walls, floor } from './data/buildings-data.js';
+import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation } from './data/buildings-data.js';
 import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
-
+import { Kitchen } from './model/kitchen/kitchen.js';
 
 export class ODC {
 	constructor() {
@@ -42,6 +42,9 @@ export class ODC {
 
 		// 渲染 ODC 工位
 		this.renderStation();
+
+		// 渲染厨房
+		this.renderKitchen();
 
 		this.scene.add(this.odcGroup);
 
@@ -132,6 +135,16 @@ export class ODC {
 		this.southWorkstation = theSouthWorkstation;
 		this.odcGroup.add(this.southWorkstation.group);
 	}
+
+	renderKitchen() {
+		const {begin, end} = kitchenStation;
+		const { x, z } = this.getCenterOfModelArea(begin, end);
+		const kitchen = new Kitchen();
+		kitchen.position.z = z;
+		kitchen.position.x = x;  
+		this.odcGroup.add(kitchen)
+	}
+
 	// TODO
 	renderFloor() {
 		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));

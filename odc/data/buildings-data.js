@@ -146,3 +146,9 @@ export const walls = [
 		end: [25200, 66000]
 	},
 ]
+
+// 厨房参数
+export const kitchenStation = {
+	begin: [0, 71200],
+	end: [25200, 71200]
+}
