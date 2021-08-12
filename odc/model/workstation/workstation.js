@@ -178,6 +178,7 @@ export class Workstation {
 			if (isHighlightMesh) {
 				if (type === 'click') {
 					this.clickActiveGroup = activeMesh.parent;
+					this.fillActiveMesh(activeMesh);
 					this.seatInfoPlan.show(activeMesh.parent.userData.data, activeMesh.parent.userData.type);
 				}
 				if (type === 'move') this.moveActiveGroup = activeMesh.parent;
@@ -192,6 +193,20 @@ export class Workstation {
 		}
 		highlightComposer.render();
 	}
+
+	fillActiveMesh(activeMesh) {
+		const cached = this.getAllCacheMaterial();
+		if (activeMesh.userData.clickFlag) {
+			activeMesh.material = cached[activeMesh.parent.name]
+			activeMesh.userData.clickFlag = false;
+		} else {
+			activeMesh.userData.clickFlag = true;
+			// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
+			// activeMesh.material[1].emissive.setHex( 0x409EFF );
+			activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+		}
+	}
+
 	initFloor(xLength, zLength) {
 		const floor = new THREE.Mesh(new THREE.BoxGeometry(xLength, 2, zLength), new THREE.MeshLambertMaterial( { color: '#ccc' } ));
 		this.group.add(floor);
@@ -207,6 +222,26 @@ export class Workstation {
 		});
 		return allSeats;
 	}
+
+	// todo 层级太深了。。
+	getAllCacheMaterial() {
+		const cacheMaterail = {};
+		this.group.children.forEach((innerGroup) => {
+			innerGroup.children.forEach((row) => {
+				row.children.forEach((seat) => {
+					seat.children.forEach(item => {
+						if (item.name.indexOf('desktop') > -1) {
+							item.children.forEach(desktop => {
+								cacheMaterail[desktop.name] = desktop.userData.materials
+							})
+						}
+					})
+				})
+			});
+		});
+		return cacheMaterail;
+	}
+
 	getSize(obj) {
 		const box3 = new THREE.Box3();
 		const v3 = new THREE.Vector3()

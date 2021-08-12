@@ -11,15 +11,12 @@ export class Kitchen {
     }
 
     initKitchen() {
-        new MTLLoader().load('./model/kitchen/kitchen.mtl', (materials) => {
-			const objLoader = new OBJLoader();
-			objLoader.setMaterials(materials);
-			objLoader.load('./model/kitchen/kitchen.obj', (obj) => {
-                const scale = 0.8;
-                obj.scale.set(scale, scale, scale);
-                obj.children[0].material.color.set(0xDEB887);
-				this.group.add(obj);
-			})
-		})
+        const objLoader = new OBJLoader();
+        objLoader.load('./model/kitchen/kitchen.obj', (obj) => {
+            const scale = 0.8;
+            obj.scale.set(scale, scale, scale);
+            obj.children[0].material.color.set(0xDEB887);
+            this.group.add(obj);
+        })
     }
 }

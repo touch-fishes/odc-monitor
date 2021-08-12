@@ -48,7 +48,7 @@ export class ODC {
 		this.renderKitchen();
 
 		// 渲染可爱的机器人
-		this.renderRobot();
+		// this.renderRobot();
 
 		this.scene.add(this.odcGroup);
 

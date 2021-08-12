@@ -27,6 +27,7 @@ export class Desktop {
 					monitorObj.userData.highlight = true;
 					monitorObj.userData.type = `monitor.${i}`;
 					monitorObj.userData.data = seatInfo;
+					monitorObj.userData.materials = monitorObj.getObjectByName('Screen').material;
 					this.group.add(monitorObj);
 				}
 			})
@@ -38,6 +39,7 @@ export class Desktop {
 		hwHost.userData.highlight = true;
 		hwHost.userData.type = 'pc';
 		hwHost.userData.data = info;
+		hwHost.userData.materials = hwHost.children[0].material;
 		this.group.add(hwHost);
 	}
 	initAppleHost(name, info) {
@@ -46,6 +48,7 @@ export class Desktop {
 		macmini.userData.highlight = true;
 		macmini.userData.type = 'macmini';
 		macmini.userData.data = info;
+		macmini.userData.materials = macmini.children[0].material;
 		this.group.add(macmini);
 	}
 }
