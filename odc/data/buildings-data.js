@@ -158,3 +158,4 @@ export const robotStation = {
 	begin: [15400, 16800],
 	end: [15400, 36000]
 }
+

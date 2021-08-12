@@ -4,13 +4,15 @@ import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
 
-// TODO 融合 北区工作区域
+// TODO 融合 北区工作区域 职责过于复杂
 export class Workstation {
 	constructor({camera, scene, renderer, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
 		this.group = new THREE.Group();
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
+		// TODO 全局管理
 		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass);
+		// 初始化信息面板
 		this.seatInfoPlan = new StationInfo();
 	}
 
@@ -32,6 +34,12 @@ export class Workstation {
 		document.addEventListener( 'click', renderActiveGroup('click'));
 	}
 
+	/**
+	 * 初始化工位片区 比如，北边的一片工位
+	 * @param xLength
+	 * @param zLength
+	 * @param seats
+	 */
 	initSeats({xLength, zLength}, seats) {
 		const objLoader = new OBJLoader();
 		const innerGroup = new THREE.Group();
@@ -63,6 +71,13 @@ export class Workstation {
 			this.group.add(innerGroup);
 		})
 	}
+
+	/**
+	 * 渲染一组工位
+	 * @param tableObject
+	 * @param seats
+	 * @returns {Group}
+	 */
 	renderSeatGroup(tableObject, seats) {
 		// 按照南北 分为两排
 		const seatsGroup = new THREE.Group();
@@ -83,11 +98,22 @@ export class Workstation {
 		}
 		return seatsGroup;
 	}
+
+	/**
+	 * 渲染单个工位（一个人对应的座位）
+	 * @param type
+	 * @param seatObject
+	 * @param seatInfo
+	 * @param index
+	 * @returns {Group}
+	 */
 	renderSeat(type, seatObject, seatInfo, index) {
-		const { y, z } = this.getSize(seatObject);
+		const { y, z, x } = this.getSize(seatObject);
 		const seatGroup = new THREE.Group();
 		const desktopName = `desktop_${seatInfo.rowCode}_${index}`;
 		const desktop = new Desktop(desktopName, seatInfo);
+		// 工位蒲团， 用于点击观测工位
+		const futon = this.renderFuton();
 		desktop.name = desktopName;
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
@@ -96,18 +122,31 @@ export class Workstation {
 		// seatObject.userData.highlight = true;
 		seatObject.userData.type = 'table';
 		seatGroup.add(seatObject);
+		// futon.rotation.y = -Math.PI/2;
+
 		if (type === 'west') {
 			desktop.position.z = seatObject.position.z - z/4;
+			futon.position.z = seatObject.position.z
+			futon.position.x = seatObject.position.x - x;
 		}
 		if (type === 'east') {
 			desktop.position.z = seatObject.position.z + z/4;
+			futon.position.z = seatObject.position.z;
+			futon.position.x = seatObject.position.x + x;
+
 			// 东排电脑是反方向的
 			desktop.position.x = seatObject.position.x;
 			desktop.rotation.y = -Math.PI;
 		}
 		seatGroup.add(desktop);
+		seatGroup.add(futon);
 		seatGroup.name = `seat_${seatInfo.rowCode}_${index}`
 		return seatGroup;
+	}
+	renderFuton() {
+		const geometry = new THREE.CylinderGeometry( 9, 9, 5, 32 );
+		const material = new THREE.MeshBasicMaterial( { color: "#FFFFFF" } );
+		return new THREE.Mesh( geometry, material );
 	}
 	getHighlightMesh(pointer, camera) {
 		const allSeats = this.getSeats();
