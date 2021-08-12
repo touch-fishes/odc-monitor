@@ -63,8 +63,8 @@ export class ODC {
 	}
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
-		this.controls.update();
-
+		this.controls.screenSpacePanning = false;
+		this.controls.maxPolarAngle = Math.PI / 2;
 		this.clock = new THREE.Clock();
 		// 坐标轴
 		const axesHelper = new THREE.AxesHelper(100)
@@ -88,8 +88,8 @@ export class ODC {
 		this.highlightOutlinePass = outlinePass;
 	}
 	initCamera() {
-		const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-		camera.position.set( 800, 800, 800 );
+		const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 10, 10000 );
+		camera.position.set( -712, 1000,  -712);
 		camera.lookAt( 0, 0, 0 );
 		return camera;
 	}
@@ -110,6 +110,7 @@ export class ODC {
 		if ( this.mixer ) this.mixer.update( dt );
 		requestAnimationFrame( this.animate.bind(this) );
 		this.stats.update();
+		// this.controls.update();
 	}
 	scale(measurement) {
 		const measurementLength = 71200;
@@ -163,7 +164,7 @@ export class ODC {
 		this.odcGroup.add(robot);
 	}
 
-	// TODO
+	// TODO 材质优化
 	renderFloor() {
 		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));
 	}
