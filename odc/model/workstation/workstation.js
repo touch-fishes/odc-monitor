@@ -196,6 +196,10 @@ export class Workstation {
 
 	fillActiveMesh(activeMesh) {
 		const cached = this.getAllCacheMaterial();
+		if (this.oldActiveMesh) {
+			this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name]
+			this.oldActiveMesh = null;
+		}
 		if (activeMesh.userData.clickFlag) {
 			activeMesh.material = cached[activeMesh.parent.name]
 			activeMesh.userData.clickFlag = false;
@@ -203,6 +207,7 @@ export class Workstation {
 			activeMesh.userData.clickFlag = true;
 			// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
 			// activeMesh.material[1].emissive.setHex( 0x409EFF );
+			this.oldActiveMesh = activeMesh;
 			activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
 		}
 	}
