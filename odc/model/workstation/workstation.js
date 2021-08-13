@@ -3,20 +3,21 @@ import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
+import { animateOrbitCamera } from '../../util/camera.js';
 
 // TODO 融合 北区工作区域 职责过于复杂
 export class Workstation {
-	constructor({camera, scene, renderer, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
+	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
 		this.group = new THREE.Group();
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
 		// TODO 全局管理
-		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass);
+		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls);
 		// 初始化信息面板
 		this.seatInfoPlan = new StationInfo();
 	}
 
-	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass) {
+	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls) {
 		this.moveRaycaster = new THREE.Raycaster();
 		this.activeStation = null;
 		this.moveActiveGroup = null;
@@ -24,9 +25,10 @@ export class Workstation {
 		const renderActiveGroup = (type) => (event) => {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
+			if (!this.loaded) return;
 			// 鼠标移动时检测高亮
 			requestAnimationFrame(() => {
-				this.renderActiveMesh(type, {x,y}, {camera, highlightComposer, highlightOutlinePass}, );
+				this.renderActiveMesh(type, {x,y}, {camera, controls, highlightComposer, highlightOutlinePass}, );
 			});
 		}
 		// TODO 全局管理
@@ -144,9 +146,12 @@ export class Workstation {
 		return seatGroup;
 	}
 	renderFuton() {
-		const geometry = new THREE.CylinderGeometry( 9, 9, 5, 32 );
+		const geometry = new THREE.CylinderGeometry( 9, 9, 3, 32 );
 		const material = new THREE.MeshBasicMaterial( { color: "#FFFFFF" } );
-		return new THREE.Mesh( geometry, material );
+		const futon = new THREE.Mesh( geometry, material )
+		futon.position.y = 16;
+		futon.userData.type = 'keypoint';
+		return futon;
 	}
 	getHighlightMesh(pointer, camera) {
 		const allSeats = this.getSeats();
@@ -165,13 +170,28 @@ export class Workstation {
 		}
 		return [this.clickActiveGroup, this.moveActiveGroup].filter((item) => item)
 	}
+	observationSeat({camera, controls}, seatKeyPointMesh) {
+		// 获取观测点坐标
+		const {  x, y, z  } = seatKeyPointMesh.getWorldPosition(new THREE.Vector3());
+		// 获取座位坐标，需要调整摄像头看向座位
+		const { x: lookX } = seatKeyPointMesh.parent.children[0].getWorldPosition(new THREE.Vector3());
+		const basePosition = { x: lookX > x ? x - 6 : x + 6, y, z };
+		const lockAtPosition = { x: lookX > x ? x + 100 : x - 100, y, z };
+		animateOrbitCamera(
+			{camera, controls},
+			{cameraPosition: camera.position, orbitTargetPosition: controls.target },
+			{ cameraPosition: basePosition, orbitTargetPosition: lockAtPosition }
+		)
+	}
 	// TODO 职责过多
-	renderActiveMesh(type, pointer, {camera, highlightComposer, highlightOutlinePass}) {
-		if (!this.loaded) return;
+	renderActiveMesh(type, pointer, {camera, controls, highlightOutlinePass}) {
 		// 获取激活 Mesh
 		const activeMesh = this.getHighlightMesh(pointer, camera);
 		// 有交集
 		if (activeMesh) {
+			if (type === 'click' && activeMesh.userData.type === 'keypoint') {
+				this.observationSeat({camera, controls}, activeMesh);
+			}
 			// 是不是可以进行高亮操作
 			const isHighlightMesh = activeMesh.parent.userData.highlight;
 			// 属于可以高亮的元素
@@ -191,7 +211,6 @@ export class Workstation {
 			this.moveActiveGroup = null;
 			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 		}
-		highlightComposer.render();
 	}
 
 	fillActiveMesh(activeMesh) {

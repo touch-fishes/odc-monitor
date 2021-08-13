@@ -13,6 +13,8 @@ import { southWorkstationArea, southWorkstation } from './data/workstations-data
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
 import { Robot } from './model/robot-expressive/robot.js'
+import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
+
 
 export class ODC {
 	constructor() {
@@ -109,7 +111,9 @@ export class ODC {
 		const dt = this.clock.getDelta();
 		if ( this.mixer ) this.mixer.update( dt );
 		requestAnimationFrame( this.animate.bind(this) );
+		TWEEN.update();
 		this.stats.update();
+		this.highlightComposer.render();
 		// this.controls.update();
 	}
 	scale(measurement) {
@@ -136,8 +140,8 @@ export class ODC {
 		const [beginX, beginY] = begin.map(this.scale);
 		const [endX, endY] = end.map(this.scale);
 		const theSouthWorkstation = new Workstation(
-			{ camera: this.camera, scene: this.scene, renderer: this.renderer, highlightComposer: this.highlightComposer, highlightOutlinePass: this.highlightOutlinePass},
-			{xLength: (endY - beginY), zLength: (endX- beginX)},
+			this.getContext(),
+			{ xLength: (endY - beginY), zLength: (endX- beginX) },
 			southWorkstation);
 		theSouthWorkstation.group.position.x = x;
 		theSouthWorkstation.group.position.z = z;
@@ -167,6 +171,16 @@ export class ODC {
 	// TODO 材质优化
 	renderFloor() {
 		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));
+	}
+	getContext() {
+		return {
+			camera: this.camera,
+			renderer: this.renderer,
+			scene: this.scene,
+			controls: this.controls,
+			highlightComposer: this.highlightComposer,
+			highlightOutlinePass: this.highlightOutlinePass
+		}
 	}
 	locationODC() {
 		const box3 = new THREE.Box3();
