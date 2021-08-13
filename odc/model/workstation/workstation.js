@@ -197,7 +197,8 @@ export class Workstation {
 	fillActiveMesh(activeMesh) {
 		const cached = this.getAllCacheMaterial();
 		if (this.oldActiveMesh) {
-			this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name]
+			this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name];
+			this.oldActiveMesh.userData.clickFlag = false;
 			this.oldActiveMesh = null;
 		}
 		if (activeMesh.userData.clickFlag) {
