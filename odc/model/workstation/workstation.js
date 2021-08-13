@@ -4,6 +4,7 @@ import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
 import { animateOrbitCamera } from '../../util/camera.js';
+import { Arrow } from '../arrow/arrow.js'
 
 // TODO 融合 北区工作区域 职责过于复杂
 export class Workstation {
@@ -115,7 +116,8 @@ export class Workstation {
 		const desktopName = `desktop_${seatInfo.rowCode}_${index}`;
 		const desktop = new Desktop(desktopName, seatInfo);
 		// 工位蒲团， 用于点击观测工位
-		const futon = this.renderFuton();
+		// const futon = this.renderFuton();
+		const futon = new Arrow({x: Math.PI/2, y: -Math.PI/2}, 30);
 		desktop.name = desktopName;
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
@@ -129,12 +131,15 @@ export class Workstation {
 		if (type === 'west') {
 			desktop.position.z = seatObject.position.z - z/4;
 			futon.position.z = seatObject.position.z
-			futon.position.x = seatObject.position.x - x;
+			futon.position.x = seatObject.position.x - 1.5 * x;
+			futon.position.y = 10;
+			futon.rotation.y = Math.PI;
 		}
 		if (type === 'east') {
 			desktop.position.z = seatObject.position.z + z/4;
 			futon.position.z = seatObject.position.z;
-			futon.position.x = seatObject.position.x + x;
+			futon.position.x = seatObject.position.x + 1.5 * x;
+			futon.position.y = 10;
 
 			// 东排电脑是反方向的
 			desktop.position.x = seatObject.position.x;

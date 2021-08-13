@@ -14,7 +14,8 @@ import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
 import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
-
+import { Arrow } from './model/arrow/arrow.js'
+import { arrowPositions } from './data/arrow.js';
 
 export class ODC {
 	constructor() {
@@ -51,6 +52,8 @@ export class ODC {
 
 		// 渲染可爱的机器人
 		// this.renderRobot();
+
+		this.renderArrow();
 
 		this.scene.add(this.odcGroup);
 
@@ -172,6 +175,7 @@ export class ODC {
 	renderFloor() {
 		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));
 	}
+
 	getContext() {
 		return {
 			camera: this.camera,
@@ -182,6 +186,19 @@ export class ODC {
 			highlightOutlinePass: this.highlightOutlinePass
 		}
 	}
+
+	renderArrow() {
+		arrowPositions.forEach(item=> {
+			const {begin, end, rotation} = item;
+			const { x, z } = this.getCenterOfModelArea(begin, end);
+			const arrow = new Arrow(rotation, 50);
+			arrow.position.z = z;
+			arrow.position.y = this.scale(WALL_HEIGHT);
+			arrow.position.x = x;
+			this.odcGroup.add(arrow)
+		})
+	}
+
 	locationODC() {
 		const box3 = new THREE.Box3();
 		box3.expandByObject(this.odcGroup);
