@@ -21,7 +21,7 @@ export class Floor {
 	 */
 	initMaterial() {
 		const loader = new THREE.TextureLoader();
-		const texture = loader.load( '../odc/texture/floor.jpeg');
+		const texture = loader.load( './odc/texture/floor.jpeg');
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		// uv两个方向纹理重复数量

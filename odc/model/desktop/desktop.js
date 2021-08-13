@@ -14,10 +14,10 @@ export class Desktop {
 	}
 	initMonitor(name, seatInfo) {
 		this.loaded = false;
-		new MTLLoader().load('./model/monitor/monitor.mtl', (materials) => {
+		new MTLLoader().load('./odc/model/monitor/monitor.mtl', (materials) => {
 			const objLoader = new OBJLoader();
 			objLoader.setMaterials(materials);
-			objLoader.load('./model/monitor/monitor.obj', (obj) => {
+			objLoader.load('./odc/model/monitor/monitor.obj', (obj) => {
 				this.loaded = true;
 				for (let i = 0; i < seatInfo.monitor.length; i++) {
 					const monitorObj = obj.clone();

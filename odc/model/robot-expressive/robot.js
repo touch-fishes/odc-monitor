@@ -12,7 +12,7 @@ export class Robot {
 
     initRobot() {
         const loader = new GLTFLoader();
-        loader.load( './model/robot-expressive/robot-expressive.glb',  ( gltf ) => {
+        loader.load( './odc/model/robot-expressive/robot-expressive.glb',  ( gltf ) => {
 			const scale = 12;
 			gltf.scene.scale.set(scale, scale, scale);
 			gltf.scene.rotation.y = Math.PI / 2;

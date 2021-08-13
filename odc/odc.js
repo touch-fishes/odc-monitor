@@ -117,7 +117,6 @@ export class ODC {
 		TWEEN.update();
 		this.stats.update();
 		this.highlightComposer.render();
-		// this.controls.update();
 	}
 	scale(measurement) {
 		const measurementLength = 71200;

@@ -29,7 +29,7 @@ document.addEventListener( 'mousemove', (event) => {
 
 在"可捕获物"上添加标识
 ```js
-objLoader.load('./model/monitor/monitor.obj', (obj) => {
+objLoader.load('./odc/model/monitor/monitor.obj', (obj) => {
     // 添加标识，只有拥有该标识 Group 下的 Mesh 才需要 高亮
     obj.userData.highlight = true;
     this.group.add(obj);

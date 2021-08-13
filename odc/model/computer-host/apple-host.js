@@ -17,10 +17,10 @@ export class AppleHost extends Host{
 	}
 
 	renderLog({x, z}) {
-		new MTLLoader().load('./model/computer-host/apple-logo/apple-logo.mtl', (materials) => {
+		new MTLLoader().load('./odc/model/computer-host/apple-logo/apple-logo.mtl', (materials) => {
 			const objLoader = new OBJLoader();
 			objLoader.setMaterials(materials);
-			objLoader.load('./model/computer-host/apple-logo/apple-logo.obj', (obj) => {
+			objLoader.load('./odc/model/computer-host/apple-logo/apple-logo.obj', (obj) => {
 				obj.position.x = x - (this.baseWidth/2);
 				obj.position.z = z;
 				obj.position.y = this.baseHeight / 8;

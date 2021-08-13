@@ -45,7 +45,6 @@ export class Wall {
 	calculatePosition(begin, end, height) {
 		const [beginX, beginY] = begin;
 		const [endX, endY] = end;
-		console.log('calculatePosition', (endX + beginX) / 2, (endY + beginY) / 2,  height)
 		return [(endY + beginY) / 2, height/2, (endX + beginX) / 2 ]
 	}
 

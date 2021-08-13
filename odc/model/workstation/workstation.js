@@ -47,7 +47,7 @@ export class Workstation {
 		const objLoader = new OBJLoader();
 		const innerGroup = new THREE.Group();
 		this.loaded = false;
-		objLoader.load('./model/workstation/table.obj', (obj) => {
+		objLoader.load('./odc/model/workstation/table.obj', (obj) => {
 			this.loaded = true;
 			// 单张桌子长度
 			const { x, z } = this.getSize(obj);

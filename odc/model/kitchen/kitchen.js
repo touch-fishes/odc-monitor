@@ -12,7 +12,7 @@ export class Kitchen {
 
     initKitchen() {
         const objLoader = new OBJLoader();
-        objLoader.load('./model/kitchen/kitchen.obj', (obj) => {
+        objLoader.load('./odc/model/kitchen/kitchen.obj', (obj) => {
             const scale = 0.8;
             obj.scale.set(scale, scale, scale);
             obj.children[0].material.color.set(0xDEB887);

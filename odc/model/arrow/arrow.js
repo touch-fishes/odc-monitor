@@ -21,7 +21,7 @@ export class Arrow {
 	 */
 	initMaterial() {
 		const loader = new THREE.TextureLoader();
-		const texture = loader.load( '../odc/texture/arrow.png');
+		const texture = loader.load( './odc/texture/arrow.png');
         var plane = new THREE.MeshBasicMaterial();
         plane.map = texture;
         plane.transparent = true;
