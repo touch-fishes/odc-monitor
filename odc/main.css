@@ -82,3 +82,10 @@ a, button, input, select {
 	margin-top: 20px;
 	padding: 10px;
 }
+.switch-btn {
+	position: fixed;
+	left: 90px;
+	top: 6px;
+	color: #1296db;
+	cursor: pointer;
+}

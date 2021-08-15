@@ -16,6 +16,7 @@ import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
 import { Arrow } from './model/arrow/arrow.js'
 import { arrowPositions } from './data/arrow.js';
+import {animateOrbitCamera} from "./util/camera.js";
 
 export class ODC {
 	constructor() {
@@ -25,6 +26,8 @@ export class ODC {
 		this.renderer = this.initRender();
 
 		this.camera = this.initCamera();
+
+		this.oldCamera = this.initCamera();
 
 		this.scene = this.initScene();
 
@@ -65,11 +68,19 @@ export class ODC {
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize( window.innerWidth, window.innerHeight );
 		});
+		document.getElementById('#switch-btn').addEventListener( 'click', (event) => {
+			animateOrbitCamera(
+				{camera: this.camera, controls: this.controls},
+				{cameraPosition: this.camera.position, orbitTargetPosition: this.controls.target },
+				{ cameraPosition: this.oldCamera.position, orbitTargetPosition: this.oldControls.target }
+			)
+		});
 	}
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 		this.controls.screenSpacePanning = false;
 		this.controls.maxPolarAngle = Math.PI / 2;
+		this.oldControls = new OrbitControls( this.camera, this.renderer.domElement );
 		this.clock = new THREE.Clock();
 		// 坐标轴
 		const axesHelper = new THREE.AxesHelper(100)
@@ -188,12 +199,13 @@ export class ODC {
 
 	renderArrow() {
 		arrowPositions.forEach(item=> {
-			const {begin, end, rotation} = item;
+			const {begin, end} = item;
 			const { x, z } = this.getCenterOfModelArea(begin, end);
-			const arrow = new Arrow(rotation, 50);
+			const arrow = new Arrow(20, this.getContext());
 			arrow.position.z = z;
 			arrow.position.y = this.scale(WALL_HEIGHT);
 			arrow.position.x = x;
+			arrow.userData.isNeedLiftCamera = item.type === 'hight';
 			this.odcGroup.add(arrow)
 		})
 	}

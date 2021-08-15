@@ -116,7 +116,7 @@ export class Workstation {
 		const desktopName = `desktop_${seatInfo.rowCode}_${index}`;
 		const desktop = new Desktop(desktopName, seatInfo);
 		// 工位蒲团， 用于点击观测工位
-		const futon = new Arrow({x: Math.PI/2, y: Math.PI/2}, 30);
+		const futon = new Arrow(20);
 		desktop.name = desktopName;
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
