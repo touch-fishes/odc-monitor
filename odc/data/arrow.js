@@ -3,9 +3,8 @@ export const arrowPositions = [
 		begin: [-3500, 0],
 		end: [25200, -3500],
         rotation: {
-            x: Math.PI/2,
+            x: -Math.PI/2,
             y: Math.PI/2,
-            z: Math.PI/2
         }
     },
     {
@@ -13,7 +12,7 @@ export const arrowPositions = [
 		end: [25200, 73700],
         rotation: {
             x: Math.PI/2,
-            y: -Math.PI/2,
+            y: Math.PI/2,
         }
     },
     {
@@ -21,7 +20,7 @@ export const arrowPositions = [
 		end: [13800, 64800],
         rotation: {
             x: Math.PI/2,
-            y: -Math.PI/2,
+            y: Math.PI/2,
         }
     },
     {
@@ -29,7 +28,7 @@ export const arrowPositions = [
         end: [4200, 71200],
         rotation: {
             x: Math.PI/2,
-            y: -Math.PI/2,
+            y: Math.PI/2,
         }
     }
 ]

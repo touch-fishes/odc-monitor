@@ -116,8 +116,7 @@ export class Workstation {
 		const desktopName = `desktop_${seatInfo.rowCode}_${index}`;
 		const desktop = new Desktop(desktopName, seatInfo);
 		// 工位蒲团， 用于点击观测工位
-		// const futon = this.renderFuton();
-		const futon = new Arrow({x: Math.PI/2, y: -Math.PI/2}, 30);
+		const futon = new Arrow({x: Math.PI/2, y: Math.PI/2}, 30);
 		desktop.name = desktopName;
 		desktop.scale.set(0.25, 0.25, 0.25);
 		desktop.position.y = y;
@@ -126,14 +125,13 @@ export class Workstation {
 		// seatObject.userData.highlight = true;
 		seatObject.userData.type = 'table';
 		seatGroup.add(seatObject);
-		// futon.rotation.y = -Math.PI/2;
 
 		if (type === 'west') {
 			desktop.position.z = seatObject.position.z - z/4;
 			futon.position.z = seatObject.position.z
 			futon.position.x = seatObject.position.x - 1.5 * x;
 			futon.position.y = 10;
-			futon.rotation.y = Math.PI;
+			futon.rotation.y = -Math.PI;
 		}
 		if (type === 'east') {
 			desktop.position.z = seatObject.position.z + z/4;
@@ -150,14 +148,7 @@ export class Workstation {
 		seatGroup.name = `seat_${seatInfo.rowCode}_${index}`
 		return seatGroup;
 	}
-	renderFuton() {
-		const geometry = new THREE.CylinderGeometry( 9, 9, 3, 32 );
-		const material = new THREE.MeshBasicMaterial( { color: "#FFFFFF" } );
-		const futon = new THREE.Mesh( geometry, material )
-		futon.position.y = 16;
-		futon.userData.type = 'keypoint';
-		return futon;
-	}
+
 	getHighlightMesh(pointer, camera) {
 		const allSeats = this.getSeats();
 		// 更新射线
@@ -180,6 +171,7 @@ export class Workstation {
 		const {  x, y, z  } = seatKeyPointMesh.getWorldPosition(new THREE.Vector3());
 		// 获取座位坐标，需要调整摄像头看向座位
 		const { x: lookX } = seatKeyPointMesh.parent.children[0].getWorldPosition(new THREE.Vector3());
+		// todo 6和100的计算逻辑是啥
 		const basePosition = { x: lookX > x ? x - 6 : x + 6, y, z };
 		const lockAtPosition = { x: lookX > x ? x + 100 : x - 100, y, z };
 		animateOrbitCamera(

@@ -1,8 +1,5 @@
 import * as THREE from '../../../build/three.module.js';
 
-/**
- * 墙体 仅支持笔直的墙，不打弯
- */
 export class Arrow {
 	/**
 	 *
@@ -36,9 +33,9 @@ export class Arrow {
 	 */
 	initGeometry(rotation, size) {
         const geometry = new THREE.PlaneGeometry(size, size);
-        const {x, y, z} = rotation
-        if (x) geometry.rotateX(x)
-        if (y) geometry.rotateY(y)
-		return geometry
+        const {x, y, z} = rotation;
+        if (x) geometry.rotateX(x);
+        if (y) geometry.rotateY(y);
+		return geometry;
 	}
 }
