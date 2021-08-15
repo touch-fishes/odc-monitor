@@ -11,7 +11,6 @@ export class ExternalWall extends Wall {
 
 		});
 		return new THREE.MeshLambertMaterial( {
-			bumpScale: 0.6,
 			map: wallLoader
 		});
 	}

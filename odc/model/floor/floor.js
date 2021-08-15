@@ -27,8 +27,6 @@ export class Floor {
 		// uv两个方向纹理重复数量
 		texture.repeat.set(2, 1);
 		return new THREE.MeshLambertMaterial( {
-			shininess: 0,
-			roughness: 1,
 			map: texture
 		});
 	}

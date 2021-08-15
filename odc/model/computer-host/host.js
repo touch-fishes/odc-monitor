@@ -1,14 +1,14 @@
 import * as THREE from '../../../build/three.module.js';
 
 export class Host {
-	constructor({x, z}) {
+	constructor() {
 		this.group = new THREE.Group();
 		this.baseHeight = 18;
 		this.baseDepth = 6;
 		this.baseWidth = 18;
 		this.host = new THREE.Mesh(this.initGeometry(), this.initMaterial());
-		this.calculatePosition({x, z});
-		this.renderLog({x, z})
+		// this.calculatePosition({x, z});
+		this.renderLog()
 		this.group.add(this.host)
 		return this.group;
 
@@ -28,5 +28,5 @@ export class Host {
 		this.host.position.z = z;
 	}
 
-	renderLog({x, z}) {}
+	renderLog() {}
 }

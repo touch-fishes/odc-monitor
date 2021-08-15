@@ -61,6 +61,7 @@ export class ODC {
 		this.scene.add(this.odcGroup);
 
 		this.locationODC();
+
 	}
 	initEvent() {
 		window.addEventListener( 'resize', (event) => {
@@ -104,7 +105,7 @@ export class ODC {
 		this.highlightOutlinePass = outlinePass;
 	}
 	initCamera() {
-		const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 10, 10000 );
+		const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 6000 );
 		camera.position.set( -712, 1000,  -712);
 		camera.lookAt( 0, 0, 0 );
 		return camera;

@@ -1,3 +1,6 @@
+import * as THREE from '../../build/three.module.js';
+
+
 export const setHex = (obj, content) => {
 	if (obj.material) {
 		if (Array.isArray(obj.material)) {
@@ -16,4 +19,16 @@ export const getHex = (object) => {
 		return object.material.emissive.getHex();
 	}
 	return '';
+}
+
+export const getSize = (obj) => {
+	const box3 = new THREE.Box3();
+	const v3 = new THREE.Vector3()
+	box3.setFromObject(obj);
+	return box3.getSize(v3);
+}
+
+export const setEqualScale = (obj, scale) => {
+	const {x: oldX, y: oldY, z: oldZ}  = obj.scale;
+	obj.scale.set(oldX * scale, oldY * scale, oldZ * scale);
 }

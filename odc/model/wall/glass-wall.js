@@ -6,6 +6,6 @@ export class GlassWall extends Wall {
 		return super(begin, end, height, thickness);
 	}
 	initMaterial() {
-		return new THREE.MeshBasicMaterial( { color: '0XECF1F3', transparent: true, opacity: 0.4 } );
+		return new THREE.MeshBasicMaterial( { color: 0XECF1F3, transparent: true, opacity: 0.4 } );
 	}
 }
