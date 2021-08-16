@@ -4,22 +4,22 @@ import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
 import { animateOrbitCamera } from '../../util/camera.js';
+import { handleMouseRaycaster } from '../../util/raycaster.js'
 import { Arrow } from '../arrow/arrow.js'
 
 // TODO 融合 北区工作区域 职责过于复杂
 export class Workstation {
-	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass}, {xLength, zLength}, seats) {
+	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass, raycaster}, {xLength, zLength}, seats) {
 		this.group = new THREE.Group();
 		this.initSeats({xLength, zLength}, seats);
 		// this.initFloor(xLength, zLength);
 		// TODO 全局管理
-		this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls);
+		this.initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster);
 		// 初始化信息面板
 		this.seatInfoPlan = new StationInfo();
 	}
 
-	initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls) {
-		this.moveRaycaster = new THREE.Raycaster();
+	initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster) {
 		this.activeStation = null;
 		this.moveActiveGroup = null;
 		this.clickActiveGroup = null;
@@ -29,7 +29,7 @@ export class Workstation {
 			if (!this.loaded) return;
 			// 鼠标移动时检测高亮
 			requestAnimationFrame(() => {
-				this.renderActiveMesh(type, {x,y}, {camera, controls, highlightComposer, highlightOutlinePass}, );
+				this.renderActiveMesh(type, {x,y}, {camera, controls, highlightComposer, highlightOutlinePass, raycaster}, );
 			});
 		}
 		// TODO 全局管理
@@ -149,46 +149,15 @@ export class Workstation {
 		return seatGroup;
 	}
 
-	getHighlightMesh(pointer, camera) {
-		const allSeats = this.getSeats();
-		// 更新射线
-		this.moveRaycaster.setFromCamera(pointer, camera);
-		// 计算物体和射线的交点（可能是 桌子 可能是 显示器 可能是 主机）
-		const intersects = this.moveRaycaster.intersectObjects(allSeats, true);
-		if (intersects.length > 0) {
-			return intersects[0].object;
-		}
-		return null;
-	}
 	getSelectedObjects() {
 		if (this.clickActiveGroup && this.moveActiveGroup && this.moveActiveGroup === this.clickActiveGroup) {
 			return [this.clickActiveGroup];
 		}
 		return [this.clickActiveGroup, this.moveActiveGroup].filter((item) => item)
 	}
-	observationSeat({camera, controls}, seatKeyPointMesh) {
-		// 获取观测点坐标
-		const {  x, y, z  } = seatKeyPointMesh.getWorldPosition(new THREE.Vector3());
-		// 获取座位坐标，需要调整摄像头看向座位
-		const { x: lookX } = seatKeyPointMesh.parent.children[0].getWorldPosition(new THREE.Vector3());
-		// todo 6和100的计算逻辑是啥
-		const basePosition = { x: lookX > x ? x - 6 : x + 6, y, z };
-		const lockAtPosition = { x: lookX > x ? x + 100 : x - 100, y, z };
-		animateOrbitCamera(
-			{camera, controls},
-			{cameraPosition: camera.position, orbitTargetPosition: controls.target },
-			{ cameraPosition: basePosition, orbitTargetPosition: lockAtPosition }
-		)
-	}
-	// TODO 职责过多
-	renderActiveMesh(type, pointer, {camera, controls, highlightOutlinePass}) {
-		// 获取激活 Mesh
-		const activeMesh = this.getHighlightMesh(pointer, camera);
-		// 有交集
-		if (activeMesh) {
-			if (type === 'click' && activeMesh.userData.type === 'keypoint') {
-				this.observationSeat({camera, controls}, activeMesh);
-			}
+
+	renderActiveMesh(type, pointer, {camera, controls, highlightOutlinePass, raycaster}) {
+		handleMouseRaycaster({camera, raycasterInstance: raycaster}, pointer, this.getSeats(), (activeMesh) => {
 			// 是不是可以进行高亮操作
 			const isHighlightMesh = activeMesh.parent.userData.highlight;
 			// 属于可以高亮的元素
@@ -204,10 +173,10 @@ export class Workstation {
 				this.moveActiveGroup = null;
 				highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 			}
-		} else {
+		}, () => {
 			this.moveActiveGroup = null;
 			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-		}
+		})
 	}
 
 	fillActiveMesh(activeMesh) {

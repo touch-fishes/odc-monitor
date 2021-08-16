@@ -31,6 +31,8 @@ export class ODC {
 
 		this.scene = this.initScene();
 
+		this.moveRaycaster = new THREE.Raycaster();
+
 		this.initHighlight(this.scene, this.camera, this.renderer);
 
 		this.initHelp()
@@ -194,7 +196,8 @@ export class ODC {
 			scene: this.scene,
 			controls: this.controls,
 			highlightComposer: this.highlightComposer,
-			highlightOutlinePass: this.highlightOutlinePass
+			highlightOutlinePass: this.highlightOutlinePass,
+			raycaster: this.moveRaycaster
 		}
 	}
 

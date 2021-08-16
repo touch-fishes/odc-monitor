@@ -1,6 +1,7 @@
 import * as THREE from '../../../build/three.module.js';
 import { clientX2X, clientY2Y } from "../../util/location.js";
 import { animateOrbitCamera } from "../../util/camera.js";
+import { handleMouseRaycaster } from '../../util/raycaster.js';
 
 export class Arrow extends THREE.Mesh{
 
@@ -10,8 +11,8 @@ export class Arrow extends THREE.Mesh{
 		this.material = this.initMaterial();
 		this.userData.type = 'keypoint';
 		if (context) {
-			const { camera, scene, renderer, controls } = context;
-			this.initMoveEvent(camera, scene, renderer, controls);
+			const { camera, scene, raycaster, controls } = context;
+			this.initMoveEvent(camera, scene, raycaster, controls);
 		}
 	}
 
@@ -31,44 +32,28 @@ export class Arrow extends THREE.Mesh{
 		return geometry;
 	}
 
-	initMoveEvent(camera, scene, renderer, controls) {
-		this.moveRaycaster = new THREE.Raycaster();
+	initMoveEvent(camera, scene, raycaster, controls) {
 		const renderActiveGroup = (type) => (event) => {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
 			// 鼠标移动时检测高亮
 			requestAnimationFrame(() => {
-				this.renderActiveMesh(type, {x,y}, {camera, controls, scene}, );
+				this.renderActiveMesh(type, {x,y}, {camera, controls, scene, raycaster}, );
 			});
 		};
 		document.addEventListener( 'click', renderActiveGroup('click'));
 	}
 
-	getHighlightMesh(pointer, camera, scene) {
-		// 更新射线
-		this.moveRaycaster.setFromCamera(pointer, camera);
-		const intersects = this.moveRaycaster.intersectObjects(scene.children, true);
-		if (intersects.length > 0) {
-			return intersects[0].object;
-		}
-		return null;
-	}
-
-	renderActiveMesh(type, pointer, {camera, controls, scene}) {
-		// 获取激活 Mesh
-		const activeMesh = this.getHighlightMesh(pointer, camera, scene);
-		// 有交集
-		if (activeMesh) {
+	renderActiveMesh(type, pointer, {camera, controls, scene, raycaster}) {
+		handleMouseRaycaster({camera, raycasterInstance: raycaster}, pointer, scene.children, (activeMesh) => {
 			if (type === 'click' && activeMesh.userData.type === 'keypoint') {
 				this.observationArea({camera, controls}, activeMesh);
 			}
-		}
+		})
 	}
 
 	observationArea({camera, controls}, activeMesh) {
-		// 获取观测点坐标
 		const {  x, y, z  } = activeMesh.getWorldPosition(new THREE.Vector3());
-		// 获取座位坐标，需要调整摄像头看向座位
 		const { x: lookX } = activeMesh.parent.children[0].getWorldPosition(new THREE.Vector3());
 		const heightY = activeMesh.userData.isNeedLiftCamera ? 100: y;
 		const basePosition = { x: lookX > x ? x - 6 : x + 6, y: heightY, z };
