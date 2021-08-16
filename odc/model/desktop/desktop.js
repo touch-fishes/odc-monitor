@@ -6,18 +6,36 @@ import { AppleHost } from '../computer-host/Apple-host.js'
 import { generateTextSprite } from '../../util/generate-text-sprite.js';
 import { getSize, setEqualScale } from '../../util/object3D.js';
 
-export class Desktop {
+export class Desktop extends THREE.Group{
 	constructor(name, seatInfo) {
-		this.group = new THREE.Group();
-		this.tips = [];
-		this.initMonitor(name, seatInfo).then(() => {
-			this.initAppleHost(name, seatInfo);
-			this.initHWHost(name, seatInfo);
+		super();
+		this.monitors = [];
+		this.monitorTips = [];
+		this.pc = null;
+		this.pcTip = null;
+		this.macMini = null;
+		this.macMiniTip = null;
+		this.loadPromise = this.createMonitor(name, seatInfo).then(({ monitors, monitorTips }) => {
+			this.monitors.push(...monitors);
+			this.monitorTips.push(...monitorTips);
+			const { macMini, macMiniTip } = this.createMacMini(name, seatInfo);
+			const { pc, pcTip } = this.createPC(name, seatInfo);
+			this.pc = pc;
+			this.pcTip = pcTip;
+			this.macMini = macMini;
+			this.macMiniTip = macMiniTip;
+			this.add(this.pc);
+			this.add(this.pcTip);
+			this.add(this.macMini);
+			this.add(this.macMiniTip);
+			this.monitors.forEach((monitor) => this.add(monitor));
+			this.monitorTips.forEach((monitorTip) => this.add(monitorTip));
 		});
-		return this.group
 	}
-	initMonitor(name, seatInfo) {
+	createMonitor(name, seatInfo) {
 		this.loaded = false;
+		const monitors = [];
+		const monitorTips = [];
 		return new Promise((resolve) => {
 			new MTLLoader().load('./odc/model/monitor/monitor.mtl', (materials) => {
 				const objLoader = new OBJLoader();
@@ -39,16 +57,15 @@ export class Desktop {
 						monitorTip.position.y = y + 3;
 						monitorTip.position.z = monitorObj.position.z + z/2;
 						monitorTip.material.visible =false;
-						this.tips.push(monitorTip);
-						this.group.add(monitorTip);
-						this.group.add(monitorObj);
+						monitors.push(monitorObj);
+						monitorTips.push(monitorTip);
 					}
-					resolve()
+					resolve({ monitors, monitorTips })
 				})
 			});
 		})
 	}
-	initHWHost(name, info) {
+	createPC(name, info) {
 		const hwHost = new HWHost();
 		const { y, z } = getSize(hwHost);
 		hwHost.position.z = (-z - 1);
@@ -62,11 +79,12 @@ export class Desktop {
 		hwTip.position.y = y + 3;
 		hwTip.position.z = hwHost.position.z;
 		hwTip.material.visible =false;
-		this.tips.push(hwTip);
-		this.group.add(hwTip);
-		this.group.add(hwHost);
+		return {
+			pc: hwHost,
+			pcTip: hwTip
+		}
 	}
-	initAppleHost(name, info) {
+	createMacMini(name, info) {
 		const macmini = new AppleHost();
 		const { y } = getSize(macmini);
 		// macmini 放在显示器右边
@@ -82,9 +100,10 @@ export class Desktop {
 		macminiTip.position.y = y + 3;
 		macminiTip.position.z = macmini.position.z + (tipX/3);
 		macminiTip.material.visible = false;
-		this.tips.push(macminiTip);
-		this.group.add(macminiTip);
-		this.group.add(macmini);
+		return {
+			macMini: macmini,
+			macMiniTip: macminiTip
+		}
 	}
 	createTextSprite(text) {
 		const textSprite = generateTextSprite(text, {
@@ -102,13 +121,19 @@ export class Desktop {
 		setEqualScale(textSprite, 0.1);
 		return textSprite;
 	}
-	showTip() {
-		this.tips.forEach((object3D) => {
+	async showTip() {
+		await this.loadPromise;
+		this.pcTip.material.visibl = true;
+		this.macMiniTip.material.visibl = true;
+		this.monitorTips.forEach((object3D) => {
 			object3D.material.visible = true;
-		})
+		});
 	}
-	hideTip() {
-		this.tips.forEach((object3D) => {
+	async hideTip() {
+		await this.loadPromise;
+		this.pcTip.material.visibl = false;
+		this.macMiniTip.material.visibl = false;
+		this.monitorTips.forEach((object3D) => {
 			object3D.material.visible = false;
 		})
 	}
