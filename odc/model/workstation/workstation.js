@@ -5,17 +5,22 @@ import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
 import { handleMouseRaycaster } from '../../util/raycaster.js'
 import { Arrow } from '../arrow/arrow.js'
+import { Seat } from '../seat/seat.js';
 
 // TODO 融合 北区工作区域 职责过于复杂
 export class Workstation {
 	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass, raycaster}, {xLength, zLength}, seats) {
 		this.group = new THREE.Group();
-		this.initSeats({xLength, zLength}, seats);
-		// this.initFloor(xLength, zLength);
-		// TODO 全局管理
-		this.initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster);
-		// 初始化信息面板
-		this.seatInfoPlan = new StationInfo();
+		Seat.loadResource().then((seatResource) => {
+			this.seatResource = seatResource;
+			const workstation = this.createWorkstation({xLength, zLength}, seats);
+			this.group.add(workstation);
+			// this.initFloor(xLength, zLength);
+			// TODO 全局管理
+			this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls);
+			// 初始化信息面板
+			this.seatInfoPlan = new StationInfo();
+		});
 	}
 
 	initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster) {
@@ -34,6 +39,54 @@ export class Workstation {
 		// TODO 全局管理
 		document.addEventListener( 'mousemove', renderActiveGroup('move'));
 		document.addEventListener( 'click', renderActiveGroup('click'));
+	}
+
+	createWorkstation({xLength, zLength}, seats) {
+		const spacing = xLength / seats.length;
+		const xCenter = zLength / 2;
+		const innerGroup = new THREE.Group();
+		seats.forEach((row, idx) => {
+			const seatGroup = this.createSeatGroup(row);
+			seatGroup.name = `seatRow_${idx}`
+			// 排列位置
+			seatGroup.position.z = xCenter;
+			seatGroup.position.x = spacing * idx;
+			innerGroup.add(seatGroup);
+		});
+		// 前面要留点空位置
+		innerGroup.position.x = -xLength / 2 + 60;
+		// TODO scale 计算错误
+		innerGroup.position.z = -xCenter - 66;
+		return innerGroup;
+	}
+	createSeatGroup(rowSeats) {
+		// 按照南北 分为两排
+		const seatsGroup = new THREE.Group();
+		const seatsLength = rowSeats.length;
+		// 背靠背两排的个数
+		const itemNumber = seatsLength / 2;
+		const tempSeat = new Seat(this.seatResource);
+		const { x, z } = this.getSize(tempSeat.table);
+
+		// 循环排列工位
+		for (let i = 0; i < itemNumber; i ++) {
+			// 创建一个 工位
+			const eastSeat = new Seat(this.seatResource, rowSeats[i]);
+			// 获取宽高信息计算排列
+			const westSeat = new Seat(this.seatResource, rowSeats[seatsLength - i - 1]);
+			const offset = (z * i);
+			westSeat.position.z = offset;
+			westSeat.position.x = 0;
+			eastSeat.position.z = offset;
+			// 东变的座位需要旋转下, 再移动桌子的距离
+			eastSeat.rotation.y = -Math.PI;
+			eastSeat.position.x = x;
+			// 添加到分组中
+			seatsGroup.add(westSeat)
+			seatsGroup.add(eastSeat);
+		}
+
+		return seatsGroup;
 	}
 
 	/**

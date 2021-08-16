@@ -41,10 +41,10 @@ export class Desktop extends THREE.Group{
 				const objLoader = new OBJLoader();
 				objLoader.setMaterials(materials);
 				objLoader.load('./odc/model/monitor/monitor.obj', (obj) => {
-					this.loaded = true;
+					this.moitorSize = getSize(obj);
+					if (!Array.isArray(seatInfo.monitor)) return resolve({ monitors: [], monitorTips: [] });
 					for (let i = 0; i < seatInfo.monitor.length; i++) {
 						const monitorObj = obj.clone();
-						this.moitorSize = getSize(monitorObj);
 						monitorObj.rotation.y = - Math.PI
 						monitorObj.position.z = (i * 40);
 						monitorObj.name = `${name}_monitor_${i}`;
@@ -60,7 +60,7 @@ export class Desktop extends THREE.Group{
 						monitors.push(monitorObj);
 						monitorTips.push(monitorTip);
 					}
-					resolve({ monitors, monitorTips })
+					return resolve({ monitors, monitorTips })
 				})
 			});
 		})
@@ -106,7 +106,7 @@ export class Desktop extends THREE.Group{
 		}
 	}
 	createTextSprite(text) {
-		const textSprite = generateTextSprite(text, {
+		const textSprite = generateTextSprite(text || '', {
 			fontFace: 'Helvetica',
 			fontSize: 36,
 			fontColor: 'rgba(255, 255, 255, 1)',
