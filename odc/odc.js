@@ -12,7 +12,7 @@ import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
 import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
-import { Arrow } from './model/arrow/arrow.js'
+import { KeyPoint } from './model/key-point/key-point.js'
 import { arrowPositions } from './data/arrow.js';
 import { animateOrbitCamera } from "./util/camera.js";
 import { Mousemove } from "./event/mousemove.js";
@@ -196,7 +196,7 @@ export class ODC {
 		arrowPositions.forEach(item=> {
 			const {begin, end} = item;
 			const { x, z } = this.getCenterOfModelArea(begin, end);
-			const arrow = new Arrow(20);
+			const arrow = new KeyPoint(20);
 			arrow.position.z = z;
 			arrow.position.y = this.scale(WALL_HEIGHT);
 			arrow.position.x = x;

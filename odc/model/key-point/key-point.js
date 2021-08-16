@@ -3,13 +3,18 @@ import { animateOrbitCamera } from "../../util/camera.js";
 import { handleMouseRaycaster } from '../../util/raycaster.js';
 import { mixCLickObserver } from "../../event/click.js";
 
-export class Arrow extends mixCLickObserver(THREE.Group){
+export class KeyPoint extends mixCLickObserver(THREE.Group){
 
 	constructor(size) {
 		super()
+		this.looAtPosition = {x: 0, y: 0, z:0};
 		this.arrow = new THREE.Mesh(this.createGeometry(size), this.createMaterial());
 		this.arrow.userData.type = 'keypoint';
 		this.add(this.arrow);
+	}
+
+	setLookAt(lookAt) {
+		this.looAtPosition = lookAt;
 	}
 
 	createMaterial() {
@@ -31,14 +36,15 @@ export class Arrow extends mixCLickObserver(THREE.Group){
 	observationArea({camera, controls}, activeMesh) {
 		const {  x, y, z  } = activeMesh.getWorldPosition(new THREE.Vector3());
 		// TODO
-		const { x: lookX } = activeMesh.parent.children[0].getWorldPosition(new THREE.Vector3());
-		const heightY = activeMesh.userData.isNeedLiftCamera ? 100: y;
-		const basePosition = { x: lookX > x ? x - 6 : x + 6, y: heightY, z };
-		const lockAtPosition = { x: lookX > x ? x + 100 : x - 100, y: heightY, z };
+		// const { x: lookX } = activeMesh.parent.parent.desktop.getWorldPosition(new THREE.Vector3());
+		// const heightY = activeMesh.userData.isNeedLiftCamera ? 100: y;
+		// const basePosition = { x: lookX > x ? x - 6 : x + 6, y: heightY, z };
+		const basePosition = { x, y, z };
+		// const lockAtPosition = { x: lookX > x ? x + 100 : x - 100, y: heightY, z };
 		animateOrbitCamera(
 			{camera, controls},
 			{cameraPosition: camera.position, orbitTargetPosition: controls.target },
-			{ cameraPosition: basePosition, orbitTargetPosition: lockAtPosition }
+			{ cameraPosition: basePosition, orbitTargetPosition: this.looAtPosition }
 		)
 	}
 

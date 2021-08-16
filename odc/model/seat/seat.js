@@ -1,7 +1,7 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
-import { Arrow } from '../arrow/arrow.js';
+import { KeyPoint } from '../key-point/key-point.js';
 import { getSize} from '../../util/object3D.js';
 import { globalEvent } from '../../event.js';
 
@@ -19,6 +19,10 @@ export class Seat extends THREE.Group {
 		this.add(this.table);
 		this.add(this.keyPoint);
 		this.add(this.desktop);
+		// 延时加载观测点 注视方向
+		new Promise((resolve => resolve(true))).then(() => {
+			this.locationKeyPoint();
+		})
 
 	}
 	static loadResource() {
@@ -29,8 +33,15 @@ export class Seat extends THREE.Group {
 			})
 		})
 	}
+	locationKeyPoint() {
+		const { y: heightY } = this.getWorldPosition(new THREE.Vector3());
+		const { x: lookX } = this.desktop.getWorldPosition(new THREE.Vector3());
+		const { x: keyPointX, z:keyPointZ } = this.keyPoint.getWorldPosition(new THREE.Vector3());
+		const lockAtPosition = { x: lookX > keyPointX ? keyPointX + 100 : keyPointX - 100, y: heightY + 16, z: keyPointZ };
+		this.keyPoint.setLookAt(lockAtPosition);
+	}
 	createKeyPoint() {
-		const keyPoint = new Arrow(20);
+		const keyPoint = new KeyPoint(20);
 		const { x: tableX } = getSize(this.table);
 		keyPoint.position.y = 10
 		keyPoint.position.x = -tableX - 6;
