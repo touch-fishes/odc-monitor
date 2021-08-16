@@ -159,10 +159,10 @@ export class ODC {
 			this.getContext(),
 			{ xLength: (endY - beginY), zLength: (endX- beginX) },
 			southWorkstation);
-		theSouthWorkstation.group.position.x = x;
-		theSouthWorkstation.group.position.z = z;
+		theSouthWorkstation.position.x = x;
+		theSouthWorkstation.position.z = z;
 		this.southWorkstation = theSouthWorkstation;
-		this.odcGroup.add(this.southWorkstation.group);
+		this.odcGroup.add(this.southWorkstation);
 	}
 
 	renderKitchen() {
