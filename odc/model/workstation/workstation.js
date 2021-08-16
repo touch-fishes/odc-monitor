@@ -17,7 +17,7 @@ export class Workstation {
 			this.group.add(workstation);
 			// this.initFloor(xLength, zLength);
 			// TODO 全局管理
-			this.initMoveEvent(camera, scene, renderer, highlightComposer, highlightOutlinePass, controls);
+			this.initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster);
 			// 初始化信息面板
 			this.seatInfoPlan = new StationInfo();
 		});
@@ -30,7 +30,6 @@ export class Workstation {
 		const renderActiveGroup = (type) => (event) => {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
-			if (!this.loaded) return;
 			// 鼠标移动时检测高亮
 			requestAnimationFrame(() => {
 				this.renderActiveMesh(type, {x,y}, {camera, controls, highlightComposer, highlightOutlinePass, raycaster}, );
@@ -210,6 +209,7 @@ export class Workstation {
 
 	renderActiveMesh(type, pointer, {camera, controls, highlightOutlinePass, raycaster}) {
 		handleMouseRaycaster({camera, raycasterInstance: raycaster}, pointer, this.getSeats(), (activeMesh) => {
+			debugger
 			// 是不是可以进行高亮操作
 			const isHighlightMesh = activeMesh.parent.userData.highlight;
 			// 属于可以高亮的元素
