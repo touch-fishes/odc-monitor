@@ -1,8 +1,9 @@
 import * as THREE from '../../../build/three.module.js';
-import {OBJLoader} from "../../../examples/jsm/loaders/OBJLoader.js";
-import {Desktop} from "../desktop/desktop.js";
-import {Arrow} from "../arrow/arrow.js";
-import {getSize} from "../../util/object3D.js";
+import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
+import { Desktop } from '../desktop/desktop.js';
+import { Arrow } from '../arrow/arrow.js';
+import { getSize} from '../../util/object3D.js';
+import { globalEvent } from '../../event.js';
 
 export class Seat extends THREE.Group {
 	constructor({ tableObject3D }, seatInfo) {
@@ -33,6 +34,8 @@ export class Seat extends THREE.Group {
 		const { x: tableX } = getSize(this.table);
 		keyPoint.position.y = 10
 		keyPoint.position.x = -tableX - 6;
+		// 添加观测事件
+		globalEvent.dispatchEvent({ type: 'addClickObserver', message: [keyPoint]});
 		return keyPoint;
 	}
 	createDeskTop(seatInfo) {

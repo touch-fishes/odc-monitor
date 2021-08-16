@@ -1,44 +1,26 @@
 import * as THREE from '../../../build/three.module.js';
 import { StationInfo } from '../info/station-info.js';
-import { clientX2X, clientY2Y } from '../../util/location.js';
-import { handleMouseRaycaster } from '../../util/raycaster.js'
 import { Seat } from '../seat/seat.js';
 import { getSize } from "../../util/object3D.js";
+import { mixMousemoveObserver } from '../../event/mousemove.js';
+import { mixCLickObserver } from '../../event/click.js';
 
 // TODO 融合 北区工作区域 职责过于复杂
-export class Workstation extends THREE.Group{
-	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass, raycaster}, {xLength, zLength}, seats) {
+export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Group)){
+	constructor({}, {xLength, zLength}, seats) {
 		super();
+		// 配合点击事件
+		this.activeStation = null;
+		this.moveActiveGroup = null;
+		this.clickActiveGroup = null;
+		// 初始化信息面板
+		this.seatInfoPlan = new StationInfo();
 		// TODO 修改为依赖注入的模式
 		Seat.loadResource().then((seatResource) => {
 			this.seatResource = seatResource;
 			const workstation = this.createWorkstation({xLength, zLength}, seats);
 			this.add(workstation);
-			// this.initFloor(xLength, zLength);
-			// TODO 全局管理
-			this.initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster);
-			// 初始化信息面板
-			this.seatInfoPlan = new StationInfo();
-			const loader = new THREE.TextureLoader();
-			this.texture = loader.load( './odc/texture/screen.png');
 		});
-	}
-
-	initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster) {
-		this.activeStation = null;
-		this.moveActiveGroup = null;
-		this.clickActiveGroup = null;
-		const renderActiveGroup = (type) => (event) => {
-			const x = clientX2X(event.clientX);
-			const y = clientY2Y(event.clientY);
-			// 鼠标移动时检测高亮
-			requestAnimationFrame(() => {
-				this.renderActiveMesh(type, {x,y}, {camera, controls, highlightComposer, highlightOutlinePass, raycaster}, );
-			});
-		}
-		// TODO 全局管理
-		document.addEventListener( 'mousemove', renderActiveGroup('move'));
-		document.addEventListener( 'click', renderActiveGroup('click'));
 	}
 
 	createWorkstation({xLength, zLength}, seats) {
@@ -96,53 +78,75 @@ export class Workstation extends THREE.Group{
 		return [this.clickActiveGroup, this.moveActiveGroup].filter((item) => item)
 	}
 
-	renderActiveMesh(type, pointer, {camera, controls, highlightOutlinePass, raycaster}) {
-		handleMouseRaycaster({camera, raycasterInstance: raycaster}, pointer, this.getSeats(), (activeMesh) => {
-			// 是不是可以进行高亮操作
-			const isHighlightMesh = activeMesh.parent.userData.highlight;
-			// 属于可以高亮的元素
-			if (isHighlightMesh) {
-				if (type === 'click') {
-					this.clickActiveGroup = activeMesh.parent;
-					this.fillActiveMesh(activeMesh);
-					this.seatInfoPlan.show(activeMesh.parent.userData.data, activeMesh.parent.userData.type);
-				}
-				if (type === 'move') this.moveActiveGroup = activeMesh.parent;
-				highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-			} else {
-				this.moveActiveGroup = null;
-				highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-			}
-		}, () => {
+	onUnMousemove({ highlightOutlinePass }) {
+		this.moveActiveGroup = null;
+		highlightOutlinePass.selectedObjects = this.getSelectedObjects();
+	}
+
+	onMousemove({ highlightOutlinePass }, activeMesh) {
+		// 是不是可以进行高亮操作
+		const isHighlightMesh = activeMesh.parent.userData.highlight;
+		if (isHighlightMesh) {
+			this.moveActiveGroup = activeMesh.parent;
+			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
+		} else {
 			this.moveActiveGroup = null;
 			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-		})
+		}
 	}
 
-	fillActiveMesh(activeMesh) {
-		const cached = this.getAllCacheMaterial();
-		if (this.oldActiveMesh) {
-			this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name];
-			this.oldActiveMesh.userData.clickFlag = false;
-			this.oldActiveMesh = null;
+	onClick({highlightOutlinePass}, activeMesh) {
+		// todo 层级太深了。。
+		const getAllCacheMaterial = () => {
+			const cacheMaterail = {};
+			this.children.forEach((innerGroup) => {
+				innerGroup.children.forEach((row) => {
+					row.children.forEach((seat) => {
+						seat.children.forEach(item => {
+							if (item.name.indexOf('desktop') > -1) {
+								item.children.forEach(desktop => {
+									cacheMaterail[desktop.name] = desktop.userData.materials
+								})
+							}
+						})
+					})
+				});
+			});
+			return cacheMaterail;
 		}
-		if (activeMesh.userData.clickFlag) {
-			activeMesh.material = cached[activeMesh.parent.name]
-			activeMesh.userData.clickFlag = false;
-		} else {
-			activeMesh.userData.clickFlag = true;
-			// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
-			// activeMesh.material[1].emissive.setHex( 0x409EFF );
-			this.oldActiveMesh = activeMesh;
-			if (activeMesh.parent.name.indexOf('monitor') > -1) {
-				activeMesh.material = new THREE.MeshPhongMaterial( { map: this.texture});
+		const fillActiveMesh = (activeMesh) => {
+			const cached = getAllCacheMaterial();
+			if (this.oldActiveMesh) {
+				this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name];
+				this.oldActiveMesh.userData.clickFlag = false;
+				this.oldActiveMesh = null;
+			}
+			if (activeMesh.userData.clickFlag) {
+				activeMesh.material = cached[activeMesh.parent.name]
+				activeMesh.userData.clickFlag = false;
 			} else {
-				activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+				activeMesh.userData.clickFlag = true;
+				// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
+				// activeMesh.material[1].emissive.setHex( 0x409EFF );
+				this.oldActiveMesh = activeMesh;
+				if (activeMesh.parent.name.indexOf('monitor') > -1) {
+					activeMesh.material = new THREE.MeshPhongMaterial( { map: this.texture});
+				} else {
+					activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+				}
 			}
 		}
+		// 是不是可以进行高亮操作
+		const isHighlightMesh = activeMesh.parent.userData.highlight;
+		if (isHighlightMesh) {
+			this.clickActiveGroup = activeMesh.parent;
+			fillActiveMesh(activeMesh);
+			this.seatInfoPlan.show(activeMesh.parent.userData.data, activeMesh.parent.userData.type);
+		}
+		highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 	}
 
-	getSeats() {
+	getMousemoveObserveObjects() {
 		const allSeats = [];
 		this.children.forEach((innerGroup) => {
 			innerGroup.children.forEach((row) => {
@@ -154,22 +158,15 @@ export class Workstation extends THREE.Group{
 		return allSeats;
 	}
 
-	// todo 层级太深了。。
-	getAllCacheMaterial() {
-		const cacheMaterail = {};
+	getClickObserveObjects() {
+		const allSeats = [];
 		this.children.forEach((innerGroup) => {
 			innerGroup.children.forEach((row) => {
 				row.children.forEach((seat) => {
-					seat.children.forEach(item => {
-						if (item.name.indexOf('desktop') > -1) {
-							item.children.forEach(desktop => {
-								cacheMaterail[desktop.name] = desktop.userData.materials
-							})
-						}
-					})
+					allSeats.push(seat);
 				})
 			});
 		});
-		return cacheMaterail;
+		return allSeats;
 	}
 }

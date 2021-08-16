@@ -1,8 +1,6 @@
 import * as THREE from '../build/three.module.js';
 import { OrbitControls } from '../examples/jsm/controls/OrbitControls.js';
 import Stats from '../examples/jsm/libs/stats.module.js';
-
-
 import { Floor } from './model/floor/floor.js';
 import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
@@ -16,7 +14,10 @@ import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
 import { Arrow } from './model/arrow/arrow.js'
 import { arrowPositions } from './data/arrow.js';
-import {animateOrbitCamera} from "./util/camera.js";
+import { animateOrbitCamera } from "./util/camera.js";
+import { Mousemove } from "./event/mousemove.js";
+import { Click } from "./event/click.js";
+import { globalEvent } from './event.js';
 
 export class ODC {
 	constructor() {
@@ -31,17 +32,9 @@ export class ODC {
 
 		this.scene = this.initScene();
 
-		this.moveRaycaster = new THREE.Raycaster();
-
-		this.initHighlight(this.scene, this.camera, this.renderer);
-
 		this.initHelp()
 
 		this.initLight();
-
-		this.initEvent();
-
-		this.animate();
 
 		// 渲染墙体结构
 		this.renderWall();
@@ -64,13 +57,11 @@ export class ODC {
 
 		this.locationODC();
 
+		this.initEvent();
+
+		this.animate();
 	}
 	initEvent() {
-		window.addEventListener( 'resize', (event) => {
-			this.camera.aspect = window.innerWidth / window.innerHeight;
-			this.camera.updateProjectionMatrix();
-			this.renderer.setSize( window.innerWidth, window.innerHeight );
-		});
 		document.getElementById('#switch-btn').addEventListener( 'click', (event) => {
 			animateOrbitCamera(
 				{camera: this.camera, controls: this.controls},
@@ -78,6 +69,24 @@ export class ODC {
 				{ cameraPosition: this.oldCamera.position, orbitTargetPosition: this.oldControls.target }
 			)
 		});
+		window.addEventListener( 'resize', (event) => {
+			this.camera.aspect = window.innerWidth / window.innerHeight;
+			this.camera.updateProjectionMatrix();
+			this.renderer.setSize( window.innerWidth, window.innerHeight );
+		});
+		// 事件准备
+		const { composer, outlinePass } = createHighlightElement(this.scene, this.camera, this.renderer);
+		this.highlightComposer = composer;
+		this.highlightOutlinePass = outlinePass;
+		// 移动事件
+		const mousemoveEvent = new Mousemove({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
+		mousemoveEvent.addEvent([this.southWorkstation]);
+		globalEvent.addEventListener('addMousemoveObserver', ({ message }) => mousemoveEvent.addEvent(message))
+		// 点击事件
+		const clickEvent = new Click({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
+		clickEvent.addEvent([this.southWorkstation, ...this.arrows]);
+		globalEvent.addEventListener('addClickObserver', ({ message }) => clickEvent.addEvent(message))
+
 	}
 	initHelp() {
 		this.controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -100,11 +109,6 @@ export class ODC {
 		const directionalLight = new THREE.DirectionalLight( 0xffffff );
 		directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
 		this.scene.add( directionalLight );
-	}
-	initHighlight(scene, camera, renderer) {
-		const { composer, outlinePass } = createHighlightElement(scene, camera, renderer);
-		this.highlightComposer = composer;
-		this.highlightOutlinePass = outlinePass;
 	}
 	initCamera() {
 		const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 6000 );
@@ -154,7 +158,7 @@ export class ODC {
 		const [beginX, beginY] = begin.map(this.scale);
 		const [endX, endY] = end.map(this.scale);
 		const theSouthWorkstation = new Workstation(
-			this.getContext(),
+			{},
 			{ xLength: (endY - beginY), zLength: (endX- beginX) },
 			southWorkstation);
 		theSouthWorkstation.position.x = x;
@@ -187,29 +191,19 @@ export class ODC {
 		this.odcGroup.add(new Floor(floor.begin.map(this.scale), floor.end.map(this.scale)));
 	}
 
-	getContext() {
-		return {
-			camera: this.camera,
-			renderer: this.renderer,
-			scene: this.scene,
-			controls: this.controls,
-			highlightComposer: this.highlightComposer,
-			highlightOutlinePass: this.highlightOutlinePass,
-			raycaster: this.moveRaycaster
-		}
-	}
-
 	renderArrow() {
+		this.arrows = []
 		arrowPositions.forEach(item=> {
 			const {begin, end} = item;
 			const { x, z } = this.getCenterOfModelArea(begin, end);
-			const arrow = new Arrow(20, this.getContext());
+			const arrow = new Arrow(20);
 			arrow.position.z = z;
 			arrow.position.y = this.scale(WALL_HEIGHT);
 			arrow.position.x = x;
 			arrow.userData.isNeedLiftCamera = item.type === 'hight';
-			this.odcGroup.add(arrow)
+			this.arrows.push(arrow);
 		})
+		this.arrows.forEach((arrow) => this.odcGroup.add(arrow));
 	}
 
 	locationODC() {
