@@ -125,8 +125,6 @@ export class ODC {
 		return renderer;
 	}
 	animate() {
-		const dt = this.clock.getDelta();
-		if ( this.mixer ) this.mixer.update( dt );
 		requestAnimationFrame( this.animate.bind(this) );
 		TWEEN.update();
 		this.stats.update();
