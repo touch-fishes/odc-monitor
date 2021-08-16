@@ -20,6 +20,9 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 			this.seatResource = seatResource;
 			const workstation = this.createWorkstation({xLength, zLength}, seats);
 			this.add(workstation);
+			// TODO 私有化
+			const loader = new THREE.TextureLoader();
+			this.texture = loader.load( './odc/texture/screen.png');
 		});
 	}
 
