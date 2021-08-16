@@ -3,7 +3,6 @@ import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 import { Desktop } from '../desktop/desktop.js';
 import { StationInfo } from '../info/station-info.js';
 import { clientX2X, clientY2Y } from '../../util/location.js';
-import { animateOrbitCamera } from '../../util/camera.js';
 import { handleMouseRaycaster } from '../../util/raycaster.js'
 import { Arrow } from '../arrow/arrow.js'
 
