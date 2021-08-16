@@ -1,27 +1,20 @@
 import * as THREE from '../../../build/three.module.js';
-import {clientX2X, clientY2Y} from "../../util/location.js";
-import {animateOrbitCamera} from "../../util/camera.js";
+import { clientX2X, clientY2Y } from "../../util/location.js";
+import { animateOrbitCamera } from "../../util/camera.js";
 
-export class Arrow {
-	/**
-	 *
-	 * @param begin
-	 * @param end
-	 * @returns {Mesh}
-	 */
+export class Arrow extends THREE.Mesh{
+
 	constructor(size, context) {
-		this.arrow = new THREE.Mesh(this.initGeometry(size), this.initMaterial());
-		this.arrow.userData.type = 'keypoint';
+		super()
+		this.geometry = this.initGeometry(size);
+		this.material = this.initMaterial();
+		this.userData.type = 'keypoint';
 		if (context) {
-			const {camera, scene, renderer, controls} = context;
+			const { camera, scene, renderer, controls } = context;
 			this.initMoveEvent(camera, scene, renderer, controls);
 		}
-		return this.arrow;
 	}
-	/**
-	 *
-	 * @returns {MeshLambertMaterial}
-	 */
+
 	initMaterial() {
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load( './odc/texture/arrow.png');
@@ -32,11 +25,6 @@ export class Arrow {
 		});
 	}
 
-	/**
-	 *
-	 * @param begin
-	 * @param end
-	 */
 	initGeometry(size) {
         const geometry = new THREE.PlaneGeometry(size, size);
 		geometry.rotateX(Math.PI/2);
