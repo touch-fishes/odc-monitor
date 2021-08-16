@@ -9,7 +9,7 @@ import { getSize } from "../../util/object3D.js";
 export class Workstation extends THREE.Group{
 	constructor({camera, scene, renderer, controls, highlightComposer, highlightOutlinePass, raycaster}, {xLength, zLength}, seats) {
 		super();
-		// TODO 修改为以来注入的模式
+		// TODO 修改为依赖注入的模式
 		Seat.loadResource().then((seatResource) => {
 			this.seatResource = seatResource;
 			const workstation = this.createWorkstation({xLength, zLength}, seats);

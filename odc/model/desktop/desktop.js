@@ -36,6 +36,7 @@ export class Desktop extends THREE.Group{
 		this.loaded = false;
 		const monitors = [];
 		const monitorTips = [];
+		// TODO 修改为依赖注入的模式
 		return new Promise((resolve) => {
 			new MTLLoader().load('./odc/model/monitor/monitor.mtl', (materials) => {
 				const objLoader = new OBJLoader();
