@@ -19,6 +19,8 @@ export class Workstation extends THREE.Group{
 			this.initMoveEvent(camera, highlightComposer, highlightOutlinePass, controls, raycaster);
 			// 初始化信息面板
 			this.seatInfoPlan = new StationInfo();
+			const loader = new THREE.TextureLoader();
+			this.texture = loader.load( './odc/texture/screen.png');
 		});
 	}
 
@@ -132,7 +134,11 @@ export class Workstation extends THREE.Group{
 			// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
 			// activeMesh.material[1].emissive.setHex( 0x409EFF );
 			this.oldActiveMesh = activeMesh;
-			activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+			if (activeMesh.parent.name.indexOf('monitor') > -1) {
+				activeMesh.material = new THREE.MeshPhongMaterial( { map: this.texture});
+			} else {
+				activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+			}
 		}
 	}
 
