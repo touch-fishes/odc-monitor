@@ -16,4 +16,5 @@ export const handleMouseRaycaster = (context, pointer, intersectObject, activeCa
     } else {
         inActiveCallback && inActiveCallback();
     }
+    return !!activeMesh;
 }

@@ -9,10 +9,6 @@ import { mixCLickObserver } from '../../event/click.js';
 export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Group)){
 	constructor({}, {xLength, zLength}, seats) {
 		super();
-		// 配合点击事件
-		this.activeStation = null;
-		this.moveActiveGroup = null;
-		this.clickActiveGroup = null;
 		// 初始化信息面板
 		this.seatInfoPlan = new StationInfo();
 		// TODO 修改为依赖注入的模式
@@ -74,27 +70,13 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		return seatsGroup;
 	}
 
-	getSelectedObjects() {
-		if (this.clickActiveGroup && this.moveActiveGroup && this.moveActiveGroup === this.clickActiveGroup) {
-			return [this.clickActiveGroup];
-		}
-		return [this.clickActiveGroup, this.moveActiveGroup].filter((item) => item)
-	}
-
-	onUnMousemove({ highlightOutlinePass }) {
-		this.moveActiveGroup = null;
-		highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-	}
+	onUnMousemove({ highlightOutlinePass }) {}
 
 	onMousemove({ highlightOutlinePass }, activeMesh) {
 		// 是不是可以进行高亮操作
 		const isHighlightMesh = activeMesh.parent.userData.highlight;
 		if (isHighlightMesh) {
-			this.moveActiveGroup = activeMesh.parent;
-			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
-		} else {
-			this.moveActiveGroup = null;
-			highlightOutlinePass.selectedObjects = this.getSelectedObjects();
+			highlightOutlinePass.selectedObjects = [activeMesh.parent];
 		}
 	}
 
@@ -142,11 +124,9 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		// 是不是可以进行高亮操作
 		const isHighlightMesh = activeMesh.parent.userData.highlight;
 		if (isHighlightMesh) {
-			this.clickActiveGroup = activeMesh.parent;
-			fillActiveMesh(activeMesh);
-			this.seatInfoPlan.show(activeMesh.parent.userData.data, activeMesh.parent.userData.type);
+			fillActiveMesh(activeMesh.parent);
+			this.seatInfoPlan.show(activeMesh.parent.parent.userData.data, activeMesh.parent.parent.userData.type);
 		}
-		highlightOutlinePass.selectedObjects = this.getSelectedObjects();
 	}
 
 	getMousemoveObserveObjects() {
