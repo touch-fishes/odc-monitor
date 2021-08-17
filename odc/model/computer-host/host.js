@@ -9,7 +9,6 @@ export class Host extends THREE.Group{
 		this.host = this.createHost();
 		this.hostmMaterial = this.host.material;
 		this.add(this.host)
-		return this.group;
 	}
 
 	createHostGeometry() {

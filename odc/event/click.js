@@ -56,13 +56,6 @@ export class Click {
 					observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
 				}
 			});
-			// requestAnimationFrame(() => {
-			// 	observers.forEach((observer) => {
-			// 		handleMouseRaycaster({camera: this.camera, raycasterInstance: this.clickRaycaster}, { x, y }, observer.getClickObserveObjects(), (activeMesh) => {
-			// 			observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
-			// 		});
-			// 	})
-			// })
 		});
 	}
 

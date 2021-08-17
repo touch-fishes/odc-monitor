@@ -50,14 +50,11 @@ export class Desktop extends THREE.Group{
 			monitorObj.userData.highlight = true;
 			monitorObj.userData.type = `monitor.${i}`;
 			monitorObj.userData.data = seatInfo;
-			// TODO [Monitor] 抽象 clazz
-			monitorObj.userData.clazzName = 'monitor';
-			monitorObj.userData.materials = monitorObj.getObjectByName('Screen').material;
 			const monitorTip = this.createTextSprite(seatInfo.monitor[i]);
 			const { y, z } = getSize(monitorObj);
 			monitorTip.position.y = y + 3;
 			monitorTip.position.z = monitorObj.position.z + z/2;
-			monitorTip.material.visible =false;
+			monitorTip.material.visible = false;
 			monitors.push(monitorObj);
 			monitorTips.push(monitorTip);
 		}
@@ -76,7 +73,7 @@ export class Desktop extends THREE.Group{
 		const hwTip = this.createTextSprite(info.pc);
 		hwTip.position.y = y + 3;
 		hwTip.position.z = hwHost.position.z;
-		hwTip.material.visible =false;
+		hwTip.material.visible = false;
 		return {
 			pc: hwHost,
 			pcTip: hwTip
@@ -119,22 +116,6 @@ export class Desktop extends THREE.Group{
 		setEqualScale(textSprite, 0.1);
 		return textSprite;
 	}
-	async showTip() {
-		await this.loadPromise;
-		this.pcTip.material.visibl = true;
-		this.macMiniTip.material.visibl = true;
-		this.monitorTips.forEach((object3D) => {
-			object3D.material.visible = true;
-		});
-	}
-	async hideTip() {
-		await this.loadPromise;
-		this.pcTip.material.visibl = false;
-		this.macMiniTip.material.visibl = false;
-		this.monitorTips.forEach((object3D) => {
-			object3D.material.visible = false;
-		})
-	}
 	/**
 	 * 激活
 	 * @param activeMesh
@@ -148,9 +129,11 @@ export class Desktop extends THREE.Group{
 			member.active();
 		}
 		if (clazzName === AppleHost.clazzName) {
+			this.macMiniTip.material.visible = true;
 			this.macMini.active();
 		}
 		if (clazzName === HWHost.clazzName) {
+			this.pcTip.material.visible = true;
 			this.pc.active();
 		}
 	}
@@ -164,5 +147,10 @@ export class Desktop extends THREE.Group{
 		this.monitors.forEach((monitor) => {
 			monitor.silence();
 		});
+		this.pcTip.material.visible = false;
+		this.macMiniTip.material.visible = false;
+		this.monitorTips.forEach((object3D) => {
+			object3D.material.visible = false;
+		})
 	}
 }
