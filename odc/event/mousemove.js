@@ -26,13 +26,25 @@ export class Mousemove {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
 			requestAnimationFrame(() => {
-				observers.forEach((observer) => {
-					handleMouseRaycaster({camera: this.camera, raycasterInstance: this.moveRaycaster}, { x, y }, observer.getMousemoveObserveObjects(), (activeMesh) => {
-						observer.onMousemove({ highlightOutlinePass: this.highlightOutlinePass }, activeMesh);
-					}, () => {
-						observer.onUnMousemove({ highlightOutlinePass: this.highlightOutlinePass });
+				handleMouseRaycaster(
+					{camera: this.camera, raycasterInstance: this.moveRaycaster},
+					{ x, y },
+					observers.reduce((acc, observer) => {
+						return [
+							...acc,
+							...observer.getMousemoveObserveObjects()
+						]
+					}, []),
+					(activeMesh) => {
+						observers.forEach((observer) => {
+							observer.onMousemove({ highlightOutlinePass: this.highlightOutlinePass }, activeMesh);
+						});
+					},
+					() => {
+						observers.forEach((observer) => {
+							observer.onUnMousemove({ highlightOutlinePass: this.highlightOutlinePass });
+						});
 					});
-				})
 			})
 		});
 	}

@@ -25,6 +25,22 @@ export class Click {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
 			const observers = this.observers;
+			// requestAnimationFrame(() => {
+			// 	handleMouseRaycaster(
+			// 		{ camera: this.camera, raycasterInstance: this.clickRaycaster },
+			// 		{ x, y },
+			// 		observers.reduce((acc, observer) => {
+			// 			return [
+			// 				...acc,
+			// 				...observer.getClickObserveObjects()
+			// 			]
+			// 		}, []),
+			// 		(activeMesh) => {
+			// 			observers.forEach((observer) => {
+			// 				observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
+			// 			});
+			// 		})
+			// })
 			requestAnimationFrame(() => {
 				observers.forEach((observer) => {
 					handleMouseRaycaster({camera: this.camera, raycasterInstance: this.clickRaycaster}, { x, y }, observer.getClickObserveObjects(), (activeMesh) => {
