@@ -1,6 +1,5 @@
 import * as THREE from '../../../build/three.module.js';
 import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
-import { MTLLoader } from '../../../examples/jsm/loaders/MTLLoader.js';
 
 export class Kitchen {
 

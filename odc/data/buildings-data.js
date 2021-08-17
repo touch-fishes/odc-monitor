@@ -159,3 +159,8 @@ export const robotStation = {
 	end: [15400, 36000]
 }
 
+// 北区沙发参数
+export const northSofaStation = {
+	begin: [8400, 12600],
+	end: [14400, 16800]
+}

@@ -6,10 +6,11 @@ import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
-import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation, robotStation } from './data/buildings-data.js';
+import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation, robotStation, northSofaStation } from './data/buildings-data.js';
 import {southWorkstationArea, southWorkstation, northWorkstationArea, northWorkstation} from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
+import { Sofa } from './model/sofa/sofa.js';
 import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
 import { KeyPoint } from './model/key-point/key-point.js'
@@ -53,6 +54,8 @@ export class ODC {
 		// this.renderRobot();
 
 		this.renderArrow();
+
+		this.renderNorthSofa();
 
 		this.scene.add(this.odcGroup);
 
@@ -180,6 +183,13 @@ export class ODC {
 		kitchen.position.z = z;
 		kitchen.position.x = x;
 		this.odcGroup.add(kitchen)
+	}
+
+	renderNorthSofa() {
+		const {begin, end} = northSofaStation;
+		const { x, z } = this.getCenterOfModelArea(begin, end);
+		const sofa = new Sofa(begin, end, {x, z});
+		this.odcGroup.add(sofa)
 	}
 
 	// todo
