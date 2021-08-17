@@ -1,9 +1,10 @@
 import { clientX2X, clientY2Y } from '../util/location.js';
-import { handleMouseRaycaster } from '../util/raycaster.js';
+import { getIntersectedMesh } from '../util/raycaster.js';
 import * as THREE from '../../build/three.module.js';
 
 export const mixCLickObserver = (ObjectClass) => class MousemoveObserver extends ObjectClass {
 	onClick () {}
+	beforeClick() {}
 	getClickObserveObjects() {}
 }
 
@@ -20,38 +21,52 @@ export class Click {
 		this.initEvent();
 	}
 
+	// TODO 合理抽象
+	getObserverGroup({ x, y }) {
+		// 遍历每一个观测者 找到中奖选手
+		return this.observers.reduce((acc, observer) => {
+			const activeMesh = getIntersectedMesh({ camera: this.camera, raycasterInstance: this.clickRaycaster }, { x, y }, observer.getClickObserveObjects());
+			if (activeMesh) {
+				return {
+					active: [...acc.active, { activeMesh, observer }],
+					inactive: acc.inactive
+				}
+			} else {
+				return {
+					active: acc.active,
+					inactive: [...acc.inactive, { observer }]
+				}
+			}
+		}, { active: [],  inactive: [] });
+	}
+
 	initEvent() {
 		document.addEventListener( 'click', (event) => {
 			const x = clientX2X(event.clientX);
 			const y = clientY2Y(event.clientY);
-			const observers = this.observers;
-			// requestAnimationFrame(() => {
-			// 	handleMouseRaycaster(
-			// 		{ camera: this.camera, raycasterInstance: this.clickRaycaster },
-			// 		{ x, y },
-			// 		observers.reduce((acc, observer) => {
-			// 			return [
-			// 				...acc,
-			// 				...observer.getClickObserveObjects()
-			// 			]
-			// 		}, []),
-			// 		(activeMesh) => {
-			// 			observers.forEach((observer) => {
-			// 				observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
-			// 			});
-			// 		})
-			// })
-			requestAnimationFrame(() => {
-				observers.forEach((observer) => {
-					handleMouseRaycaster({camera: this.camera, raycasterInstance: this.clickRaycaster}, { x, y }, observer.getClickObserveObjects(), (activeMesh) => {
-						observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
-					});
-				})
+			// 遍历每一个观测者 找到中奖选手
+			const observerGroup = this.getObserverGroup({x, y});
+			observerGroup.inactive.forEach(({observer}) => {
+				if (observer.beforeClick) observer.beforeClick();
 			})
+			// 遍历中奖选手 发奖 暂时不考虑头奖选手 不让其他 mesh 得奖
+			observerGroup.active.forEach(({observer,  activeMesh}) => {
+				if (observer.beforeClick) observer.beforeClick();
+				if (observer.onClick) {
+					observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
+				}
+			});
+			// requestAnimationFrame(() => {
+			// 	observers.forEach((observer) => {
+			// 		handleMouseRaycaster({camera: this.camera, raycasterInstance: this.clickRaycaster}, { x, y }, observer.getClickObserveObjects(), (activeMesh) => {
+			// 			observer.onClick({ highlightOutlinePass: this.highlightOutlinePass, controls: this.controls, camera: this.camera }, activeMesh);
+			// 		});
+			// 	})
+			// })
 		});
 	}
 
-	addEvent(observers) {
+	addObservers(observers) {
 		this.observers.push(...observers);
 	}
 }

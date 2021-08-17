@@ -5,11 +5,14 @@ import { mixCLickObserver } from "../../event/click.js";
 
 export class KeyPoint extends mixCLickObserver(THREE.Group){
 
+	static clazzName = 'keyPoint';
+
 	constructor(size) {
 		super()
 		this.looAtPosition = {x: 0, y: 0, z:0};
 		this.arrow = new THREE.Mesh(this.createGeometry(size), this.createMaterial());
 		this.arrow.userData.type = 'keypoint';
+		this.userData.clazzName = KeyPoint.clazzName;
 		this.add(this.arrow);
 	}
 

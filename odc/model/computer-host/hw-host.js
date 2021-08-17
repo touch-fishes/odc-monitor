@@ -1,7 +1,11 @@
 import { Host } from './host.js'
 
 export class HWHost extends Host {
+
+	static clazzName = 'HWHost';
+
 	constructor() {
-		return super()
+		super()
+		this.userData.clazzName = HWHost.clazzName;
 	}
 }

@@ -28,7 +28,7 @@ export class Seat extends THREE.Group {
 	static loadResource() {
 		return new Promise((resolve) => {
 			const objLoader = new OBJLoader();
-			objLoader.load('./odc/model/workstation/table.obj', (obj) => {
+			objLoader.load('./odc/model/seat/table.obj', (obj) => {
 				resolve({ tableObject3D: obj });
 			})
 		})

@@ -1,11 +1,11 @@
 import * as THREE from '../../../build/three.module.js';
 import { StationInfo } from '../info/station-info.js';
 import { Seat } from '../seat/seat.js';
-import { getSize } from "../../util/object3D.js";
+import { getDefinedObject3D, getDefinedObject3DByName, getSize } from "../../util/object3D.js";
 import { mixMousemoveObserver } from '../../event/mousemove.js';
 import { mixCLickObserver } from '../../event/click.js';
+import { Desktop } from '../desktop/desktop.js';
 
-// TODO 融合 北区工作区域 职责过于复杂
 export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Group)){
 	constructor({}, {xLength, zLength}, seats) {
 		super();
@@ -16,9 +16,6 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 			this.seatResource = seatResource;
 			const workstation = this.createWorkstation({xLength, zLength}, seats);
 			this.add(workstation);
-			// TODO 私有化
-			const loader = new THREE.TextureLoader();
-			this.texture = loader.load( './odc/texture/screen.png');
 		});
 	}
 
@@ -70,7 +67,8 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		return seatsGroup;
 	}
 
-	onUnMousemove({ highlightOutlinePass }) {}
+	// 暂时不需要在没有 hover 的时候做任何事情
+	beforeMousemove({ highlightOutlinePass }) {}
 
 	onMousemove({ highlightOutlinePass }, activeMesh) {
 		// 是不是可以进行高亮操作
@@ -80,52 +78,27 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		}
 	}
 
+	beforeClick() {
+		// 清除上次高亮的设备
+		if (this.activeDesktop) {
+			this.activeDesktop.silence();
+			this.activeDesktop = null;
+		}
+	}
+
 	onClick({highlightOutlinePass}, activeMesh) {
-		// todo 层级太深了。。
-		const getAllCacheMaterial = () => {
-			const cacheMaterail = {};
-			this.children.forEach((innerGroup) => {
-				innerGroup.children.forEach((row) => {
-					row.children.forEach((seat) => {
-						seat.children.forEach(item => {
-							if (item.name.indexOf('desktop') > -1) {
-								item.children.forEach(desktop => {
-									cacheMaterail[desktop.name] = desktop.userData.materials
-								})
-							}
-						})
-					})
-				});
-			});
-			return cacheMaterail;
-		}
-		const fillActiveMesh = (activeMesh) => {
-			const cached = getAllCacheMaterial();
-			if (this.oldActiveMesh) {
-				this.oldActiveMesh.material = cached[this.oldActiveMesh.parent.name];
-				this.oldActiveMesh.userData.clickFlag = false;
-				this.oldActiveMesh = null;
-			}
-			if (activeMesh.userData.clickFlag) {
-				activeMesh.material = cached[activeMesh.parent.name]
-				activeMesh.userData.clickFlag = false;
-			} else {
-				activeMesh.userData.clickFlag = true;
-				// 由于monitor使用了多个材质，并且是多个重复name的材质，所以下面的代码会产生重复的颜色
-				// activeMesh.material[1].emissive.setHex( 0x409EFF );
-				this.oldActiveMesh = activeMesh;
-				if (activeMesh.parent.name.indexOf('monitor') > -1) {
-					activeMesh.material = new THREE.MeshPhongMaterial( { map: this.texture});
-				} else {
-					activeMesh.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
-				}
-			}
-		}
 		// 是不是可以进行高亮操作
-		const isHighlightMesh = activeMesh.parent.userData.highlight;
+		const definedObject3D = getDefinedObject3D(activeMesh);
+		const isHighlightMesh = definedObject3D.userData.highlight;
 		if (isHighlightMesh) {
-			fillActiveMesh(activeMesh.parent);
-			this.seatInfoPlan.show(activeMesh.parent.parent.userData.data, activeMesh.parent.parent.userData.type);
+			// 高亮当前的设备
+			const desktop = getDefinedObject3DByName(activeMesh, Desktop.clazzName);
+			if (desktop) {
+				desktop.active(activeMesh);
+				// 记录当前激活物
+				this.activeDesktop = desktop;
+			}
+			this.seatInfoPlan.show(definedObject3D.userData.data, definedObject3D.userData.type);
 		}
 	}
 

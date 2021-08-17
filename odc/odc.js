@@ -19,51 +19,56 @@ import { animateOrbitCamera } from "./util/camera.js";
 import { Mousemove } from "./event/mousemove.js";
 import { Click } from "./event/click.js";
 import { globalEvent } from './event.js';
+import { Monitor } from "./model/monitor/monitor.js";
 
 export class ODC {
 	constructor() {
+		// TODO 优化提取 处理依赖
+		Promise.all([
+			Monitor.loadResource()
+		]).then(() => {
+			this.odcGroup = new THREE.Group();
 
-		this.odcGroup = new THREE.Group();
+			this.renderer = this.initRender();
 
-		this.renderer = this.initRender();
+			this.camera = this.initCamera();
 
-		this.camera = this.initCamera();
+			this.oldCamera = this.initCamera();
 
-		this.oldCamera = this.initCamera();
+			this.scene = this.initScene();
 
-		this.scene = this.initScene();
+			this.initHelp()
 
-		this.initHelp()
+			this.initLight();
 
-		this.initLight();
+			// 渲染墙体结构
+			this.renderWall();
 
-		// 渲染墙体结构
-		this.renderWall();
+			// 渲染地面
+			this.renderFloor();
 
-		// 渲染地面
-		this.renderFloor();
+			// 渲染 ODC 工位
+			this.renderStation(southWorkstationArea, southWorkstation, 'south');
+			this.renderStation(northWorkstationArea, northWorkstation, 'north');
 
-		// 渲染 ODC 工位
-		this.renderStation(southWorkstationArea, southWorkstation, 'south');
-		this.renderStation(northWorkstationArea, northWorkstation, 'north');
+			// 渲染厨房
+			this.renderKitchen();
 
-		// 渲染厨房
-		this.renderKitchen();
+			// 渲染可爱的机器人
+			// this.renderRobot();
 
-		// 渲染可爱的机器人
-		// this.renderRobot();
+			this.renderNorthSofa();
 
-		this.renderArrow();
+			this.renderArrow();
 
-		this.renderNorthSofa();
+			this.scene.add(this.odcGroup);
 
-		this.scene.add(this.odcGroup);
+			this.locationODC();
 
-		this.locationODC();
+			this.initEvent();
 
-		this.initEvent();
-
-		this.animate();
+			this.animate();
+		});
 	}
 	initEvent() {
 		document.getElementById('#switch-btn').addEventListener( 'click', (event) => {
@@ -84,12 +89,12 @@ export class ODC {
 		this.highlightOutlinePass = outlinePass;
 		// 移动事件
 		const mousemoveEvent = new Mousemove({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		mousemoveEvent.addEvent([this.northWorkstation, this.southWorkstation]);
-		globalEvent.addEventListener('addMousemoveObserver', ({ message }) => mousemoveEvent.addEvent(message))
+		mousemoveEvent.addObservers([this.northWorkstation, this.southWorkstation]);
+		globalEvent.addEventListener('addMousemoveObserver', ({ message }) => mousemoveEvent.addObservers(message))
 		// 点击事件
 		const clickEvent = new Click({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		clickEvent.addEvent([this.southWorkstation, this.northWorkstation, ...this.arrows]);
-		globalEvent.addEventListener('addClickObserver', ({ message }) => clickEvent.addEvent(message))
+		clickEvent.addObservers([this.southWorkstation, this.northWorkstation, ...this.arrows]);
+		globalEvent.addEventListener('addClickObserver', ({ message }) => clickEvent.addObservers(message))
 
 	}
 	initHelp() {

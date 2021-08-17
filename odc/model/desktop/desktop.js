@@ -1,12 +1,14 @@
 import * as THREE from '../../../build/three.module.js';
-import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
-import { MTLLoader } from '../../../examples/jsm/loaders/MTLLoader.js';
 import { HWHost } from '../computer-host/hw-host.js'
 import { AppleHost } from '../computer-host/Apple-host.js'
 import { generateTextSprite } from '../../util/generate-text-sprite.js';
-import { getSize, setEqualScale } from '../../util/object3D.js';
+import { getDefinedObject3D, getSize, setEqualScale } from '../../util/object3D.js';
+import { Monitor } from "../monitor/monitor.js";
 
 export class Desktop extends THREE.Group{
+
+	static clazzName = 'desktop';
+
 	constructor(name, seatInfo) {
 		super();
 		this.monitors = [];
@@ -15,56 +17,51 @@ export class Desktop extends THREE.Group{
 		this.pcTip = null;
 		this.macMini = null;
 		this.macMiniTip = null;
-		this.loadPromise = this.createMonitor(name, seatInfo).then(({ monitors, monitorTips }) => {
-			this.monitors.push(...monitors);
-			this.monitorTips.push(...monitorTips);
-			const { macMini, macMiniTip } = this.createMacMini(name, seatInfo);
-			const { pc, pcTip } = this.createPC(name, seatInfo);
-			this.pc = pc;
-			this.pcTip = pcTip;
-			this.macMini = macMini;
-			this.macMiniTip = macMiniTip;
-			this.add(this.pc);
-			this.add(this.pcTip);
-			this.add(this.macMini);
-			this.add(this.macMiniTip);
-			this.monitors.forEach((monitor) => this.add(monitor));
-			this.monitorTips.forEach((monitorTip) => this.add(monitorTip));
-		});
+		// 稳定性标识用于识别 当前 Group
+		this.userData.clazzName = Desktop.clazzName;
+		const { monitors, monitorTips } = this.createMonitor(name, seatInfo);
+		this.monitors.push(...monitors);
+		this.monitorTips.push(...monitorTips);
+		const { macMini, macMiniTip } = this.createMacMini(name, seatInfo);
+		const { pc, pcTip } = this.createPC(name, seatInfo);
+		this.pc = pc;
+		this.pcTip = pcTip;
+		this.macMini = macMini;
+		this.macMiniTip = macMiniTip;
+		this.add(this.pc);
+		this.add(this.pcTip);
+		this.add(this.macMini);
+		this.add(this.macMiniTip);
+		this.monitors.forEach((monitor) => this.add(monitor));
+		this.monitorTips.forEach((monitorTip) => this.add(monitorTip));
 	}
 	createMonitor(name, seatInfo) {
 		this.loaded = false;
 		const monitors = [];
 		const monitorTips = [];
-		// TODO 修改为依赖注入的模式
-		return new Promise((resolve) => {
-			new MTLLoader().load('./odc/model/monitor/monitor.mtl', (materials) => {
-				const objLoader = new OBJLoader();
-				objLoader.setMaterials(materials);
-				objLoader.load('./odc/model/monitor/monitor.obj', (obj) => {
-					this.moitorSize = getSize(obj);
-					if (!Array.isArray(seatInfo.monitor)) return resolve({ monitors: [], monitorTips: [] });
-					for (let i = 0; i < seatInfo.monitor.length; i++) {
-						const monitorObj = obj.clone();
-						monitorObj.rotation.y = - Math.PI
-						monitorObj.position.z = (i * 40);
-						monitorObj.name = `${name}_monitor_${i}`;
-						monitorObj.userData.highlight = true;
-						monitorObj.userData.type = `monitor.${i}`;
-						monitorObj.userData.data = seatInfo;
-						monitorObj.userData.materials = monitorObj.getObjectByName('Screen').material;
-						const monitorTip = this.createTextSprite(seatInfo.monitor[i]);
-						const { y, z } = getSize(monitorObj);
-						monitorTip.position.y = y + 3;
-						monitorTip.position.z = monitorObj.position.z + z/2;
-						monitorTip.material.visible =false;
-						monitors.push(monitorObj);
-						monitorTips.push(monitorTip);
-					}
-					return resolve({ monitors, monitorTips })
-				})
-			});
-		})
+		const theMonitorObj = new Monitor();
+		this.moitorSize = getSize(theMonitorObj);
+		if (!Array.isArray(seatInfo.monitor)) return { monitors: [], monitorTips: [] };
+		for (let i = 0; i < seatInfo.monitor.length; i++) {
+			const monitorObj = theMonitorObj.clone();
+			monitorObj.rotation.y = - Math.PI
+			monitorObj.position.z = (i * 40);
+			monitorObj.name = `${name}_monitor_${i}`;
+			monitorObj.userData.highlight = true;
+			monitorObj.userData.type = `monitor.${i}`;
+			monitorObj.userData.data = seatInfo;
+			// TODO [Monitor] 抽象 clazz
+			monitorObj.userData.clazzName = 'monitor';
+			monitorObj.userData.materials = monitorObj.getObjectByName('Screen').material;
+			const monitorTip = this.createTextSprite(seatInfo.monitor[i]);
+			const { y, z } = getSize(monitorObj);
+			monitorTip.position.y = y + 3;
+			monitorTip.position.z = monitorObj.position.z + z/2;
+			monitorTip.material.visible =false;
+			monitors.push(monitorObj);
+			monitorTips.push(monitorTip);
+		}
+		return { monitors, monitorTips };
 	}
 	createPC(name, info) {
 		const hwHost = new HWHost();
@@ -137,5 +134,35 @@ export class Desktop extends THREE.Group{
 		this.monitorTips.forEach((object3D) => {
 			object3D.material.visible = false;
 		})
+	}
+	/**
+	 * 激活
+	 * @param activeMesh
+	 * @returns {Promise<void>}
+	 */
+	async active(activeMesh) {
+		const member = getDefinedObject3D(activeMesh);
+		const clazzName = member.userData.clazzName;
+		if (clazzName === Monitor.clazzName) {
+			// 有两个屏幕不好定位
+			member.active();
+		}
+		if (clazzName === AppleHost.clazzName) {
+			this.macMini.active();
+		}
+		if (clazzName === HWHost.clazzName) {
+			this.pc.active();
+		}
+	}
+
+	/**
+	 * 沉默接触所有的激活效果
+	 */
+	silence() {
+		this.pc.silence();
+		this.macMini.silence();
+		this.monitors.forEach((monitor) => {
+			monitor.silence();
+		});
 	}
 }

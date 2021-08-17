@@ -1,32 +1,34 @@
 import * as THREE from '../../../build/three.module.js';
 
-export class Host {
+export class Host extends THREE.Group{
 	constructor() {
-		this.group = new THREE.Group();
+		super();
 		this.baseHeight = 18;
 		this.baseDepth = 6;
 		this.baseWidth = 18;
-		this.host = new THREE.Mesh(this.initGeometry(), this.initMaterial());
-		// this.calculatePosition({x, z});
-		this.renderLog()
-		this.group.add(this.host)
+		this.host = this.createHost();
+		this.hostmMaterial = this.host.material;
+		this.add(this.host)
 		return this.group;
-
 	}
 
-	initMaterial() {
-		return new THREE.MeshLambertMaterial( { color: '#282c34',} );
-	}
-
-	initGeometry() {
+	createHostGeometry() {
 		return new THREE.BoxGeometry(this.baseWidth, this.baseHeight, this.baseDepth);
 	}
 
-	calculatePosition({x, z}) {
-		this.host.position.y = this.baseHeight / 2;
-		this.host.position.x = x;
-		this.host.position.z = z;
+	createHostMaterial() {
+		return new THREE.MeshLambertMaterial( { color: '#282c34',} );
 	}
 
-	renderLog() {}
+	createHost() {
+		return new THREE.Mesh(this.createHostGeometry(), this.createHostMaterial());
+	}
+
+	active() {
+		this.host.material = new THREE.MeshPhongMaterial( { color: 0x409EFF});
+	}
+
+	silence() {
+		this.host.material = this.hostmMaterial;
+	}
 }
