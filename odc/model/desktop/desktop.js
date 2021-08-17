@@ -49,6 +49,7 @@ export class Desktop extends THREE.Group{
 			monitorObj.name = `${name}_monitor_${i}`;
 			monitorObj.userData.highlight = true;
 			monitorObj.userData.type = `monitor.${i}`;
+			monitorObj.userData.index = i;
 			monitorObj.userData.data = seatInfo;
 			const monitorTip = this.createTextSprite(seatInfo.monitor[i]);
 			const { y, z } = getSize(monitorObj);
@@ -127,6 +128,8 @@ export class Desktop extends THREE.Group{
 		if (clazzName === Monitor.clazzName) {
 			// 有两个屏幕不好定位
 			member.active();
+			const index = member.userData.index;
+			this.monitorTips[index].material.visible = true;
 		}
 		if (clazzName === AppleHost.clazzName) {
 			this.macMiniTip.material.visible = true;
