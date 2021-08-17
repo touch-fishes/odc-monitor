@@ -4,8 +4,8 @@ const sideSpacing = 1200;
  * 北部工位区域
  * */
 export const northWorkstationArea = {
-	begin: [sideSpacing, 8400],
-	end: [8400, 48000],
+	begin: [0, 8400],
+	end: [8400-sideSpacing, 48000],
 }
 
 /**
