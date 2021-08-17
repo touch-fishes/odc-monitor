@@ -60,6 +60,10 @@ export class StationInfo {
 			<div>
 		`;
 		document.getElementById(this.domId).innerHTML = dom;
+		document.getElementById(this.domId).style.display = 'block';
+	}
+	hide() {
+		document.getElementById(this.domId).style.display = 'none';
 	}
 	initStyle() {
 		this.styleId = 'seatInfoStyle';

@@ -15,17 +15,21 @@ import { Robot } from './model/robot-expressive/robot.js'
 import { TWEEN } from '../examples/jsm/libs/tween.module.min.js';
 import { KeyPoint } from './model/key-point/key-point.js'
 import { arrowPositions } from './data/arrow.js';
-import { animateOrbitCamera } from "./util/camera.js";
-import { Mousemove } from "./event/mousemove.js";
-import { Click } from "./event/click.js";
+import { animateOrbitCamera } from './util/camera.js';
+import { Mousemove } from './event/mousemove.js';
+import { Click } from './event/click.js';
 import { globalEvent } from './event.js';
-import { Monitor } from "./model/monitor/monitor.js";
+import { Monitor } from './model/monitor/monitor.js';
+import { AppleHost } from './model/computer-host/apple-host.js';
+import { Seat } from './model/seat/seat.js';
 
 export class ODC {
 	constructor() {
 		// TODO 优化提取 处理依赖
 		Promise.all([
-			Monitor.loadResource()
+			Monitor.loadResource(),
+			// AppleHost.loadResource(),
+			Seat.loadResource(),
 		]).then(() => {
 			this.odcGroup = new THREE.Group();
 
@@ -40,6 +44,8 @@ export class ODC {
 			this.initHelp()
 
 			this.initLight();
+
+			this.initEvent();
 
 			// 渲染墙体结构
 			this.renderWall();
@@ -65,8 +71,6 @@ export class ODC {
 
 			this.locationODC();
 
-			this.initEvent();
-
 			this.animate();
 		});
 	}
@@ -89,11 +93,9 @@ export class ODC {
 		this.highlightOutlinePass = outlinePass;
 		// 移动事件
 		const mousemoveEvent = new Mousemove({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		mousemoveEvent.addObservers([this.northWorkstation, this.southWorkstation]);
 		globalEvent.addEventListener('addMousemoveObserver', ({ message }) => mousemoveEvent.addObservers(message))
 		// 点击事件
 		const clickEvent = new Click({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		clickEvent.addObservers([this.southWorkstation, this.northWorkstation, ...this.arrows]);
 		globalEvent.addEventListener('addClickObserver', ({ message }) => clickEvent.addObservers(message))
 
 	}
@@ -175,9 +177,11 @@ export class ODC {
 		if (type === 'north') {
 			this.northWorkstation = theWorkstation;
 			this.odcGroup.add(this.northWorkstation);
+			globalEvent.dispatchEvent({ type: 'addClickObserver', message: [this.northWorkstation]});
 		} else if (type === 'south') {
 			this.southWorkstation = theWorkstation;
 			this.odcGroup.add(this.southWorkstation);
+			globalEvent.dispatchEvent({ type: 'addClickObserver', message: [this.southWorkstation]});
 		}
 	}
 
@@ -225,6 +229,7 @@ export class ODC {
 			this.arrows.push(arrow);
 		})
 		this.arrows.forEach((arrow) => this.odcGroup.add(arrow));
+		globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.arrows});
 	}
 
 	locationODC() {

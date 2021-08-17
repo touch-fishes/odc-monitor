@@ -7,6 +7,23 @@ export class AppleHost extends Host{
 
 	static clazzName = 'AppleHost';
 
+	static resource = {
+		logoObject3D: null
+	};
+
+	static loadResource() {
+		return new Promise((resolve) => {
+			new MTLLoader().load('./odc/model/computer-host/apple-logo/apple-logo.mtl', (materials) => {
+				const objLoader = new OBJLoader();
+				objLoader.setMaterials(materials);
+				objLoader.load('./odc/model/computer-host/apple-logo/apple-logo.obj', (obj) => {
+					AppleHost.resource.logoObject3D = obj;
+					resolve({ logoObject3D: obj });
+				})
+			})
+		});
+	}
+
 	constructor() {
 		super();
 		this.userData.clazzName = AppleHost.clazzName;
@@ -36,5 +53,12 @@ export class AppleHost extends Host{
 				})
 			})
 		});
+		// const obj = AppleHost.resource.logoObject3D.clone();
+		// obj.position.x = this.host.position.x - (this.baseWidth/2);
+		// obj.position.z = this.host.position.z;
+		// obj.position.y = this.baseHeight / 8;
+		// obj.rotation.y = - Math.PI/2;
+		// obj.scale.set(0.04,0.04,0.04);
+		// return obj;
 	}
 }

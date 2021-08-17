@@ -6,33 +6,44 @@ import { getSize} from '../../util/object3D.js';
 import { globalEvent } from '../../event.js';
 
 export class Seat extends THREE.Group {
-	constructor({ tableObject3D }, seatInfo) {
+
+	static clazzName = 'seat';
+
+	static resource = {
+		tableObject3D: null
+	}
+
+	static loadResource() {
+		return new Promise((resolve) => {
+			const objLoader = new OBJLoader();
+			objLoader.load('./odc/model/seat/table.obj', (obj) => {
+				Seat.resource.tableObject3D = obj;
+				console.log('Seat loadResource')
+				resolve({ tableObject3D: obj });
+			})
+		})
+	}
+
+	constructor(seatInfo) {
 		const theSeatInfo = seatInfo || {};
 		super();
 		this.table = null;
 		this.keyPoint = null;
 		this.desktop = null;
 		// 桌子为外部模型
-		this.table = this.createTable(tableObject3D);
+		this.table = this.createTable();
 		this.keyPoint = this.createKeyPoint();
 		this.desktop = this.createDeskTop(theSeatInfo);
 		this.add(this.table);
 		this.add(this.keyPoint);
 		this.add(this.desktop);
-		// 延时加载观测点 注视方向
+		// TODO 延时加载观测点 注视方向
 		new Promise((resolve => resolve(true))).then(() => {
 			this.locationKeyPoint();
 		})
 
 	}
-	static loadResource() {
-		return new Promise((resolve) => {
-			const objLoader = new OBJLoader();
-			objLoader.load('./odc/model/seat/table.obj', (obj) => {
-				resolve({ tableObject3D: obj });
-			})
-		})
-	}
+
 	locationKeyPoint() {
 		const { y: heightY } = this.getWorldPosition(new THREE.Vector3());
 		const { x: lookX } = this.desktop.getWorldPosition(new THREE.Vector3());
@@ -59,8 +70,8 @@ export class Seat extends THREE.Group {
 		desktop.position.z = this.table.position.z - tableZ/4;
 		return desktop;
 	}
-	createTable(tableObject3D) {
-		const table = tableObject3D.clone();
+	createTable() {
+		const table = Seat.resource.tableObject3D.clone();
 		// 单张桌子长度
 		const { x, z } = getSize(table);
 		// 能放桌子的区域 比 目前桌子长

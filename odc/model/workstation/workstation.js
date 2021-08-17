@@ -11,12 +11,8 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		super();
 		// 初始化信息面板
 		this.seatInfoPlan = new StationInfo();
-		// TODO 修改为依赖注入的模式
-		Seat.loadResource().then((seatResource) => {
-			this.seatResource = seatResource;
-			const workstation = this.createWorkstation({xLength, zLength}, seats);
-			this.add(workstation);
-		});
+		const workstation = this.createWorkstation({xLength, zLength}, seats);
+		this.add(workstation);
 	}
 
 	createWorkstation({xLength, zLength}, seats) {
@@ -43,15 +39,15 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		const seatsLength = rowSeats.length;
 		// 背靠背两排的个数
 		const itemNumber = seatsLength / 2;
-		const tempSeat = new Seat(this.seatResource);
+		const tempSeat = new Seat();
 		const { x, z } = getSize(tempSeat.table);
 
 		// 循环排列工位
 		for (let i = 0; i < itemNumber; i ++) {
 			// 创建一个 工位
-			const eastSeat = new Seat(this.seatResource, rowSeats[i]);
+			const eastSeat = new Seat(rowSeats[i]);
 			// 获取宽高信息计算排列
-			const westSeat = new Seat(this.seatResource, rowSeats[seatsLength - i - 1]);
+			const westSeat = new Seat(rowSeats[seatsLength - i - 1]);
 			const offset = (z * i);
 			westSeat.position.z = offset;
 			westSeat.position.x = 0;
@@ -83,14 +79,14 @@ export class Workstation extends mixCLickObserver(mixMousemoveObserver(THREE.Gro
 		if (this.activeDesktop) {
 			this.activeDesktop.silence();
 			this.activeDesktop = null;
+			this.seatInfoPlan.hide();
 		}
 	}
 
 	onClick({highlightOutlinePass}, activeMesh) {
 		// 是不是可以进行高亮操作
 		const definedObject3D = getDefinedObject3D(activeMesh);
-		const isHighlightMesh = definedObject3D.userData.highlight;
-		if (isHighlightMesh) {
+		if (definedObject3D && definedObject3D.userData.highlight) {
 			// 高亮当前的设备
 			const desktop = getDefinedObject3DByName(activeMesh, Desktop.clazzName);
 			if (desktop) {
