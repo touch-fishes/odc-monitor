@@ -23,6 +23,7 @@ export class Sofa {
 
 	initNorthSofa(begin, end) {
 		const objLoader = new OBJLoader();
+		//TODO 修改为全局
 		objLoader.load('./odc/model/sofa/couch.obj', (obj) => {
 			const scale = 50;
 			obj.scale.set(116, scale, scale);

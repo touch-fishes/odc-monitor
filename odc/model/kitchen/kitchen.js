@@ -11,6 +11,7 @@ export class Kitchen {
 
     initKitchen() {
         const objLoader = new OBJLoader();
+        // TODO 修改为全局
         objLoader.load('./odc/model/kitchen/kitchen.obj', (obj) => {
             const scale = 0.8;
             obj.scale.set(scale, scale, scale);

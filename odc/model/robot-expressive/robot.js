@@ -12,6 +12,7 @@ export class Robot {
 
     initRobot() {
         const loader = new GLTFLoader();
+        // TODO 修改为全局
         loader.load( './odc/model/robot-expressive/robot-expressive.glb',  ( gltf ) => {
 			const scale = 12;
 			gltf.scene.scale.set(scale, scale, scale);
