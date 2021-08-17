@@ -7,7 +7,7 @@ import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
 import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation, robotStation } from './data/buildings-data.js';
-import { southWorkstationArea, southWorkstation } from './data/workstations-data.js'
+import {southWorkstationArea, southWorkstation, northWorkstationArea, northWorkstation} from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
 import { Robot } from './model/robot-expressive/robot.js'
@@ -43,7 +43,8 @@ export class ODC {
 		this.renderFloor();
 
 		// 渲染 ODC 工位
-		this.renderStation();
+		this.renderStation(southWorkstationArea, southWorkstation, 'south');
+		this.renderStation(northWorkstationArea, northWorkstation, 'north');
 
 		// 渲染厨房
 		this.renderKitchen();
@@ -80,11 +81,11 @@ export class ODC {
 		this.highlightOutlinePass = outlinePass;
 		// 移动事件
 		const mousemoveEvent = new Mousemove({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		mousemoveEvent.addEvent([this.southWorkstation]);
+		mousemoveEvent.addEvent([this.northWorkstation, this.southWorkstation]);
 		globalEvent.addEventListener('addMousemoveObserver', ({ message }) => mousemoveEvent.addEvent(message))
 		// 点击事件
 		const clickEvent = new Click({ camera: this.camera, highlightOutlinePass: this.highlightOutlinePass, controls: this.controls });
-		clickEvent.addEvent([this.southWorkstation, ...this.arrows]);
+		clickEvent.addEvent([this.southWorkstation, this.northWorkstation, ...this.arrows]);
 		globalEvent.addEventListener('addClickObserver', ({ message }) => clickEvent.addEvent(message))
 
 	}
@@ -152,19 +153,24 @@ export class ODC {
 		});
 	}
 	// TODO
-	renderStation() {
-		const {begin, end} = southWorkstationArea;
+	renderStation(workStationArea, workStation, type) {
+		const {begin, end} = workStationArea;
 		const { x, z } = this.getCenterOfModelArea(begin, end);
 		const [beginX, beginY] = begin.map(this.scale);
 		const [endX, endY] = end.map(this.scale);
-		const theSouthWorkstation = new Workstation(
+		const theWorkstation = new Workstation(
 			{},
 			{ xLength: (endY - beginY), zLength: (endX- beginX) },
-			southWorkstation);
-		theSouthWorkstation.position.x = x;
-		theSouthWorkstation.position.z = z;
-		this.southWorkstation = theSouthWorkstation;
-		this.odcGroup.add(this.southWorkstation);
+			workStation);
+		theWorkstation.position.x = x;
+		theWorkstation.position.z = z;
+		if (type === 'north') {
+			this.northWorkstation = theWorkstation;
+			this.odcGroup.add(this.northWorkstation);
+		} else if (type === 'south') {
+			this.southWorkstation = theWorkstation;
+			this.odcGroup.add(this.southWorkstation);
+		}
 	}
 
 	renderKitchen() {
