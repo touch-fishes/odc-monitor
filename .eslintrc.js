@@ -14,6 +14,7 @@ module.exports = {
     rules: {
         'unicorn/numeric-separators-style': 'off',
         'unicorn/no-array-for-each': 'off',
+        'import/named': 'off',
     },
     globals: {
         JSX: true,
