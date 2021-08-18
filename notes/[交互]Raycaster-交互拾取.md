@@ -76,7 +76,7 @@ if (intersects.length > 0) {
 
 在每一"瞬间"都执行高亮方法
 ```js
-class ODC {
+class Odc {
     animate() {
         if (this.southWorkstation) {
             this.southWorkstation.renderActiveStation(this.camera);
