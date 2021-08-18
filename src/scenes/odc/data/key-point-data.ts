@@ -1,4 +1,4 @@
-export const arrowPositions = [
+export const keyPointPositions = [
     {
 		begin: [-3500, 0],
 		end: [25200, -3500],

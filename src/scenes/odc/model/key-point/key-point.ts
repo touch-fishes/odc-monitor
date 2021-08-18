@@ -10,15 +10,15 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
     public static clazzName = 'keyPoint';
 
     private looAtPosition: THREE.Vector3;
-    private readonly arrow: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
+    private readonly keyPoint: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
 
     public constructor(size: number) {
         super();
         this.looAtPosition = new THREE.Vector3(0, 0, 0);
-        this.arrow = new THREE.Mesh(this.createGeometry(size), this.createMaterial());
-        this.arrow.userData.type = 'keypoint';
+        this.keyPoint = new THREE.Mesh(this.createGeometry(size), this.createMaterial());
+        this.keyPoint.userData.type = 'keypoint';
         this.userData.clazzName = KeyPoint.clazzName;
-        this.add(this.arrow);
+        this.add(this.keyPoint);
     }
 
     public beforeClick() {}
@@ -50,7 +50,7 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
 
     private createMaterial() {
         const loader = new THREE.TextureLoader();
-        const texture = loader.load('/texture/arrow.png');
+        const texture = loader.load('/texture/key-point.png');
         return new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,

@@ -29,7 +29,7 @@ import {
     southWorkstationArea,
 } from './data/workstations-data';
 import { createHighlightElement } from './util/highlight';
-import { arrowPositions } from './data/arrow';
+import { keyPointPositions } from './data/key-point-data';
 
 import { ModelLine, ModelPointer } from '@/scenes/types';
 
@@ -54,7 +54,7 @@ export class ODC {
     private stats: Stats;
     private readonly northWorkstation: Workstation;
     private readonly southWorkstation: Workstation;
-    private readonly arrows: any[];
+    private readonly keyPoints: any[];
 
     public constructor() {
         this.odcGroup = new THREE.Group();
@@ -121,8 +121,8 @@ export class ODC {
 
         // this.renderNorthSofa();
 
-        this.arrows = this.renderArrow();
-        globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.arrows });
+        this.keyPoints = this.renderKeyPoints();
+        globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.keyPoints });
 
         this.scene.add(this.odcGroup);
 
@@ -302,16 +302,16 @@ export class ODC {
         );
     }
 
-    private renderArrow() {
-        return arrowPositions.map((item) => {
+    private renderKeyPoints() {
+        return keyPointPositions.map((item) => {
             const { begin, end } = item;
             const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const arrow = new KeyPoint(20);
-            arrow.position.z = z;
-            arrow.position.y = this.scale(WALL_HEIGHT);
-            arrow.position.x = x;
-            arrow.userData.isNeedLiftCamera = item.type === 'hight';
-            return arrow;
+            const keyPoint = new KeyPoint(20);
+            keyPoint.position.z = z;
+            keyPoint.position.y = this.scale(WALL_HEIGHT);
+            keyPoint.position.x = x;
+            keyPoint.userData.isNeedLiftCamera = item.type === 'hight';
+            return keyPoint;
         });
     }
 
