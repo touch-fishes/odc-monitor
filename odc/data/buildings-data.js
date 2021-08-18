@@ -164,3 +164,9 @@ export const northSofaStation = {
 	begin: [8400, 12600],
 	end: [14400, 16800]
 }
+
+// 北区桌子参数
+export const coffeeTableStation = {
+	begin: [8400, 20400],
+	end: [14400, 25200],
+};

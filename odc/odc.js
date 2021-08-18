@@ -6,7 +6,16 @@ import { GlassWall } from './model/wall/glass-wall.js';
 import { InnerWall } from './model/wall/inner-wall.js';
 import { ExternalWall } from './model/wall/external-wall.js';
 import { Workstation } from './model/workstation/workstation.js';
-import { WALL_HEIGHT,WALL_THICKNESS, walls, floor, kitchenStation, robotStation, northSofaStation } from './data/buildings-data.js';
+import {
+	WALL_HEIGHT,
+	WALL_THICKNESS,
+	walls,
+	floor,
+	kitchenStation,
+	robotStation,
+	northSofaStation,
+	coffeeTableStation
+} from './data/buildings-data.js';
 import {southWorkstationArea, southWorkstation, northWorkstationArea, northWorkstation} from './data/workstations-data.js'
 import { createHighlightElement } from './util/highlight.js';
 import { Kitchen } from './model/kitchen/kitchen.js';
@@ -22,15 +31,19 @@ import { globalEvent } from './event.js';
 import { Monitor } from './model/monitor/monitor.js';
 // import { AppleHost } from './model/computer-host/apple-host.js';
 import { Seat } from './model/seat/seat.js';
+import { CoffeeTable } from "./model/coffee-table/coffee-table.js";
 
 export class ODC {
 	constructor() {
 		// TODO 优化提取 处理依赖
 		Promise.all([
+			CoffeeTable.loadCoffeeTableResource(),
+			Sofa.loadNorthSofaResource(northSofaStation),
+			Kitchen.loadKitchenResource(),
 			Monitor.loadResource(),
 			// AppleHost.loadResource(),
 			Seat.loadResource(),
-		]).then(() => {
+		]).then(([coffeeTable, sofa, kitchenObj]) => {
 			this.odcGroup = new THREE.Group();
 
 			this.renderer = this.initRender();
@@ -58,12 +71,14 @@ export class ODC {
 			this.renderStation(northWorkstationArea, northWorkstation, 'north');
 
 			// 渲染厨房
-			this.renderKitchen();
+			this.renderKitchen(kitchenObj);
 
 			// 渲染可爱的机器人
 			// this.renderRobot();
 
-			this.renderNorthSofa();
+			this.renderNorthSofa(sofa);
+
+			this.renderCoffeeTable(coffeeTable);
 
 			this.renderArrow();
 
@@ -185,20 +200,25 @@ export class ODC {
 		}
 	}
 
-	renderKitchen() {
+	renderKitchen(kitchenObj) {
 		const {begin, end} = kitchenStation;
 		const { x, z } = this.getCenterOfModelArea(begin, end);
-		const kitchen = new Kitchen();
+		const kitchen = new Kitchen(kitchenObj);
 		kitchen.position.z = z;
 		kitchen.position.x = x;
 		this.odcGroup.add(kitchen)
 	}
 
-	renderNorthSofa() {
+	renderNorthSofa(sofa) {
 		const {begin, end} = northSofaStation;
 		const { x, z } = this.getCenterOfModelArea(begin, end);
-		const sofa = new Sofa(begin, end, {x, z});
-		this.odcGroup.add(sofa)
+		this.odcGroup.add(new Sofa(sofa, begin, end, {x, z}))
+	}
+
+	renderCoffeeTable(coffeeTable) {
+		const {begin, end} = coffeeTableStation;
+		const { x, z } = this.getCenterOfModelArea(begin, end);
+		this.odcGroup.add(new CoffeeTable(coffeeTable, {x, z}))
 	}
 
 	// todo

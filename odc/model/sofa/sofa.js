@@ -6,34 +6,34 @@ import { OBJLoader } from '../../../examples/jsm/loaders/OBJLoader.js';
 /**
  * 北区沙发
  */
-export class Sofa {
+export class Sofa extends THREE.Group{
 	/**
 	 *
 	 * @param begin
 	 * @param end
 	 * @returns {Mesh}
 	 */
-	constructor(begin, end, {x, z}) {
-		this.group = new THREE.Group();
-		this.initNorthSofa(begin, end, {x, z});
-		this.group.position.z = z;
-		this.group.position.x = x;
-		return this.group;
+	constructor({sofaObject3D}, begin, end, {x, z}) {
+		super()
+		this.position.z = z;
+		this.position.x = x;
+		this.add(sofaObject3D);
 	}
 
-	initNorthSofa(begin, end) {
-		const objLoader = new OBJLoader();
-		//TODO 修改为全局
-		objLoader.load('./odc/model/sofa/couch.obj', (obj) => {
-			const scale = 50;
-			obj.scale.set(116, scale, scale);
-			obj.rotation.x = -Math.PI / 2;
-			const [beginX, beginY] = begin;
-			const [endX, endY] = end;
-			obj.rotation.z = Math.atan2(endY - beginY, endX - beginX) + Math.PI / 2;
-			obj.translateY(-15)
-			obj.children[0].material.color.set(0x4682B4);
-			this.group.add(obj)
-		});
+	static loadNorthSofaResource({begin, end}) {
+		return new Promise((resolve) => {
+			const objLoader = new OBJLoader();
+			objLoader.load('./odc/model/sofa/couch.obj', (obj) => {
+				const scale = 50;
+				obj.scale.set(116, scale, scale);
+				obj.rotation.x = -Math.PI / 2;
+				const [beginX, beginY] = begin;
+				const [endX, endY] = end;
+				obj.rotation.z = Math.atan2(endY - beginY, endX - beginX) + Math.PI / 2;
+				obj.translateY(-15)
+				obj.children[0].material.color.set(0x4682B4);
+				resolve({ sofaObject3D: obj });
+			});
+		})
 	}
 }
