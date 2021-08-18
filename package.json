@@ -30,7 +30,6 @@
         "typescript": "^4.3.5",
         "vue": "^3.0.0"
     },
-    "gitHooks": {},
     "lint-staged": {
         "*.{js,jsx,vue,ts,tsx}": [
             "yarn lint",

@@ -107,7 +107,7 @@ export class ODC {
             northWorkstation,
             SeatAreaType.north,
         );
-        this.odcGroup.add(this.northWorkstation);
+        this.odcGroup.add(this.southWorkstation);
         globalEvent.dispatchEvent({
             type: 'addClickObserver',
             message: [this.southWorkstation],
@@ -178,7 +178,7 @@ export class ODC {
         const ambientLight = new THREE.AmbientLight(0x606060);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
         directionalLight.position.set(1, 0.75, 0.5).normalize();
         this.scene.add(directionalLight);
     }
@@ -227,9 +227,9 @@ export class ODC {
             const wall =
                 type === 'external'
                     ? new ExternalWall(beginPointer, endPointer, height, thickness)
-                    : type === 'glass'
+                    : (type === 'glass'
                     ? new GlassWall(beginPointer, endPointer, height, thickness)
-                    : new InnerWall(beginPointer, endPointer, height, thickness);
+                    : new InnerWall(beginPointer, endPointer, height, thickness));
             this.odcGroup.add(wall);
         });
     }
