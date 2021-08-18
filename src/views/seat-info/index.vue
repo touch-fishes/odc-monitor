@@ -1,5 +1,5 @@
 <template>
-    <o-panel title="工位信息"></o-panel>
+    <o-panel class="seat-info" title="工位信息"></o-panel>
 </template>
 
 <script lang="ts">
@@ -12,3 +12,9 @@ export default defineComponent({
     setup() {},
 });
 </script>
+<style scoped lang="scss">
+.seat-info {
+    right: 0;
+    top: 66px;
+}
+</style>

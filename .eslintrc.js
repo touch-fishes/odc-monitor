@@ -14,6 +14,7 @@ module.exports = {
     rules: {
         'unicorn/numeric-separators-style': 'off',
         'unicorn/no-array-for-each': 'off',
+        'vue/no-multiple-template-root': 'off',
         'import/named': 'off',
     },
     globals: {

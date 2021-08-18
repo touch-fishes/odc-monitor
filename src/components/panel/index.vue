@@ -1,5 +1,5 @@
 <template>
-    <el-card class="card-define">
+    <el-card class="card-define" shadow="hover">
         <template #header>
             <div class="card-header">
                 <span>{{ theTitle }}</span>
@@ -29,8 +29,9 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .card-define {
+    position: absolute;
     width: 200px;
 }
 </style>
