@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 
 import App from './app.vue';
 
+import 'element-theme-dark';
 import '@/element-theme/index.scss';
 import '@/main.css';
 

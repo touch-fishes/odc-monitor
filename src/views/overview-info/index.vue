@@ -1,20 +1,89 @@
 <template>
-    <o-panel class="seat-info" title="ODC 概况"></o-panel>
+    <o-panel class="info-container" title="ODC 概况">
+        <div class="content">
+            <el-progress
+                class="odc-progress"
+                stroke-width="12"
+                type="circle"
+                :percentage="usageRate"
+            >
+                <template #default="{ percentage }">
+                    <span class="percentage-value">{{ percentage }}%</span>
+                    <span class="percentage-label">工位使用率</span>
+                </template>
+            </el-progress>
+            <div class="progress-info">
+                <p class="progress-info-item">
+                    <span class="label">使用中工位</span
+                    ><span class="value-use">{{ useSeat }}</span>
+                </p>
+                <p class="progress-info-item">
+                    <span class="label">未使用中工位</span
+                    ><span class="value-no-use">{{ totalSeat - useSeat }}</span>
+                </p>
+            </div>
+        </div>
+    </o-panel>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { ElProgress, ElDivider } from 'element-plus';
 
 import OPanel from '@/components/panel/index.vue';
+import { odcInfo } from '@/data/workstations-data';
 
 export default defineComponent({
-    components: { OPanel },
-    setup() {},
+    components: { OPanel, ElProgress, ElDivider },
+    setup() {
+        return {
+            useSeat: odcInfo.useSeat,
+            totalSeat: odcInfo.totalSeat,
+            usageRate: Math.ceil((odcInfo.useSeat / odcInfo.totalSeat) * 100),
+        };
+    },
 });
 </script>
 <style scoped lang="scss">
-.seat-info {
+.info-container {
     left: 0;
     top: 66px;
+    .content {
+        text-align: center;
+        .odc-progress {
+            .percentage-value {
+                display: block;
+                font-size: 28px;
+            }
+            .percentage-label {
+                display: block;
+                margin-top: 10px;
+                font-size: 12px;
+                color: #a1a1a6;
+            }
+        }
+        .progress-info {
+            .progress-info-item {
+                margin: 5px 0;
+                text-align: left;
+                overflow: auto;
+                .label {
+                    margin-right: 20px;
+                }
+                .value-use {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #409eff;
+                    float: right;
+                }
+                .value-no-use {
+                    font-size: 16px;
+                    font-weight: 600;
+                    float: right;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
 }
 </style>

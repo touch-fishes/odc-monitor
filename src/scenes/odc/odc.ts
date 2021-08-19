@@ -205,7 +205,7 @@ export class ODC {
         axesHelper.position.set(0, 100, 0);
         this.scene.add(axesHelper);
         document.body.append(this.stats.dom);
-        this.scene.add(new THREE.GridHelper(2000, 50));
+        // this.scene.add(new THREE.GridHelper(2000, 50));
     }
     private initLight() {
         const ambientLight = new THREE.AmbientLight(0x606060);

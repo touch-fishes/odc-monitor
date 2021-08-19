@@ -5,9 +5,7 @@
                 <span>{{ theTitle }}</span>
             </div>
         </template>
-        <div v-for="o in 4" :key="o" class="text item">
-            {{ '列表内容 ' + o }}
-        </div>
+        <slot></slot>
     </el-card>
 </template>
 
@@ -32,6 +30,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .card-define {
     position: absolute;
-    width: 280px;
+    max-width: 280px;
 }
 </style>
