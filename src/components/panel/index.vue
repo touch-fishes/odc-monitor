@@ -32,6 +32,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .card-define {
     position: absolute;
-    width: 200px;
+    width: 280px;
 }
 </style>
