@@ -43,9 +43,5 @@
             "eslint --fix",
             "git add"
         ]
-    },
-    "dependencies": {
-        "-": "^0.0.1",
-        "element-theme-chalk": "^2.15.5"
     }
 }
