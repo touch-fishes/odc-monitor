@@ -19,7 +19,15 @@ import { Monitor } from './model/monitor/monitor';
 // import { Sofa } from './model/sofa/sofa';
 // import { Robot } from './model/robot-expressive/robot';
 import { KeyPoint } from './model/key-point/key-point';
-import { floor, WALL_HEIGHT, WALL_THICKNESS, walls } from './data/buildings-data';
+import {
+  coffeeTableStation,
+  floor,
+  kitchenStation,
+  northSofaStation,
+  WALL_HEIGHT,
+  WALL_THICKNESS,
+  walls
+} from './data/buildings-data';
 import {
     AreaSeats,
     northWorkstation,
@@ -31,12 +39,29 @@ import {
 import { createHighlightElement } from './util/highlight';
 import { keyPointPositions } from './data/key-point-data';
 
-import { ModelLine, ModelPointer } from '@/scenes/types';
+import {ModelLine, ModelPointer} from '@/scenes/types';
+import {CoffeeTable} from "@/scenes/odc/model/coffee-table/coffee-table";
+import {Sofa} from "@/scenes/odc/model/sofa/sofa";
+import {Kitchen} from "@/scenes/odc/model/kitchen/kitchen";
+import {CameraMonitor} from "@/scenes/odc/model/camera-monitor/camera-monitor";
+import {Object3D} from "three";
+import {cameraMonitorPositions} from "@/scenes/odc/data/camera-monitor-data";
+
+interface InitModelObj3D {
+  coffeeTableObj3D: {coffeeTableObj3D: Object3D};
+  sofaObj3D: {sofaObj3D: Object3D};
+  kitchenObj3D: {kitchenObj3D: Object3D}
+  cameraMonitorObj3D: {cameraMonitorObj3D: Object3D}
+}
 
 // import { AppleHost } from './model/computer-host/apple-host';
 
 export const loadODCResource = () => {
     return Promise.all([
+        CoffeeTable.loadCoffeeTableResource(),
+        Sofa.loadNorthSofaResource(northSofaStation),
+        Kitchen.loadKitchenResource(),
+        CameraMonitor.loadCameraMonitorResource(),
         Monitor.loadResource(),
         // AppleHost.loadResource(),
         Seat.loadResource(),
@@ -56,7 +81,7 @@ export class ODC {
     private readonly southWorkstation: Workstation;
     private readonly keyPoints: any[];
 
-    public constructor() {
+    public constructor({coffeeTableObj3D, sofaObj3D, kitchenObj3D, cameraMonitorObj3D}: InitModelObj3D) {
         this.odcGroup = new THREE.Group();
 
         this.renderer = this.initRender();
@@ -114,12 +139,15 @@ export class ODC {
         });
 
         // 渲染厨房
-        // this.renderKitchen();
+        this.renderKitchen(kitchenObj3D);
 
-        // 渲染可爱的机器人
-        // this.renderRobot();
-
-        // this.renderNorthSofa();
+        this.renderNorthSofa(sofaObj3D);
+        //
+        // // 北区茶几
+        this.renderCoffeeTable(coffeeTableObj3D);
+        //
+        // // 渲染区域内监控摄像头
+        this.renderCameraMonitor(cameraMonitorObj3D);
 
         this.keyPoints = this.renderKeyPoints();
         globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.keyPoints });
@@ -266,31 +294,38 @@ export class ODC {
         return theWorkstation;
     }
 
-    // renderKitchen() {
-    //     const { begin, end } = kitchenStation;
-    //     const { x, z } = this.getCenterOfModelArea(begin, end);
-    //     const kitchen = new Kitchen();
-    //     kitchen.position.z = z;
-    //     kitchen.position.x = x;
-    //     this.odcGroup.add(kitchen);
-    // }
+    renderKitchen(kitchenObj3D: {kitchenObj3D: Object3D}) {
+      const {begin, end} = kitchenStation;
+      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+      const kitchen = new Kitchen(kitchenObj3D);
+      kitchen.position.z = z;
+      kitchen.position.x = x;
+      this.odcGroup.add(kitchen)
+    }
 
-    // renderNorthSofa() {
-    //     const { begin, end } = northSofaStation;
-    //     const { x, z } = this.getCenterOfModelArea(begin, end);
-    //     const sofa = new Sofa(begin, end, { x, z });
-    //     this.odcGroup.add(sofa);
-    // }
+    renderNorthSofa(sofaObj3D: {sofaObj3D: Object3D}) {
+      const {begin, end} = northSofaStation;
+      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+      this.odcGroup.add(new Sofa(sofaObj3D, begin, end, {x, z}))
+    }
 
-    // todo
-    // renderRobot() {
-    //     const { begin, end } = robotStation;
-    //     const { x, z } = this.getCenterOfModelArea(begin, end);
-    //     const robot = new Robot();
-    //     robot.position.z = z;
-    //     robot.position.x = x;
-    //     this.odcGroup.add(robot);
-    // }
+    renderCoffeeTable(coffeeTableObj3D: {coffeeTableObj3D: Object3D}) {
+      const {begin, end} = coffeeTableStation;
+      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+      this.odcGroup.add(new CoffeeTable(coffeeTableObj3D, {x, z}))
+    }
+
+    renderCameraMonitor(cameraMonitorObj3D: {cameraMonitorObj3D: Object3D}) {
+      const cameraMonitors: Object3D[] = [];
+      cameraMonitorPositions.forEach(cameraMonitorPosition => {
+        const {begin, end} = cameraMonitorPosition;
+        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+        debugger
+        const obj = new CameraMonitor(cameraMonitorObj3D, {x, y: this.scale(WALL_HEIGHT), z})
+        cameraMonitors.push(obj)
+      })
+      cameraMonitors.forEach((item) => this.odcGroup.add(item));
+    }
 
     // TODO 材质优化
     private renderFloor() {
