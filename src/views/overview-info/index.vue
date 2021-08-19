@@ -28,13 +28,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ElProgress, ElDivider, ElTag } from 'element-plus';
+import { ElProgress } from 'element-plus';
 
 import OPanel from '@/components/panel/index.vue';
 import { odcInfo, bizGroupInfo } from '@/data/workstations-data';
 
 export default defineComponent({
-    components: { OPanel, ElProgress, ElDivider, ElTag },
+    components: { OPanel, ElProgress },
     setup() {
         return {
             groups: bizGroupInfo,

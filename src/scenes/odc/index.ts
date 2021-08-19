@@ -4,6 +4,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
+import { Object3D } from 'three';
 
 import { Mousemove } from './event/mousemove';
 import { Click } from './event/click';
@@ -19,6 +20,8 @@ import { Monitor } from './model/monitor/monitor';
 // import { Sofa } from './model/sofa/sofa';
 // import { Robot } from './model/robot-expressive/robot';
 import { KeyPoint } from './model/key-point/key-point';
+import { createHighlightElement } from './util/highlight';
+
 import {
     coffeeTableStation,
     floor,
@@ -36,15 +39,12 @@ import {
     southWorkstation,
     southWorkstationArea,
 } from '@/data/workstations-data';
-import { createHighlightElement } from './util/highlight';
 import { keyPointPositions } from '@/data/key-point-data';
-
 import { ModelLine, ModelPointer } from '@/scenes/types';
 import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
 import { Sofa } from '@/scenes/odc/model/sofa/sofa';
 import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
 import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
-import { Object3D } from 'three';
 import { cameraMonitorPositions } from '@/data/camera-monitor-data';
 
 interface InitModelObj3D {
@@ -211,7 +211,7 @@ export class ODC {
         const ambientLight = new THREE.AmbientLight(0x606060);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
         directionalLight.position.set(1, 0.75, 0.5).normalize();
         this.scene.add(directionalLight);
     }
@@ -260,9 +260,9 @@ export class ODC {
             const wall =
                 type === 'external'
                     ? new ExternalWall(beginPointer, endPointer, height, thickness)
-                    : type === 'glass'
+                    : (type === 'glass'
                     ? new GlassWall(beginPointer, endPointer, height, thickness)
-                    : new InnerWall(beginPointer, endPointer, height, thickness);
+                    : new InnerWall(beginPointer, endPointer, height, thickness));
             this.odcGroup.add(wall);
         });
     }
@@ -299,7 +299,7 @@ export class ODC {
         return theWorkstation;
     }
 
-    renderKitchen(kitchenObj3D: { kitchenObj3D: Object3D }) {
+    private renderKitchen(kitchenObj3D: { kitchenObj3D: Object3D }) {
         const { begin, end } = kitchenStation;
         const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         const kitchen = new Kitchen(kitchenObj3D);
@@ -308,19 +308,19 @@ export class ODC {
         this.odcGroup.add(kitchen);
     }
 
-    renderNorthSofa(sofaObj3D: { sofaObj3D: Object3D }) {
+    private renderNorthSofa(sofaObj3D: { sofaObj3D: Object3D }) {
         const { begin, end } = northSofaStation;
         const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         this.odcGroup.add(new Sofa(sofaObj3D, begin, end, { x, z }));
     }
 
-    renderCoffeeTable(coffeeTableObj3D: { coffeeTableObj3D: Object3D }) {
+    private renderCoffeeTable(coffeeTableObj3D: { coffeeTableObj3D: Object3D }) {
         const { begin, end } = coffeeTableStation;
         const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         this.odcGroup.add(new CoffeeTable(coffeeTableObj3D, { x, z }));
     }
 
-    renderCameraMonitor(cameraMonitorObj3D: { cameraMonitorObj3D: Object3D }) {
+    private renderCameraMonitor(cameraMonitorObj3D: { cameraMonitorObj3D: Object3D }) {
         const cameraMonitors: Object3D[] = [];
         cameraMonitorPositions.forEach((cameraMonitorPosition) => {
             const { begin, end } = cameraMonitorPosition;
