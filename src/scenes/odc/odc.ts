@@ -20,14 +20,14 @@ import { Monitor } from './model/monitor/monitor';
 // import { Robot } from './model/robot-expressive/robot';
 import { KeyPoint } from './model/key-point/key-point';
 import {
-  coffeeTableStation,
-  floor,
-  kitchenStation,
-  northSofaStation,
-  WALL_HEIGHT,
-  WALL_THICKNESS,
-  walls
-} from './data/buildings-data';
+    coffeeTableStation,
+    floor,
+    kitchenStation,
+    northSofaStation,
+    WALL_HEIGHT,
+    WALL_THICKNESS,
+    walls,
+} from '@/data/buildings-data';
 import {
     AreaSeats,
     northWorkstation,
@@ -35,23 +35,23 @@ import {
     SeatAreaType,
     southWorkstation,
     southWorkstationArea,
-} from './data/workstations-data';
+} from '@/data/workstations-data';
 import { createHighlightElement } from './util/highlight';
-import { keyPointPositions } from './data/key-point-data';
+import { keyPointPositions } from '@/data/key-point-data';
 
-import {ModelLine, ModelPointer} from '@/scenes/types';
-import {CoffeeTable} from "@/scenes/odc/model/coffee-table/coffee-table";
-import {Sofa} from "@/scenes/odc/model/sofa/sofa";
-import {Kitchen} from "@/scenes/odc/model/kitchen/kitchen";
-import {CameraMonitor} from "@/scenes/odc/model/camera-monitor/camera-monitor";
-import {Object3D} from "three";
-import {cameraMonitorPositions} from "@/scenes/odc/data/camera-monitor-data";
+import { ModelLine, ModelPointer } from '@/scenes/types';
+import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
+import { Sofa } from '@/scenes/odc/model/sofa/sofa';
+import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
+import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
+import { Object3D } from 'three';
+import { cameraMonitorPositions } from '@/data/camera-monitor-data';
 
 interface InitModelObj3D {
-  coffeeTableObj3D: {coffeeTableObj3D: Object3D};
-  sofaObj3D: {sofaObj3D: Object3D};
-  kitchenObj3D: {kitchenObj3D: Object3D}
-  cameraMonitorObj3D: {cameraMonitorObj3D: Object3D}
+    coffeeTableObj3D: { coffeeTableObj3D: Object3D };
+    sofaObj3D: { sofaObj3D: Object3D };
+    kitchenObj3D: { kitchenObj3D: Object3D };
+    cameraMonitorObj3D: { cameraMonitorObj3D: Object3D };
 }
 
 // import { AppleHost } from './model/computer-host/apple-host';
@@ -81,7 +81,12 @@ export class ODC {
     private readonly southWorkstation: Workstation;
     private readonly keyPoints: any[];
 
-    public constructor({coffeeTableObj3D, sofaObj3D, kitchenObj3D, cameraMonitorObj3D}: InitModelObj3D) {
+    public constructor({
+        coffeeTableObj3D,
+        sofaObj3D,
+        kitchenObj3D,
+        cameraMonitorObj3D,
+    }: InitModelObj3D) {
         this.odcGroup = new THREE.Group();
 
         this.renderer = this.initRender();
@@ -206,7 +211,7 @@ export class ODC {
         const ambientLight = new THREE.AmbientLight(0x606060);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 0.75, 0.5).normalize();
         this.scene.add(directionalLight);
     }
@@ -255,9 +260,9 @@ export class ODC {
             const wall =
                 type === 'external'
                     ? new ExternalWall(beginPointer, endPointer, height, thickness)
-                    : (type === 'glass'
+                    : type === 'glass'
                     ? new GlassWall(beginPointer, endPointer, height, thickness)
-                    : new InnerWall(beginPointer, endPointer, height, thickness));
+                    : new InnerWall(beginPointer, endPointer, height, thickness);
             this.odcGroup.add(wall);
         });
     }
@@ -294,36 +299,40 @@ export class ODC {
         return theWorkstation;
     }
 
-    renderKitchen(kitchenObj3D: {kitchenObj3D: Object3D}) {
-      const {begin, end} = kitchenStation;
-      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-      const kitchen = new Kitchen(kitchenObj3D);
-      kitchen.position.z = z;
-      kitchen.position.x = x;
-      this.odcGroup.add(kitchen)
-    }
-
-    renderNorthSofa(sofaObj3D: {sofaObj3D: Object3D}) {
-      const {begin, end} = northSofaStation;
-      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-      this.odcGroup.add(new Sofa(sofaObj3D, begin, end, {x, z}))
-    }
-
-    renderCoffeeTable(coffeeTableObj3D: {coffeeTableObj3D: Object3D}) {
-      const {begin, end} = coffeeTableStation;
-      const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-      this.odcGroup.add(new CoffeeTable(coffeeTableObj3D, {x, z}))
-    }
-
-    renderCameraMonitor(cameraMonitorObj3D: {cameraMonitorObj3D: Object3D}) {
-      const cameraMonitors: Object3D[] = [];
-      cameraMonitorPositions.forEach(cameraMonitorPosition => {
-        const {begin, end} = cameraMonitorPosition;
+    renderKitchen(kitchenObj3D: { kitchenObj3D: Object3D }) {
+        const { begin, end } = kitchenStation;
         const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-        const obj = new CameraMonitor(cameraMonitorObj3D, {x, y: this.scale(WALL_HEIGHT), z})
-        cameraMonitors.push(obj)
-      })
-      cameraMonitors.forEach((item) => this.odcGroup.add(item));
+        const kitchen = new Kitchen(kitchenObj3D);
+        kitchen.position.z = z;
+        kitchen.position.x = x;
+        this.odcGroup.add(kitchen);
+    }
+
+    renderNorthSofa(sofaObj3D: { sofaObj3D: Object3D }) {
+        const { begin, end } = northSofaStation;
+        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+        this.odcGroup.add(new Sofa(sofaObj3D, begin, end, { x, z }));
+    }
+
+    renderCoffeeTable(coffeeTableObj3D: { coffeeTableObj3D: Object3D }) {
+        const { begin, end } = coffeeTableStation;
+        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+        this.odcGroup.add(new CoffeeTable(coffeeTableObj3D, { x, z }));
+    }
+
+    renderCameraMonitor(cameraMonitorObj3D: { cameraMonitorObj3D: Object3D }) {
+        const cameraMonitors: Object3D[] = [];
+        cameraMonitorPositions.forEach((cameraMonitorPosition) => {
+            const { begin, end } = cameraMonitorPosition;
+            const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+            const obj = new CameraMonitor(cameraMonitorObj3D, {
+                x,
+                y: this.scale(WALL_HEIGHT),
+                z,
+            });
+            cameraMonitors.push(obj);
+        });
+        cameraMonitors.forEach((item) => this.odcGroup.add(item));
     }
 
     // TODO 材质优化

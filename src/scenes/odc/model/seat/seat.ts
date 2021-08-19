@@ -6,7 +6,7 @@ import { KeyPoint } from '../key-point/key-point';
 import { getSize } from '../../util/object-3d';
 import { globalEvent } from '../../event';
 
-import { SeatInfo } from '@/scenes/odc/data/workstations-data';
+import { SeatInfo } from '@/data/workstations-data';
 
 export class Seat extends THREE.Group {
     public static clazzName = 'seat';

@@ -7,7 +7,7 @@ import { generateTextSprite } from '../../util/generate-text-sprite.js';
 import { getDefinedObject3D, getSize, setEqualScale } from '../../util/object-3d';
 import { Monitor } from '../monitor/monitor';
 
-import { SeatInfo } from '@/scenes/odc/data/workstations-data';
+import { SeatInfo } from '@/data/workstations-data';
 
 export class Desktop extends THREE.Group {
     public static clazzName = 'desktop';

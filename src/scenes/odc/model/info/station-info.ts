@@ -1,4 +1,4 @@
-import {SeatInfo} from "@/scenes/odc/data/workstations-data";
+import {SeatInfo} from "@/data/workstations-data";
 
 export class StationInfo {
   private domId: string

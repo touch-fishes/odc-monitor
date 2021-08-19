@@ -1,6 +1,6 @@
-@import 'mixins/mixins';
-@import 'mixins/var';
-@import 'common/var';
+@import '~element-plus/packages/theme-chalk/src/mixins/mixins';
+@import '~element-plus/packages/theme-chalk/src/mixins/var';
+@import '~element-plus/packages/theme-chalk/src/common/var';
 
 @include b(card) {
     @include set-component-css-var('card', $--card);

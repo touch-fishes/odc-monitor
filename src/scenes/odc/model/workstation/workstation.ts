@@ -8,7 +8,7 @@ import { MousemoveObserver } from '../../event/mousemove';
 import { ClickObserver } from '../../event/click';
 import { Desktop } from '../desktop/desktop';
 
-import { AreaSeats, SeatInfo } from '@/scenes/odc/data/workstations-data';
+import { AreaSeats, SeatInfo } from '@/data/workstations-data';
 
 export class Workstation extends THREE.Group implements MousemoveObserver, ClickObserver {
     private activeDesktop: any;
