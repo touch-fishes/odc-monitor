@@ -1,12 +1,12 @@
 <template>
     <el-button-group class="toolbar">
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
-        <el-button type="primary" icon="el-icon-view"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
+        <el-button icon="el-icon-view" size="mini"></el-button>
     </el-button-group>
 </template>
 
