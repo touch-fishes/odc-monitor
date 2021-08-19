@@ -42,8 +42,12 @@ import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
 import { Sofa } from '@/scenes/odc/model/sofa/sofa';
 import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
 import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
-import { cameraMonitorPositions } from '@/data/camera-monitor-data';
-import {p} from "@/scenes/odc/util/path";
+import {
+    CameraMonitorItem,
+    northCameraMonitors,
+    southCameraMonitors,
+} from '@/data/camera-monitor-data';
+import { p } from '@/scenes/odc/util/path';
 
 interface InitModelObj3D {
     coffeeTableObj3D: { coffeeTableObj3D: Object3D };
@@ -324,16 +328,33 @@ export class ODC {
     }
 
     private renderCameraMonitor() {
-        const cameraMonitors: Object3D[] = [];
+        let cameraMonitors: Object3D[] = [];
         const map = new THREE.TextureLoader().load(p('/texture/camera-monitor.png'));
-        cameraMonitorPositions.forEach((cameraMonitorPosition) => {
-            const { begin, end } = cameraMonitorPosition;
-            const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const obj = new CameraMonitor(map, { x, y: this.scale(WALL_HEIGHT / 2), z });
-            cameraMonitors.push(obj);
-        });
+        cameraMonitors = [
+            ...this.generateCameraMonitor(southCameraMonitors, map, SeatAreaType.south),
+            ...this.generateCameraMonitor(northCameraMonitors, map, SeatAreaType.north),
+        ];
         cameraMonitors.forEach((item) => this.odcGroup.add(item));
         globalEvent.dispatchEvent({ type: 'addClickObserver', message: cameraMonitors });
+    }
+
+    private generateCameraMonitor(
+        cameraMonitors: CameraMonitorItem[],
+        map: THREE.Texture,
+        areaType: SeatAreaType,
+    ): Object3D[] {
+        const result: Object3D[] = [];
+        cameraMonitors.forEach((cameraMonitorPosition) => {
+            const { begin, end, observedSeatRowIndex } = cameraMonitorPosition;
+            const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
+            const obj = new CameraMonitor(
+                map,
+                { x, y: this.scale(WALL_HEIGHT), z },
+                { areaType, observedSeatRowIndex },
+            );
+            result.push(obj);
+        });
+        return result;
     }
 
     // TODO 材质优化
