@@ -62,3 +62,35 @@ export const northWorkstation = generateWorkstationData(10, SeatAreaType.north);
  * @type {*[]}
  */
 export const southWorkstation = generateWorkstationData(9, SeatAreaType.south);
+
+export const odcInfo = {
+    totalSeat: 190,
+    useSeat: 80,
+};
+
+export const bizGroupInfo = [
+    {
+        code: 'E-commerce Frontend',
+        seat: ['a1', 'a5', 'b9'],
+    },
+    {
+        code: 'Car Network',
+        seat: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'd6'],
+    },
+    {
+        code: 'Low Code',
+        seat: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7'],
+    },
+    {
+        code: 'E-commerce Frontend Backend',
+        seat: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7'],
+    },
+    {
+        code: 'Express',
+        seat: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7'],
+    },
+    {
+        code: 'IT Security',
+        seat: ['j1', 'j5', 'j9'],
+    },
+];
