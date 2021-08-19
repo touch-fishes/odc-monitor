@@ -43,6 +43,7 @@ import { Sofa } from '@/scenes/odc/model/sofa/sofa';
 import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
 import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
 import { cameraMonitorPositions } from '@/data/camera-monitor-data';
+import {p} from "@/scenes/odc/util/path";
 
 interface InitModelObj3D {
     coffeeTableObj3D: { coffeeTableObj3D: Object3D };
@@ -324,7 +325,7 @@ export class ODC {
 
     private renderCameraMonitor() {
         const cameraMonitors: Object3D[] = [];
-        const map = new THREE.TextureLoader().load('/texture/camera-monitor.png');
+        const map = new THREE.TextureLoader().load(p('/texture/camera-monitor.png'));
         cameraMonitorPositions.forEach((cameraMonitorPosition) => {
             const { begin, end } = cameraMonitorPosition;
             const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);

@@ -5,6 +5,7 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { animateOrbitCamera } from '../../util/camera';
 
 import { ClickObserver } from '@/scenes/odc/event/click';
+import {p} from "@/scenes/odc/util/path";
 
 export class KeyPoint extends THREE.Group implements ClickObserver {
     public static clazzName = 'keyPoint';
@@ -50,7 +51,7 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
 
     private createMaterial() {
         const loader = new THREE.TextureLoader();
-        const texture = loader.load('/texture/key-point.png');
+        const texture = loader.load(p('/texture/key-point.png'));
         return new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,

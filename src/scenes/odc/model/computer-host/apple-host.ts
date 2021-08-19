@@ -4,6 +4,8 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 import { Host } from './host';
 
+import { p } from '@/scenes/odc/util/path';
+
 export class AppleHost extends Host {
     public static clazzName = 'AppleHost';
 
@@ -13,10 +15,10 @@ export class AppleHost extends Host {
 
     public static loadResource() {
         return new Promise((resolve) => {
-            new MTLLoader().load('/3d-model/apple-logo/apple-logo.mtl', (materials) => {
+            new MTLLoader().load(p('/3d-model/apple-logo/apple-logo.mtl'), (materials) => {
                 const objLoader = new OBJLoader();
                 objLoader.setMaterials(materials);
-                objLoader.load('/3d-model/apple-logo/apple-logo.obj', (obj) => {
+                objLoader.load(p('/3d-model/apple-logo/apple-logo.obj'), (obj) => {
                     AppleHost.resource.logoObject3D = obj;
                     resolve({ logoObject3D: obj });
                 });
@@ -43,24 +45,18 @@ export class AppleHost extends Host {
     private createLogo(): Promise<THREE.Object3D> {
         // TODO 修改为依赖注入模式
         return new Promise((resolve) => {
-            new MTLLoader().load(
-                '/3d-model/apple-logo/apple-logo.mtl',
-                (materials) => {
-                    const objLoader = new OBJLoader();
-                    objLoader.setMaterials(materials);
-                    objLoader.load(
-                        '/3d-model/apple-logo/apple-logo.obj',
-                        (obj) => {
-                            obj.position.x = this.host.position.x - this.baseWidth / 2;
-                            obj.position.z = this.host.position.z;
-                            obj.position.y = this.baseHeight / 8;
-                            obj.rotation.y = -Math.PI / 2;
-                            obj.scale.set(0.04, 0.04, 0.04);
-                            resolve(obj);
-                        },
-                    );
-                },
-            );
+            new MTLLoader().load('/3d-model/apple-logo/apple-logo.mtl', (materials) => {
+                const objLoader = new OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.load('/3d-model/apple-logo/apple-logo.obj', (obj) => {
+                    obj.position.x = this.host.position.x - this.baseWidth / 2;
+                    obj.position.z = this.host.position.z;
+                    obj.position.y = this.baseHeight / 8;
+                    obj.rotation.y = -Math.PI / 2;
+                    obj.scale.set(0.04, 0.04, 0.04);
+                    resolve(obj);
+                });
+            });
         });
         // const obj = AppleHost.resource.logoObject3D.clone();
         // obj.position.x = this.host.position.x - (this.baseWidth/2);

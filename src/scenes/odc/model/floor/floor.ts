@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { ModelPointer } from '@/scenes/types';
+import { p } from '@/scenes/odc/util/path';
 
 // TODO
 
@@ -15,7 +16,7 @@ export class Floor extends THREE.Group {
 
     protected initMaterial() {
         const loader = new THREE.TextureLoader();
-        const texture = loader.load('/texture/floor.jpeg');
+        const texture = loader.load(p('/texture/floor.jpeg'));
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         // uv两个方向纹理重复数量

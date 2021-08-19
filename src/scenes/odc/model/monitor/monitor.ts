@@ -3,6 +3,8 @@ import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { Group, Material, Mesh } from 'three';
 
+import { p } from '@/scenes/odc/util/path';
+
 export class Monitor extends THREE.Group {
     public static clazzName = 'monitor';
 
@@ -12,10 +14,10 @@ export class Monitor extends THREE.Group {
 
     public static loadResource() {
         return new Promise((resolve) => {
-            new MTLLoader().load('/3d-model/monitor/monitor.mtl', (materials) => {
+            new MTLLoader().load(p('/3d-model/monitor/monitor.mtl'), (materials) => {
                 const objLoader = new OBJLoader();
                 objLoader.setMaterials(materials);
-                objLoader.load('/3d-model/monitor/monitor.obj', (obj) => {
+                objLoader.load(p('/3d-model/monitor/monitor.obj'), (obj) => {
                     Monitor.resource.monitorObject3D = obj;
                     return resolve({ monitorObject3D: obj });
                 });
@@ -39,7 +41,7 @@ export class Monitor extends THREE.Group {
 
     public active() {
         const loader = new THREE.TextureLoader();
-        const screenTexture = loader.load('/texture/screen.png');
+        const screenTexture = loader.load(p('/texture/screen.png'));
         const screenMesh = this.monitor.getObjectByName('Screen');
         if (screenMesh instanceof Mesh) {
             screenMesh.material = new THREE.MeshPhongMaterial({

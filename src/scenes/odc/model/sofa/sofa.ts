@@ -3,6 +3,8 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 import { SofaObj3D } from '../../../types';
 
+import { p } from '@/scenes/odc/util/path';
+
 // TODO
 /**
  * 北区沙发
@@ -17,7 +19,7 @@ export class Sofa extends THREE.Group {
     }): Promise<SofaObj3D> {
         return new Promise((resolve) => {
             const objLoader = new OBJLoader();
-            objLoader.load('/3d-model/couch/couch.obj', (obj) => {
+            objLoader.load(p('/3d-model/couch/couch.obj'), (obj) => {
                 const scale = 50;
                 obj.scale.set(116, scale, scale);
                 obj.rotation.x = -Math.PI / 2;

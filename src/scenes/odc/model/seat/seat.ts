@@ -7,6 +7,7 @@ import { getSize } from '../../util/object-3d';
 import { globalEvent } from '../../event';
 
 import { SeatInfo } from '@/data/workstations-data';
+import { p } from '@/scenes/odc/util/path';
 
 export class Seat extends THREE.Group {
     public static clazzName = 'seat';
@@ -18,7 +19,7 @@ export class Seat extends THREE.Group {
     public static loadResource() {
         return new Promise((resolve) => {
             const objLoader = new OBJLoader();
-            objLoader.load('/3d-model/table/table.obj', (obj) => {
+            objLoader.load(p('/3d-model/table/table.obj'), (obj) => {
                 Seat.resource.tableObject3D = obj;
                 resolve({ tableObject3D: obj });
             });
