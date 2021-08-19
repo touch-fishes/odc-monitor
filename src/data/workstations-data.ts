@@ -71,26 +71,26 @@ export const odcInfo = {
 export const bizGroupInfo = [
     {
         code: 'E-commerce Frontend',
-        seat: ['a1', 'a5', 'b9'],
+        seats: ['a1', 'a5', 'b9'],
     },
     {
         code: 'Car Network',
-        seat: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'd6'],
+        seats: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'd6'],
     },
     {
         code: 'Low Code',
-        seat: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7'],
+        seats: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7'],
     },
     {
-        code: 'E-commerce Frontend Backend',
-        seat: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7'],
+        code: 'E-commerce Backend',
+        seats: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7'],
     },
     {
         code: 'Express',
-        seat: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7'],
+        seats: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7'],
     },
     {
         code: 'IT Security',
-        seat: ['j1', 'j5', 'j9'],
+        seats: ['j1', 'j5', 'j9'],
     },
 ];

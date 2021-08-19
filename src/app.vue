@@ -1,6 +1,6 @@
 <template>
-    <seat-info />
     <overview-info />
+    <biz-group-info />
     <monitor-toolbar />
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 
 import { loadODCResource, ODC } from '@/scenes/odc/odc';
-import SeatInfo from '@/views/seat-info/index.vue';
+import BizGroupInfo from '@/views/biz-group-info/index.vue';
 import OverviewInfo from '@/views/overview-info/index.vue';
 import MonitorToolbar from '@/views/monitor-toolbar/index.vue';
 import { CameraMonitorObj3D, CoffeeTableObj3D, KitchenObj3D, SofaObj3D } from '@/scenes/types';
@@ -16,7 +16,7 @@ import { CameraMonitorObj3D, CoffeeTableObj3D, KitchenObj3D, SofaObj3D } from '@
 type LoadRes = [CoffeeTableObj3D, SofaObj3D, KitchenObj3D, CameraMonitorObj3D, unknown, unknown];
 export default defineComponent({
     name: 'App',
-    components: { SeatInfo, OverviewInfo, MonitorToolbar },
+    components: { BizGroupInfo, OverviewInfo, MonitorToolbar },
     setup() {
         // 修改any
         loadODCResource().then(

@@ -3,7 +3,7 @@
         <div class="content">
             <el-progress
                 class="odc-progress"
-                stroke-width="12"
+                :stroke-width="12"
                 type="circle"
                 :percentage="usageRate"
             >
@@ -28,15 +28,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ElProgress, ElDivider } from 'element-plus';
+import { ElProgress, ElDivider, ElTag } from 'element-plus';
 
 import OPanel from '@/components/panel/index.vue';
-import { odcInfo } from '@/data/workstations-data';
+import { odcInfo, bizGroupInfo } from '@/data/workstations-data';
 
 export default defineComponent({
-    components: { OPanel, ElProgress, ElDivider },
+    components: { OPanel, ElProgress, ElDivider, ElTag },
     setup() {
         return {
+            groups: bizGroupInfo,
             useSeat: odcInfo.useSeat,
             totalSeat: odcInfo.totalSeat,
             usageRate: Math.ceil((odcInfo.useSeat / odcInfo.totalSeat) * 100),
@@ -46,8 +47,16 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 .info-container {
-    left: 0;
+    right: 0;
     top: 66px;
+    max-height: calc(100% - 66px);
+    overflow: hidden;
+    width: 280px;
+    .panel-split {
+        margin: 18px 0 8px 0;
+        text-align: left;
+        font-size: 15px;
+    }
     .content {
         text-align: center;
         .odc-progress {

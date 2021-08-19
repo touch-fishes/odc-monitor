@@ -31,5 +31,10 @@ export default defineComponent({
 .card-define {
     position: absolute;
     max-width: 280px;
+    .card-header {
+        font-size: 15px;
+        font-weight: 600;
+
+    }
 }
 </style>
