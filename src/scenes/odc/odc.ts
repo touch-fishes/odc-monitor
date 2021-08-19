@@ -223,7 +223,7 @@ export class ODC {
     }
     private initScene() {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#2b3a42');
+        scene.background = new THREE.Color('#000');
         return scene;
     }
     private initRender() {
@@ -320,7 +320,6 @@ export class ODC {
       cameraMonitorPositions.forEach(cameraMonitorPosition => {
         const {begin, end} = cameraMonitorPosition;
         const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-        debugger
         const obj = new CameraMonitor(cameraMonitorObj3D, {x, y: this.scale(WALL_HEIGHT), z})
         cameraMonitors.push(obj)
       })

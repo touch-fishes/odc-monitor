@@ -17,6 +17,7 @@
         "babel-plugin-import": "^1.13.3",
         "core-js": "^3.6.5",
         "element-plus": "^1.0.2-beta.71",
+        "element-theme": "^2.0.1",
         "element-theme-dark": "^1.0.3",
         "es6-tween": "^5.5.11",
         "eslint": "^7.1.0",
@@ -40,5 +41,9 @@
             "yarn lint",
             "git add"
         ]
+    },
+    "dependencies": {
+        "-": "^0.0.1",
+        "element-theme-chalk": "^2.15.5"
     }
 }

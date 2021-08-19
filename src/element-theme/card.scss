@@ -1,0 +1,36 @@
+@import 'mixins/mixins';
+@import 'mixins/var';
+@import 'common/var';
+
+@include b(card) {
+    @include set-component-css-var('card', $--card);
+
+    border-radius: var(--el-card-border-radius);
+    background-color: rgba(29,29,31,0.72);
+    overflow: hidden;
+    color: #a1a1a6;
+    border: none;
+    transition: var(--el-transition-duration);
+
+    @include when(always-shadow) {
+        box-shadow: var(--el-box-shadow-light);
+    }
+
+    @include when(hover-shadow) {
+        &:hover,
+        &:focus {
+            box-shadow: var(--el-box-shadow-light);
+        }
+    }
+
+    @include e(header) {
+        padding: calc(var(--el-card-padding) - 2px) var(--el-card-padding);
+        background: linear-gradient(to bottom, #061420 0%, #151516 100%);
+        border: none;
+        box-sizing: border-box;
+    }
+
+    @include e(body) {
+        padding: var(--el-card-padding);
+    }
+}
