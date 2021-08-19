@@ -15,10 +15,7 @@ import { Seat } from './model/seat/seat';
 import { InnerWall } from './model/wall/inner-wall';
 import { ExternalWall } from './model/wall/external-wall';
 import { Workstation } from './model/workstation/workstation';
-// import { Kitchen } from './model/kitchen/kitchen';
 import { Monitor } from './model/monitor/monitor';
-// import { Sofa } from './model/sofa/sofa';
-// import { Robot } from './model/robot-expressive/robot';
 import { KeyPoint } from './model/key-point/key-point';
 import { createHighlightElement } from './util/highlight';
 
@@ -51,7 +48,6 @@ interface InitModelObj3D {
     coffeeTableObj3D: { coffeeTableObj3D: Object3D };
     sofaObj3D: { sofaObj3D: Object3D };
     kitchenObj3D: { kitchenObj3D: Object3D };
-    cameraMonitorObj3D: { cameraMonitorObj3D: Object3D };
 }
 
 // import { AppleHost } from './model/computer-host/apple-host';
@@ -61,7 +57,6 @@ export const loadODCResource = () => {
         CoffeeTable.loadCoffeeTableResource(),
         Sofa.loadNorthSofaResource(northSofaStation),
         Kitchen.loadKitchenResource(),
-        CameraMonitor.loadCameraMonitorResource(),
         Monitor.loadResource(),
         // AppleHost.loadResource(),
         Seat.loadResource(),
@@ -81,12 +76,7 @@ export class ODC {
     private readonly southWorkstation: Workstation;
     private readonly keyPoints: any[];
 
-    public constructor({
-        coffeeTableObj3D,
-        sofaObj3D,
-        kitchenObj3D,
-        cameraMonitorObj3D,
-    }: InitModelObj3D) {
+    public constructor({ coffeeTableObj3D, sofaObj3D, kitchenObj3D }: InitModelObj3D) {
         this.odcGroup = new THREE.Group();
 
         this.renderer = this.initRender();
@@ -152,7 +142,7 @@ export class ODC {
         this.renderCoffeeTable(coffeeTableObj3D);
         //
         // // 渲染区域内监控摄像头
-        this.renderCameraMonitor(cameraMonitorObj3D);
+        this.renderCameraMonitor();
 
         this.keyPoints = this.renderKeyPoints();
         globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.keyPoints });
@@ -163,6 +153,7 @@ export class ODC {
 
         this.animate();
     }
+
     private initEvent() {
         // TODO
         // document.getElementById('#switch-btn').addEventListener( 'click', (event) => {
@@ -197,6 +188,7 @@ export class ODC {
             clickEvent.addObservers(message),
         );
     }
+
     private initHelp() {
         this.controls.screenSpacePanning = false;
         this.controls.maxPolarAngle = Math.PI / 2;
@@ -207,14 +199,16 @@ export class ODC {
         document.body.append(this.stats.dom);
         // this.scene.add(new THREE.GridHelper(2000, 50));
     }
+
     private initLight() {
         const ambientLight = new THREE.AmbientLight(0x606060);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 0.75, 0.5).normalize();
         this.scene.add(directionalLight);
     }
+
     private initCamera() {
         const camera = new THREE.PerspectiveCamera(
             50,
@@ -226,11 +220,13 @@ export class ODC {
         camera.lookAt(0, 0, 0);
         return camera;
     }
+
     private initScene() {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color('#0a0a0a');
         return scene;
     }
+
     private initRender() {
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -238,17 +234,20 @@ export class ODC {
         document.body.append(renderer.domElement);
         return renderer;
     }
+
     private animate() {
         requestAnimationFrame(this.animate.bind(this));
         TWEEN.update();
         this.stats.update();
         this.highlightComposer.render();
     }
+
     private scale(measurement: number) {
         const measurementLength = 71200;
         const viewLength = 1600;
         return (measurement * viewLength) / measurementLength;
     }
+
     private renderWall() {
         walls.forEach(({ type, begin, end }) => {
             const [beginPointer, endPointer, height, thickness] = [
@@ -266,6 +265,7 @@ export class ODC {
             this.odcGroup.add(wall);
         });
     }
+
     // TODO
     private renderStation(workStationArea: ModelLine, workStation: AreaSeats, type: SeatAreaType) {
         const { begin, end } = workStationArea;
@@ -276,9 +276,11 @@ export class ODC {
             {},
             { xLength: endY - beginY, zLength: endX - beginX },
             workStation,
+            type,
         );
         theWorkstation.position.x = x;
         theWorkstation.position.z = z;
+        theWorkstation.name = `${type}Workstation`;
         if (type === SeatAreaType.north) {
             // this.northWorkstation = theWorkstation;
             // this.odcGroup.add(this.northWorkstation);
@@ -320,19 +322,17 @@ export class ODC {
         this.odcGroup.add(new CoffeeTable(coffeeTableObj3D, { x, z }));
     }
 
-    private renderCameraMonitor(cameraMonitorObj3D: { cameraMonitorObj3D: Object3D }) {
+    private renderCameraMonitor() {
         const cameraMonitors: Object3D[] = [];
+        const map = new THREE.TextureLoader().load('/texture/camera-monitor.png');
         cameraMonitorPositions.forEach((cameraMonitorPosition) => {
             const { begin, end } = cameraMonitorPosition;
             const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const obj = new CameraMonitor(cameraMonitorObj3D, {
-                x,
-                y: this.scale(WALL_HEIGHT),
-                z,
-            });
+            const obj = new CameraMonitor(map, { x, y: this.scale(WALL_HEIGHT / 2), z });
             cameraMonitors.push(obj);
         });
         cameraMonitors.forEach((item) => this.odcGroup.add(item));
+        globalEvent.dispatchEvent({ type: 'addClickObserver', message: cameraMonitors });
     }
 
     // TODO 材质优化
@@ -367,6 +367,7 @@ export class ODC {
         this.odcGroup.position.x = this.odcGroup.position.x - center.x;
         this.odcGroup.position.z = this.odcGroup.position.z - center.z;
     }
+
     private getCenterOfModelArea(begin: ModelPointer, end: ModelPointer) {
         const [beginX, beginY] = begin.map((element) => this.scale(element));
         const [endX, endY] = end.map((element) => this.scale(element));

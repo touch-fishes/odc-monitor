@@ -8,20 +8,22 @@ import { MousemoveObserver } from '../../event/mousemove';
 import { ClickObserver } from '../../event/click';
 import { Desktop } from '../desktop/desktop';
 
-import { AreaSeats, SeatInfo } from '@/data/workstations-data';
+import { AreaSeats, SeatInfo, SeatAreaType } from '@/data/workstations-data';
 
 export class Workstation extends THREE.Group implements MousemoveObserver, ClickObserver {
     private activeDesktop: any;
 
+    // eslint-disable-next-line max-params
     public constructor(
         {},
         { xLength, zLength }: { xLength: number; zLength: number },
         seats: AreaSeats,
+        type: SeatAreaType,
     ) {
         super();
         // 初始化信息面板
         // this.seatInfoPlan = new StationInfo();
-        const workstation = this.createWorkstation({ xLength, zLength }, seats);
+        const workstation = this.createWorkstation({ xLength, zLength }, seats, type);
         this.add(workstation);
     }
 
@@ -95,13 +97,14 @@ export class Workstation extends THREE.Group implements MousemoveObserver, Click
     private createWorkstation(
         { xLength, zLength }: { xLength: number; zLength: number },
         seats: AreaSeats,
+        type: SeatAreaType,
     ) {
         const spacing = xLength / seats.length;
         const xCenter = zLength / 2;
         const innerGroup = new THREE.Group();
         seats.forEach((row, idx) => {
             const seatGroup = this.createSeatGroup(row);
-            seatGroup.name = `seatRow_${idx}`;
+            seatGroup.name = `${type}_seatRow_${idx}`;
             // 排列位置
             seatGroup.position.z = xCenter;
             seatGroup.position.x = spacing * idx;

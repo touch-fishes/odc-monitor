@@ -13,23 +13,20 @@ import OverviewInfo from '@/views/overview-info/index.vue';
 import MonitorToolbar from '@/views/monitor-toolbar/index.vue';
 import { CameraMonitorObj3D, CoffeeTableObj3D, KitchenObj3D, SofaObj3D } from '@/scenes/types';
 
-type LoadRes = [CoffeeTableObj3D, SofaObj3D, KitchenObj3D, CameraMonitorObj3D, unknown, unknown];
+type LoadRes = [CoffeeTableObj3D, SofaObj3D, KitchenObj3D,unknown,unknown]
 export default defineComponent({
     name: 'App',
     components: { BizGroupInfo, OverviewInfo, MonitorToolbar },
     setup() {
-        // 修改any
-        loadODCResource().then(
-            ([coffeeTableObj3D, sofaObj3D, kitchenObj3D, cameraMonitorObj3D]: LoadRes) => {
-                // eslint-disable-next-line no-new
-                new ODC({
-                    coffeeTableObj3D,
-                    sofaObj3D,
-                    kitchenObj3D,
-                    cameraMonitorObj3D,
-                });
-            },
-        );
+      // 修改any
+        loadODCResource().then(([coffeeTableObj3D, sofaObj3D, kitchenObj3D]: LoadRes) => {
+            // eslint-disable-next-line no-new
+            new ODC({
+              coffeeTableObj3D,
+              sofaObj3D,
+              kitchenObj3D
+            });
+        });
     },
 });
 </script>

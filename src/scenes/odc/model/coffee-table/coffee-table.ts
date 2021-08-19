@@ -13,11 +13,18 @@ export class CoffeeTable extends THREE.Group {
         return new Promise((resolve) => {
             const objLoader = new OBJLoader();
             objLoader.load('/3d-model/coffee-table/coffee-table.obj', (obj: Object3D) => {
+                const scale = 0.5;
+                obj.scale.set(scale, scale, scale);
                 resolve({ coffeeTableObj3D: obj });
             });
         });
     }
-
+    /**
+     *
+     * @param begin
+     * @param end
+     * @returns {Mesh}
+     */
     public constructor(
         { coffeeTableObj3D }: CoffeeTableObj3D,
         { x, z }: { x: number; z: number },
