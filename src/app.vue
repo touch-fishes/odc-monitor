@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { loadODCResource, ODC } from '@/scenes/odc/odc';
+import { loadODCResource, ODC } from '@/scenes/odc';
 import BizGroupInfo from '@/views/biz-group-info/index.vue';
 import OverviewInfo from '@/views/overview-info/index.vue';
 import MonitorToolbar from '@/views/monitor-toolbar/index.vue';

@@ -11,10 +11,8 @@ export class ExternalWall extends Wall {
         super(begin, end, height, thickness);
     }
     protected initMaterial() {
-        const loader = new THREE.TextureLoader();
-        const wallLoader = loader.load('/texture/brick_diffuse.png', () => {});
         return new THREE.MeshLambertMaterial({
-            map: wallLoader,
+            color: '#E7E7E7',
         });
     }
 }

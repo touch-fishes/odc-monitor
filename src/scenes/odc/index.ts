@@ -228,7 +228,7 @@ export class ODC {
     }
     private initScene() {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#000');
+        scene.background = new THREE.Color('#0a0a0a');
         return scene;
     }
     private initRender() {
