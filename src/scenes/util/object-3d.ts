@@ -34,3 +34,18 @@ export const getDefinedObject3DByName = (
         return;
     }
 };
+
+export const getObject3DChild = (
+    obj: THREE.Object3D,
+    clazzName: string,
+    id: string,
+): THREE.Object3D | undefined => {
+    if (obj.userData?.clazzName === clazzName && obj.userData?.id === id) {
+        return obj;
+    }
+    if (!obj.children) return;
+    for (const child of obj.children) {
+        const obj = getObject3DChild(child, clazzName, id);
+        if (obj) return obj;
+    }
+};

@@ -1,11 +1,11 @@
 <template>
     <overview-info />
-    <biz-group-info />
-    <monitor-toolbar :odc-instance="odcInstance" />
+    <biz-group-info @seat-click="onSeatClick" />
+    <monitor-toolbar />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { ElLoading } from 'element-plus';
 
 import { loadODCResource, ODC } from '@/scenes/odc';
@@ -17,7 +17,7 @@ export default defineComponent({
     name: 'App',
     components: { BizGroupInfo, OverviewInfo, MonitorToolbar },
     setup() {
-        const odcInstance = ref({});
+        let odc: undefined | ODC;
         const loading = ElLoading.service({
             lock: true,
             text: 'Loading',
@@ -25,12 +25,16 @@ export default defineComponent({
         });
 
         loadODCResource(() => loading.close()).then(() => {
-            // eslint-disable-next-line no-new
-            odcInstance.value = new ODC();
+            odc = new ODC();
         });
-      return {
-        odcInstance: odcInstance,
-      };
+        const onSeatClick = (code: string) => {
+            if (odc) {
+                odc.lightSeat([code]);
+            }
+        };
+        return {
+            onSeatClick,
+        };
     },
 });
 </script>

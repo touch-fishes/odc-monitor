@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-import { SofaObj3D } from '../../../types';
-
 import { p } from '@/scenes/util/path';
 
 // TODO
@@ -14,12 +12,12 @@ export class Sofa extends THREE.Group {
         sofaObject3D: undefined,
     };
 
-    public static loadResource(loadManager: THREE.LoadingManager): Promise<SofaObj3D> {
+    public static loadResource(loadManager: THREE.LoadingManager) {
         return new Promise((resolve) => {
             const objLoader = new OBJLoader(loadManager);
             objLoader.load(p('/3d-model/couch/couch.obj'), (obj) => {
                 Sofa.resource.sofaObject3D = obj;
-                resolve({ sofaObj3D: obj });
+                resolve({ sofaObject3D: obj });
             });
         });
     }

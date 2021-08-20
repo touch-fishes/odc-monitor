@@ -37,6 +37,8 @@ export class Seat extends THREE.Group {
         this.table = this.createTable();
         this.keyPoint = this.createKeyPoint();
         this.desktop = this.createDeskTop(theSeatInfo);
+        this.userData.clazzName = Seat.clazzName;
+        this.userData.id = `${seatInfo.code}`;
         this.add(this.table);
         this.add(this.keyPoint);
         this.add(this.desktop);
@@ -45,6 +47,10 @@ export class Seat extends THREE.Group {
         new Promise((resolve) => resolve(true)).then(() => {
             this.locationKeyPoint();
         });
+    }
+
+    public light() {
+        console.log(666, 'light');
     }
 
     private locationKeyPoint() {
@@ -59,7 +65,7 @@ export class Seat extends THREE.Group {
         this.keyPoint.setLookAt(lockAtPosition);
     }
     private createKeyPoint() {
-        const keyPoint = new KeyPoint(20);
+        const keyPoint = new KeyPoint(16);
         const { x: tableX } = getSize(this.table);
         keyPoint.position.y = 10;
         keyPoint.position.x = -tableX - 6;

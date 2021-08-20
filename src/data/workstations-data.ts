@@ -8,6 +8,7 @@ export enum SeatAreaType {
 }
 
 export interface SeatInfo {
+    code: string;
     rowCode: string;
     monitor: string[];
     macMini: string;
@@ -36,11 +37,14 @@ export const southWorkstationArea: ModelLine = {
 const generateWorkstationData = (row: number, type: SeatAreaType): AreaSeats => {
     const result = [];
     const pre = type === SeatAreaType.north ? '2900' : '2800';
+    const areaCode = type === SeatAreaType.north ? 'n' : 's';
+    const rowCode = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'];
     for (let i = 0; i < row; i++) {
         const currentRow = [];
         for (let j = 0; j < 10; j++) {
             currentRow.push({
-                rowCode: `${type}-station-row-${i}`,
+                code: `${areaCode}${rowCode[i]}${j}`,
+                rowCode: `${areaCode}${rowCode[i]}`,
                 monitor: [`${pre}6${i}${j}${j}`, `${pre}6${i + 1}${j + 1}${j + 1}`],
                 macMini: `${pre}3${i}${j}${j}`,
                 pc: `${pre}2${i}${j}${j}`,
@@ -71,26 +75,26 @@ export const odcInfo = {
 export const bizGroupInfo = [
     {
         code: 'E-commerce Frontend',
-        seats: ['a1', 'a5', 'b9'],
+        seats: ['sa1', 'sa5', 'sb9'],
     },
     {
         code: 'Car Network',
-        seats: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'd6'],
+        seats: ['sc1', 'sc2', 'sc3', 'sc4', 'sc5', 'sc6', 'sc7', 'sc8', 'sc9', 'sd6'],
     },
     {
         code: 'Low Code',
-        seats: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7'],
+        seats: ['se1', 'se2', 'se3', 'se4', 'se5', 'se6', 'se7'],
     },
     {
         code: 'E-commerce Backend',
-        seats: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7'],
+        seats: ['sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 'sf7'],
     },
     {
         code: 'Express',
-        seats: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7'],
+        seats: ['sg1', 'sg2', 'sg3', 'sg4', 'sg5', 'sg6', 'sg7'],
     },
     {
         code: 'IT Security',
-        seats: ['j1', 'j5', 'j9'],
+        seats: ['sj1', 'sj5', 'sj9'],
     },
 ];

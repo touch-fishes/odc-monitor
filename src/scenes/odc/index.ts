@@ -18,6 +18,7 @@ import { Structure } from './structure';
 
 import { createHighlightElement } from '@/scenes/util/highlight';
 import { animateOrbitCamera } from '@/scenes/util/camera';
+import { getObject3DChild } from '@/scenes/util/object-3d';
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);
@@ -97,6 +98,13 @@ export class ODC {
         );
     }
 
+    public lightSeat(seats: string[]) {
+        seats.forEach((seatCode) => {
+            const seat = getObject3DChild(this.structure, Seat.clazzName, seatCode);
+            if (seat) (seat as Seat).light();
+        });
+    }
+
     private initEvent() {
         window.addEventListener('resize', (event) => {
             if (this.camera && this.renderer) {
@@ -136,12 +144,13 @@ export class ODC {
     }
 
     private initLight() {
-        const ambientLight = new THREE.AmbientLight(0x606060);
+        // 环境光源
+        const ambientLight = new THREE.AmbientLight(0x606060, 2);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff);
-        directionalLight.position.set(1, 0.75, 0.5).normalize();
-        this.scene.add(directionalLight);
+        // const directionalLight = new THREE.DirectionalLight(0xffffff);
+        // directionalLight.position.set(1, 0.75, 0.5).normalize();
+        // this.scene.add(directionalLight);
     }
 
     private initCamera() {

@@ -14,6 +14,7 @@
                             class="seat-tag"
                             size="mini"
                             effect="dark"
+                            @click="onSeatClick(item)"
                         >
                             {{ item.toUpperCase() }}
                         </el-tag>
@@ -33,12 +34,15 @@ import { odcInfo, bizGroupInfo } from '@/data/workstations-data';
 
 export default defineComponent({
     components: { OPanel, ElTag },
-    setup() {
+    emits: ['seat-click'],
+    setup(_props, context) {
+        const onSeatClick = (seat: string) => context.emit('seat-click', seat);
         return {
             groups: bizGroupInfo,
             useSeat: odcInfo.useSeat,
             totalSeat: odcInfo.totalSeat,
             usageRate: Math.ceil((odcInfo.useSeat / odcInfo.totalSeat) * 100),
+            onSeatClick,
         };
     },
 });

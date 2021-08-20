@@ -107,7 +107,6 @@ export class Desktop extends THREE.Group {
         hwHost.userData.highlight = true;
         hwHost.userData.type = 'pc';
         hwHost.userData.data = info;
-        // hwHost.userData.materials = hwHost.children[0].material;
         const hwTip = this.createTextSprite(info.pc);
         hwTip.position.y = y + 3;
         hwTip.position.z = hwHost.position.z;
@@ -129,7 +128,6 @@ export class Desktop extends THREE.Group {
         macMini.userData.highlight = true;
         macMini.userData.type = 'macMini';
         macMini.userData.data = info;
-        // macMini.userData.materials = macMini.children[0].material;
         const macMiniTip = this.createTextSprite(info.macMini);
         const { x: tipX } = getSize(macMiniTip);
         macMiniTip.position.y = y + 3;

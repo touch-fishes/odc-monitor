@@ -18,7 +18,7 @@ export class Host extends THREE.Group {
     }
 
     public active() {
-        this.host.material = new THREE.MeshPhongMaterial({ color: '0x409eff' });
+        this.host.material = new THREE.MeshPhongMaterial({ color: 0x409eff });
     }
 
     public silence() {
