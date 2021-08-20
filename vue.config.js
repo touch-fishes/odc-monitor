@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/odc/',
+    publicPath: '/odc-monitor/',
 };
