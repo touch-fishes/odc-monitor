@@ -63,21 +63,9 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import { ElButton, ElButtonGroup } from 'element-plus';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
 import { SeatAreaType } from '@/data/workstations-data';
 
-interface OdcInstance {
-    structure: {
-        northCameraMonitors: CameraMonitor[];
-        southCameraMonitors: CameraMonitor[];
-    };
-    camera: THREE.PerspectiveCamera;
-    controls: OrbitControls;
-    refresh: Function;
-}
 export default defineComponent({
     components: { ElButtonGroup, ElButton },
     props: {
@@ -85,52 +73,18 @@ export default defineComponent({
             type: Object,
         },
     },
-    setup(props) {
-        const innerInstance: { value: OdcInstance } = ref({
-            structure: {
-                northCameraMonitors: [],
-                southCameraMonitors: [],
-            },
-            camera: new THREE.PerspectiveCamera(),
-            controls: new OrbitControls(
-                new THREE.PerspectiveCamera(),
-                new THREE.WebGLRenderer({ antialias: true }).domElement,
-            ),
-            refresh: () => {},
-        });
-        watch(
-            () => props.odcInstance as OdcInstance,
-            (newVal: OdcInstance) => {
-                innerInstance.value = newVal;
-            },
-        );
+    emits: ['click-monitor-btn', 'monitor-mouse-move', 'refresh'],
+    setup(props, context) {
         const handleClick = (index: number, area?: string) => {
-            const currentCameraMonitor =
-                area === SeatAreaType.north
-                    ? innerInstance.value.structure.northCameraMonitors[index]
-                    : innerInstance.value.structure.southCameraMonitors[index];
-            currentCameraMonitor.observationArea({
-                camera: innerInstance.value.camera,
-                controls: innerInstance.value.controls,
-            });
+            context.emit('click-monitor-btn', { index, area });
         };
 
         const refresh = () => {
-            innerInstance.value.refresh();
+            context.emit('refresh');
         };
-
-        // eslint-disable-next-line unicorn/consistent-function-scoping
         const handleMouseMove = (index: number, area?: string, option?: 0 | 1) => {
-            const currentCameraMonitor =
-                area === SeatAreaType.north
-                    ? innerInstance.value.structure.northCameraMonitors[index]
-                    : innerInstance.value.structure.southCameraMonitors[index];
-            const hex = option === 0 ? 0xffffff : 0x409eff;
-            currentCameraMonitor.setColor(hex);
-            const scale = option === 0 ? 20 : 30;
-            currentCameraMonitor.setScale(scale);
+            context.emit('monitor-mouse-move', { index, area, option });
         };
-
         return {
             handleClick,
             handleMouseMove,

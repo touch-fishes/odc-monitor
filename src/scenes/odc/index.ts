@@ -84,6 +84,17 @@ export class ODC {
         this.animate();
     }
 
+    public getStructure() {
+        return this.structure;
+    }
+
+    public getCamera() {
+        return this.camera;
+    }
+    public getControls() {
+        return this.controls;
+    }
+
     public refresh() {
         animateOrbitCamera(
             { camera: this.camera, controls: this.controls },

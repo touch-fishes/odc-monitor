@@ -84,6 +84,13 @@ export class Structure extends THREE.Group {
         this.addObserver();
     }
 
+    public getMonitors() {
+        return {
+            south: this.southCameraMonitors,
+            north: this.northCameraMonitors,
+        };
+    }
+
     private addObserver() {
         globalEvent.dispatchEvent({
             type: 'addClickObserver',

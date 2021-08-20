@@ -23,6 +23,7 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
         this.areaType = areaType;
         this.observedSeatRowIndex = observedSeatRowIndex;
         this.add(this.initCameraMonitor(map));
+        this.add(this.initLine());
     }
 
     public beforeClick() {}
@@ -86,9 +87,30 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
     protected initCameraMonitor(map: THREE.Texture) {
         const material = new THREE.SpriteMaterial({ map });
         const sprite = new THREE.Sprite(material);
-        const scale = 20;
+        const scale = 30;
         sprite.scale.set(scale, scale, scale);
         sprite.userData.type = 'cameraMonitor';
         return sprite;
+    }
+
+    protected initLine() {
+        const points = [new THREE.Vector3(0, -80, 0), new THREE.Vector3(0, 0, 0)];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        geometry.setAttribute(
+            'color',
+            new THREE.Float32BufferAttribute(
+                [
+                    new THREE.Color(0x000000).r,
+                    new THREE.Color(0x000000).g,
+                    new THREE.Color(0x000000).b,
+                    new THREE.Color(0xffffff).r,
+                    new THREE.Color(0xffffff).g,
+                    new THREE.Color(0xffffff).b,
+                ],
+                3,
+            ),
+        );
+        const material = new THREE.LineBasicMaterial({ vertexColors: true });
+        return new THREE.Line(geometry, material);
     }
 }
