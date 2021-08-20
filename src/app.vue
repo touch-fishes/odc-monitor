@@ -6,26 +6,26 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { ElLoading } from 'element-plus';
 
 import { loadODCResource, ODC } from '@/scenes/odc';
 import BizGroupInfo from '@/views/biz-group-info/index.vue';
 import OverviewInfo from '@/views/overview-info/index.vue';
 import MonitorToolbar from '@/views/monitor-toolbar/index.vue';
-import { CameraMonitorObj3D, CoffeeTableObj3D, KitchenObj3D, SofaObj3D } from '@/scenes/types';
 
-type LoadRes = [CoffeeTableObj3D, SofaObj3D, KitchenObj3D,unknown,unknown]
 export default defineComponent({
     name: 'App',
     components: { BizGroupInfo, OverviewInfo, MonitorToolbar },
     setup() {
-      // 修改any
-        loadODCResource().then(([coffeeTableObj3D, sofaObj3D, kitchenObj3D]: LoadRes) => {
+        const loading = ElLoading.service({
+            lock: true,
+            text: 'Loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+        });
+
+        loadODCResource(() => loading.close()).then(() => {
             // eslint-disable-next-line no-new
-            new ODC({
-              coffeeTableObj3D,
-              sofaObj3D,
-              kitchenObj3D
-            });
+            new ODC();
         });
     },
 });

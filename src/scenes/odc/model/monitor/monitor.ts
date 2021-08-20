@@ -12,10 +12,10 @@ export class Monitor extends THREE.Group {
         monitorObject3D: undefined,
     };
 
-    public static loadResource() {
+    public static loadResource(loadingManager: THREE.LoadingManager) {
         return new Promise((resolve) => {
-            new MTLLoader().load(p('/3d-model/monitor/monitor.mtl'), (materials) => {
-                const objLoader = new OBJLoader();
+            new MTLLoader(loadingManager).load(p('/3d-model/monitor/monitor.mtl'), (materials) => {
+                const objLoader = new OBJLoader(loadingManager);
                 objLoader.setMaterials(materials);
                 objLoader.load(p('/3d-model/monitor/monitor.obj'), (obj) => {
                     Monitor.resource.monitorObject3D = obj;
