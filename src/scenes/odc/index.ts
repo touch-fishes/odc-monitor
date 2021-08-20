@@ -4,58 +4,18 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
-import { Object3D } from 'three';
 
 import { Mousemove } from './event/mousemove';
 import { Click } from './event/click';
 import { globalEvent } from './event';
-import { Floor } from './model/floor/floor';
-import { GlassWall } from './model/wall/glass-wall';
-import { Seat } from './model/seat/seat';
-import { InnerWall } from './model/wall/inner-wall';
-import { ExternalWall } from './model/wall/external-wall';
-import { Workstation } from './model/workstation/workstation';
-import { Monitor } from './model/monitor/monitor';
-import { KeyPoint } from './model/key-point/key-point';
 import { createHighlightElement } from './util/highlight';
-
-import {
-    coffeeTableStation,
-    floor,
-    kitchenStation,
-    northSofaStation,
-    WALL_HEIGHT,
-    WALL_THICKNESS,
-    walls,
-} from '@/data/buildings-data';
-import {
-    AreaSeats,
-    northWorkstation,
-    northWorkstationArea,
-    SeatAreaType,
-    southWorkstation,
-    southWorkstationArea,
-} from '@/data/workstations-data';
-import { keyPointPositions } from '@/data/key-point-data';
-import { ModelLine, ModelPointer } from '@/scenes/types';
-import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
-import { Sofa } from '@/scenes/odc/model/sofa/sofa';
-import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
-import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
-import {
-    CameraMonitorItem,
-    northCameraMonitors,
-    southCameraMonitors,
-} from '@/data/camera-monitor-data';
-import { p } from '@/scenes/odc/util/path';
-
-interface InitModelObj3D {
-    coffeeTableObj3D: { coffeeTableObj3D: Object3D };
-    sofaObj3D: { sofaObj3D: Object3D };
-    kitchenObj3D: { kitchenObj3D: Object3D };
-}
-
-// import { AppleHost } from './model/computer-host/apple-host';
+import { Seat } from './model/seat/seat';
+import { Monitor } from './model/monitor/monitor';
+import { AppleHost } from './model/computer-host/apple-host';
+import { CoffeeTable } from './model/coffee-table/coffee-table';
+import { Sofa } from './model/sofa/sofa';
+import { Kitchen } from './model/kitchen/kitchen';
+import { Structure } from './structure';
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);
@@ -64,13 +24,12 @@ export const loadODCResource = (onLoad: () => void) => {
         Sofa.loadResource(loadingManager),
         Kitchen.loadResource(loadingManager),
         Monitor.loadResource(loadingManager),
-        // AppleHost.loadResource(),
+        AppleHost.loadResource(),
         Seat.loadResource(loadingManager),
     ]);
 };
 
 export class ODC {
-    private readonly odcGroup: THREE.Group;
     private readonly renderer: THREE.WebGLRenderer;
     private readonly camera: THREE.PerspectiveCamera;
     private readonly scene: THREE.Scene;
@@ -78,13 +37,9 @@ export class ODC {
     private readonly highlightOutlinePass: OutlinePass;
     private readonly controls: OrbitControls;
     private stats: Stats;
-    private readonly northWorkstation: Workstation;
-    private readonly southWorkstation: Workstation;
-    private readonly keyPoints: any[];
+    private readonly structure: Structure;
 
     public constructor() {
-        this.odcGroup = new THREE.Group();
-
         this.renderer = this.initRender();
 
         this.camera = this.initCamera();
@@ -111,49 +66,9 @@ export class ODC {
 
         this.initEvent();
 
-        // 渲染墙体结构
-        this.renderWall();
+        this.structure = new Structure();
 
-        // 渲染地面
-        this.renderFloor();
-
-        // 渲染 ODC 工位
-        this.northWorkstation = this.renderStation(
-            southWorkstationArea,
-            southWorkstation,
-            SeatAreaType.south,
-        );
-        this.odcGroup.add(this.northWorkstation);
-        globalEvent.dispatchEvent({
-            type: 'addClickObserver',
-            message: [this.northWorkstation],
-        });
-        this.southWorkstation = this.renderStation(
-            northWorkstationArea,
-            northWorkstation,
-            SeatAreaType.north,
-        );
-        this.odcGroup.add(this.southWorkstation);
-        globalEvent.dispatchEvent({
-            type: 'addClickObserver',
-            message: [this.southWorkstation],
-        });
-
-        // 渲染厨房
-        this.renderKitchen();
-
-        this.renderNorthSofa();
-        //
-        // // 北区茶几
-        this.renderCoffeeTable();
-        //
-        // // 渲染区域内监控摄像头
-        this.renderCameraMonitor();
-
-        this.keyPoints = this.renderKeyPoints();
-        globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.keyPoints });
-
-        this.scene.add(this.odcGroup);
+        this.scene.add(this.structure);
 
         this.locationODC();
 
@@ -248,156 +163,12 @@ export class ODC {
         this.highlightComposer.render();
     }
 
-    private scale(measurement: number) {
-        const measurementLength = 71200;
-        const viewLength = 1600;
-        return (measurement * viewLength) / measurementLength;
-    }
-
-    private renderWall() {
-        walls.forEach(({ type, begin, end }) => {
-            const [beginPointer, endPointer, height, thickness] = [
-                begin.map((item) => this.scale(item)) as ModelPointer,
-                end.map((item) => this.scale(item)) as ModelPointer,
-                this.scale(WALL_HEIGHT),
-                this.scale(WALL_THICKNESS),
-            ];
-            const wall =
-                type === 'external'
-                    ? new ExternalWall(beginPointer, endPointer, height, thickness)
-                    : (type === 'glass'
-                    ? new GlassWall(beginPointer, endPointer, height, thickness)
-                    : new InnerWall(beginPointer, endPointer, height, thickness));
-            this.odcGroup.add(wall);
-        });
-    }
-
-    // TODO
-    private renderStation(workStationArea: ModelLine, workStation: AreaSeats, type: SeatAreaType) {
-        const { begin, end } = workStationArea;
-        const { x, z } = this.getCenterOfModelArea(begin, end);
-        const [beginX, beginY] = begin.map((element) => this.scale(element));
-        const [endX, endY] = end.map((element) => this.scale(element));
-        const theWorkstation = new Workstation(
-            {},
-            { xLength: endY - beginY, zLength: endX - beginX },
-            workStation,
-            type,
-        );
-        theWorkstation.position.x = x;
-        theWorkstation.position.z = z;
-        theWorkstation.name = `${type}Workstation`;
-        if (type === SeatAreaType.north) {
-            // this.northWorkstation = theWorkstation;
-            // this.odcGroup.add(this.northWorkstation);
-            // return theWorkstation;
-            globalEvent.dispatchEvent({
-                type: 'addClickObserver',
-                message: [this.northWorkstation],
-            });
-        }
-        if (type === SeatAreaType.north) {
-            // this.southWorkstation = theWorkstation;
-            // this.odcGroup.add(this.southWorkstation);
-            // globalEvent.dispatchEvent({
-            //     type: 'addClickObserver',
-            //     message: [this.southWorkstation],
-            // });
-        }
-        return theWorkstation;
-    }
-
-    private renderKitchen() {
-        const { begin, end } = kitchenStation;
-        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-        const kitchen = new Kitchen();
-        kitchen.position.z = z;
-        kitchen.position.x = x;
-        this.odcGroup.add(kitchen);
-    }
-
-    private renderNorthSofa() {
-        const { begin, end } = northSofaStation;
-        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-        this.odcGroup.add(new Sofa(begin, end, { x, z }));
-    }
-
-    private renderCoffeeTable() {
-        const { begin, end } = coffeeTableStation;
-        const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-        this.odcGroup.add(new CoffeeTable({ x, z }));
-    }
-
-    private renderCameraMonitor() {
-        let cameraMonitors: Object3D[] = [];
-        const map = new THREE.TextureLoader().load(p('/texture/camera-monitor.png'));
-        cameraMonitors = [
-            ...this.generateCameraMonitor(southCameraMonitors, map, SeatAreaType.south),
-            ...this.generateCameraMonitor(northCameraMonitors, map, SeatAreaType.north),
-        ];
-        cameraMonitors.forEach((item) => this.odcGroup.add(item));
-        globalEvent.dispatchEvent({ type: 'addClickObserver', message: cameraMonitors });
-    }
-
-    private generateCameraMonitor(
-        cameraMonitors: CameraMonitorItem[],
-        map: THREE.Texture,
-        areaType: SeatAreaType,
-    ): Object3D[] {
-        const result: Object3D[] = [];
-        cameraMonitors.forEach((cameraMonitorPosition) => {
-            const { begin, end, observedSeatRowIndex } = cameraMonitorPosition;
-            const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const obj = new CameraMonitor(
-                map,
-                { x, y: this.scale(WALL_HEIGHT), z },
-                { areaType, observedSeatRowIndex },
-            );
-            result.push(obj);
-        });
-        return result;
-    }
-
-    // TODO 材质优化
-    private renderFloor() {
-        this.odcGroup.add(
-            new Floor(
-                floor.begin.map((itm) => this.scale(itm)) as ModelPointer,
-                floor.end.map((itm) => this.scale(itm)) as ModelPointer,
-            ),
-        );
-    }
-
-    private renderKeyPoints() {
-        return keyPointPositions.map((item) => {
-            const { begin, end } = item;
-            const { x, z } = this.getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const keyPoint = new KeyPoint(20);
-            keyPoint.position.z = z;
-            keyPoint.position.y = this.scale(WALL_HEIGHT);
-            keyPoint.position.x = x;
-            keyPoint.userData.isNeedLiftCamera = item.type === 'hight';
-            return keyPoint;
-        });
-    }
-
     private locationODC() {
         const box3 = new THREE.Box3();
-        box3.expandByObject(this.odcGroup);
+        box3.expandByObject(this.structure);
         const center = new THREE.Vector3();
         box3.getCenter(center);
-
-        this.odcGroup.position.x = this.odcGroup.position.x - center.x;
-        this.odcGroup.position.z = this.odcGroup.position.z - center.z;
-    }
-
-    private getCenterOfModelArea(begin: ModelPointer, end: ModelPointer) {
-        const [beginX, beginY] = begin.map((element) => this.scale(element));
-        const [endX, endY] = end.map((element) => this.scale(element));
-        // 模型的 x 对应 坐标系 z 轴
-        const centerZ = (beginX + endX) / 2;
-        // 模型的 y 对应 坐标系 x 轴
-        const centerX = (beginY + endY) / 2;
-        return { x: centerX, z: centerZ };
+        this.structure.position.x = this.structure.position.x - center.x;
+        this.structure.position.z = this.structure.position.z - center.z;
     }
 }

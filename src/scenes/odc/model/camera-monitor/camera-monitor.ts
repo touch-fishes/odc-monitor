@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Object3D, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
@@ -8,7 +8,7 @@ import { animateOrbitCamera } from '@/scenes/odc/util/camera';
 import { SeatAreaType } from '@/data/workstations-data';
 
 export class CameraMonitor extends THREE.Group implements ClickObserver {
-    private areaType: string;
+    private readonly areaType: string;
     private observedSeatRowIndex: number;
 
     public constructor(
