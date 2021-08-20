@@ -94,26 +94,26 @@ export class Structure extends THREE.Group {
         globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.cameraMonitors });
     }
 
-    private renderKitchen() {
+    private renderKitchen = () => {
         const { begin, end } = kitchenStation;
         const { x, z } = getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         const kitchen = new Kitchen();
         kitchen.position.z = z;
         kitchen.position.x = x;
         return kitchen;
-    }
+    };
 
-    private renderNorthSofa() {
+    private renderNorthSofa = () => {
         const { begin, end } = northSofaStation;
         const { x, z } = getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         return new Sofa(begin, end, { x, z });
-    }
+    };
 
-    private renderCoffeeTable() {
+    private renderCoffeeTable = () => {
         const { begin, end } = coffeeTableStation;
         const { x, z } = getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
         return new CoffeeTable({ x, z });
-    }
+    };
 
     private renderKeyPoints() {
         return keyPointPositions.map((item) => {
