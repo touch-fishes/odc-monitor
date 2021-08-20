@@ -20,7 +20,7 @@ export type AreaSeats = SeatInfo[][];
  * 北部工位区域
  * */
 export const northWorkstationArea: ModelLine = {
-    begin: [0, 8400],
+    begin: [120, 8400],
     end: [8400 - sideSpacing, 48000],
 };
 
