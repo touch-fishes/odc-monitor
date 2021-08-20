@@ -1,5 +1,5 @@
 <template>
-    <o-panel class="info-container" title="Index 概况">
+    <o-panel class="info-container" title="ODC 概况">
         <div class="content">
             <el-progress
                 class="odc-progress"
