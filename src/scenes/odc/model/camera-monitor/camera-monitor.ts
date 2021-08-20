@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { ClickObserver } from '@/scenes/odc/event/click';
-import { animateOrbitCamera } from '@/scenes/odc/util/camera';
+import { animateOrbitCamera } from '@/scenes/util/camera';
 import { SeatAreaType } from '@/data/workstations-data';
 
 export class CameraMonitor extends THREE.Group implements ClickObserver {

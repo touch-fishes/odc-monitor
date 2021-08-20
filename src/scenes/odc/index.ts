@@ -8,7 +8,6 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { Mousemove } from './event/mousemove';
 import { Click } from './event/click';
 import { globalEvent } from './event';
-import { createHighlightElement } from './util/highlight';
 import { Seat } from './model/seat/seat';
 import { Monitor } from './model/monitor/monitor';
 import { AppleHost } from './model/computer-host/apple-host';
@@ -16,6 +15,8 @@ import { CoffeeTable } from './model/coffee-table/coffee-table';
 import { Sofa } from './model/sofa/sofa';
 import { Kitchen } from './model/kitchen/kitchen';
 import { Structure } from './structure';
+
+import { createHighlightElement } from '@/scenes/util/highlight';
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);

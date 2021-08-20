@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 // TODO
 export class Kitchen extends THREE.Group {

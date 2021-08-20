@@ -21,7 +21,7 @@ import { ModelLine, ModelPointer } from '@/scenes/types';
 import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
 import { Sofa } from '@/scenes/odc/model/sofa/sofa';
 import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
-import { getCenterOfModelArea, scale } from '@/scenes/odc/util/location';
+import { getCenterOfModelArea, scale } from '@/scenes/util/location';
 import { keyPointPositions } from '@/data/key-point-data';
 import { KeyPoint } from '@/scenes/odc/model/key-point/key-point';
 import { Floor } from '@/scenes/odc/model/floor/floor';
@@ -30,7 +30,7 @@ import { globalEvent } from '@/scenes/odc/event';
 import { ExternalWall } from '@/scenes/odc/model/wall/external-wall';
 import { GlassWall } from '@/scenes/odc/model/wall/glass-wall';
 import { InnerWall } from '@/scenes/odc/model/wall/inner-wall';
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 import {
     CameraMonitorItem,
     northCameraMonitors,

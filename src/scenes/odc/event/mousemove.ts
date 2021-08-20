@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
-import { clientX2X, clientY2Y } from '../util/location';
-import { getIntersectedMesh } from '../util/raycaster';
+import { clientX2X, clientY2Y } from '@/scenes/util/location';
+import { getIntersectedMesh } from '@/scenes/util/raycaster';
 
 export interface MousemoveObserver {
     onMousemove: (

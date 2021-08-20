@@ -2,10 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
-import { animateOrbitCamera } from '../../util/camera';
-
+import { animateOrbitCamera } from '@/scenes/util/camera';
 import { ClickObserver } from '@/scenes/odc/event/click';
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 export class KeyPoint extends THREE.Group implements ClickObserver {
     public static clazzName = 'keyPoint';

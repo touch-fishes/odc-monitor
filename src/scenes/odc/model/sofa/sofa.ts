@@ -3,7 +3,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 import { SofaObj3D } from '../../../types';
 
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 // TODO
 /**

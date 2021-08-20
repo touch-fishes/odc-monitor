@@ -4,7 +4,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
 import { Host } from './host';
 
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 export class AppleHost extends Host {
     public static clazzName = 'AppleHost';

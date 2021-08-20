@@ -3,11 +3,11 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 // import { StationInfo } from '../info/station-info';
 import { Seat } from '../seat/seat';
-import { getDefinedObject3D, getDefinedObject3DByName, getSize } from '../../util/object-3d';
 import { MousemoveObserver } from '../../event/mousemove';
 import { ClickObserver } from '../../event/click';
 import { Desktop } from '../desktop/desktop';
 
+import { getDefinedObject3D, getDefinedObject3DByName, getSize } from '@/scenes/util/object-3d';
 import { AreaSeats, SeatInfo, SeatAreaType } from '@/data/workstations-data';
 
 export class Workstation extends THREE.Group implements MousemoveObserver, ClickObserver {

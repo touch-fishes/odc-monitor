@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { LoadingManager, Object3D } from 'three';
 
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 // TODO
 /**

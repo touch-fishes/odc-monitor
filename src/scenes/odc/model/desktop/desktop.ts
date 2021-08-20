@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import { HWHost } from '../computer-host/hw-host';
 import { AppleHost } from '../computer-host/apple-host';
-// @ts-ignore
-import { generateTextSprite } from '../../util/generate-text-sprite.js';
-import { getDefinedObject3D, getSize, setEqualScale } from '../../util/object-3d';
 import { Monitor } from '../monitor/monitor';
 
+// @ts-ignore
+import { generateTextSprite } from '@/scenes/util/generate-text-sprite.js';
+import { getDefinedObject3D, getSize, setEqualScale } from '@/scenes/util/object-3d';
 import { SeatInfo } from '@/data/workstations-data';
 
 export class Desktop extends THREE.Group {

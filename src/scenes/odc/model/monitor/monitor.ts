@@ -3,7 +3,7 @@ import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { Group, Material, Mesh } from 'three';
 
-import { p } from '@/scenes/odc/util/path';
+import { p } from '@/scenes/util/path';
 
 export class Monitor extends THREE.Group {
     public static clazzName = 'monitor';
