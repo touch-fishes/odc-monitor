@@ -156,8 +156,8 @@ export class ODC {
 
     private initLight() {
         // 环境光源
-        const ambientLight = new THREE.AmbientLight(0x606060, 2);
-        this.scene.add(ambientLight);
+        // const ambientLight = new THREE.AmbientLight(0x606060, 2);
+        // this.scene.add(ambientLight);
 
         // const directionalLight = new THREE.DirectionalLight(0xffffff);
         // directionalLight.position.set(1, 0.75, 0.5).normalize();

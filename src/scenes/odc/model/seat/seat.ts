@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 
 import { Desktop } from '../desktop/desktop';
 import { KeyPoint } from '../key-point/key-point';
@@ -50,6 +51,14 @@ export class Seat extends THREE.Group {
     }
 
     public light() {
+        const { x, y } = getSize(this.desktop);
+        const topLight = new THREE.SpotLight(0x7f00ff, 1, 180, Math.PI / 4);
+
+        const { x: lookAtX, y: lookAtY, z: lookAtZ } = this.desktop.position;
+        topLight.position.set(lookAtX, lookAtY + 20, lookAtZ);
+        topLight.target = this.desktop;
+        this.add(topLight);
+        // this.add(new RectAreaLightHelper(topLight));
         console.log(666, 'light');
     }
 
