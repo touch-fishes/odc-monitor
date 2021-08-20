@@ -48,16 +48,7 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
         return this.children;
     }
 
-    protected initCameraMonitor(map: THREE.Texture) {
-        const material = new THREE.SpriteMaterial({ map });
-        const sprite = new THREE.Sprite(material);
-        const scale = 20;
-        sprite.scale.set(scale, scale, scale);
-        sprite.userData.type = 'cameraMonitor';
-        return sprite;
-    }
-
-    private observationArea({
+    public observationArea({
         camera,
         controls,
     }: {
@@ -82,5 +73,22 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
             { cameraPosition: camera.position, orbitTargetPosition: controls.target },
             { cameraPosition: basePosition, orbitTargetPosition: lookAtPosition },
         );
+    }
+
+    public setColor(hex: number) {
+        (this.children[0] as THREE.Sprite).material.color.set(hex);
+    }
+
+    public setScale(scale: number) {
+        (this.children[0] as THREE.Sprite).scale.set(scale, scale, scale);
+    }
+
+    protected initCameraMonitor(map: THREE.Texture) {
+        const material = new THREE.SpriteMaterial({ map });
+        const sprite = new THREE.Sprite(material);
+        const scale = 20;
+        sprite.scale.set(scale, scale, scale);
+        sprite.userData.type = 'cameraMonitor';
+        return sprite;
     }
 }

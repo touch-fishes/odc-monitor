@@ -48,7 +48,8 @@ export class Structure extends THREE.Group {
     private readonly northWorkstation: Workstation;
     private readonly southWorkstation: Workstation;
     private readonly keyPoints: KeyPoint[];
-    private readonly cameraMonitors: CameraMonitor[];
+    private readonly southCameraMonitors: CameraMonitor[];
+    private readonly northCameraMonitors: CameraMonitor[];
 
     public constructor() {
         super();
@@ -58,16 +59,17 @@ export class Structure extends THREE.Group {
         this.floor = this.renderFloor();
         this.keyPoints = this.renderKeyPoints();
         this.walls = this.renderWall();
-        this.cameraMonitors = this.renderCameraMonitor();
+        this.southCameraMonitors = this.renderCameraMonitor(SeatAreaType.south);
+        this.northCameraMonitors = this.renderCameraMonitor(SeatAreaType.north);
         this.northWorkstation = this.renderStation(
             northWorkstationArea,
             northWorkstation,
-            SeatAreaType.south,
+            SeatAreaType.north,
         );
         this.southWorkstation = this.renderStation(
             southWorkstationArea,
             southWorkstation,
-            SeatAreaType.north,
+            SeatAreaType.south,
         );
         this.add(this.kitchen);
         this.add(this.northSofa);
@@ -77,7 +79,8 @@ export class Structure extends THREE.Group {
         this.add(this.southWorkstation);
         this.keyPoints.forEach((keyPoint) => this.add(keyPoint));
         this.walls.forEach((wall) => this.add(wall));
-        this.cameraMonitors.forEach((cameraMonitor) => this.add(cameraMonitor));
+        this.southCameraMonitors.forEach((cameraMonitor) => this.add(cameraMonitor));
+        this.northCameraMonitors.forEach((cameraMonitor) => this.add(cameraMonitor));
         this.addObserver();
     }
 
@@ -91,7 +94,14 @@ export class Structure extends THREE.Group {
             message: [this.southWorkstation],
         });
         globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.keyPoints });
-        globalEvent.dispatchEvent({ type: 'addClickObserver', message: this.cameraMonitors });
+        globalEvent.dispatchEvent({
+            type: 'addClickObserver',
+            message: this.northCameraMonitors,
+        });
+        globalEvent.dispatchEvent({
+            type: 'addClickObserver',
+            message: this.southCameraMonitors,
+        });
     }
 
     private renderKitchen = () => {
@@ -169,12 +179,11 @@ export class Structure extends THREE.Group {
         });
     }
 
-    private renderCameraMonitor() {
+    private renderCameraMonitor(areaType: SeatAreaType) {
         const map = new THREE.TextureLoader().load(p('/texture/camera-monitor.png'));
-        return [
-            ...this.generateCameraMonitor(southCameraMonitors, map, SeatAreaType.south),
-            ...this.generateCameraMonitor(northCameraMonitors, map, SeatAreaType.north),
-        ];
+        return areaType === SeatAreaType.south
+            ? this.generateCameraMonitor(southCameraMonitors, map, areaType)
+            : this.generateCameraMonitor(northCameraMonitors, map, areaType);
     }
 
     private generateCameraMonitor(

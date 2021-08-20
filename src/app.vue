@@ -1,11 +1,11 @@
 <template>
     <overview-info />
     <biz-group-info />
-    <monitor-toolbar />
+    <monitor-toolbar :odc-instance="odcInstance" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { ElLoading } from 'element-plus';
 
 import { loadODCResource, ODC } from '@/scenes/odc';
@@ -17,6 +17,7 @@ export default defineComponent({
     name: 'App',
     components: { BizGroupInfo, OverviewInfo, MonitorToolbar },
     setup() {
+        const odcInstance = ref({});
         const loading = ElLoading.service({
             lock: true,
             text: 'Loading',
@@ -25,8 +26,11 @@ export default defineComponent({
 
         loadODCResource(() => loading.close()).then(() => {
             // eslint-disable-next-line no-new
-            new ODC();
+            odcInstance.value = new ODC();
         });
+      return {
+        odcInstance: odcInstance,
+      };
     },
 });
 </script>

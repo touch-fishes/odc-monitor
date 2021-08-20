@@ -17,6 +17,7 @@ import { Kitchen } from './model/kitchen/kitchen';
 import { Structure } from './structure';
 
 import { createHighlightElement } from '@/scenes/util/highlight';
+import { animateOrbitCamera } from '@/scenes/util/camera';
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);
@@ -33,10 +34,12 @@ export const loadODCResource = (onLoad: () => void) => {
 export class ODC {
     private readonly renderer: THREE.WebGLRenderer;
     private readonly camera: THREE.PerspectiveCamera;
+    private readonly oldCamera: THREE.PerspectiveCamera;
     private readonly scene: THREE.Scene;
     private highlightComposer: EffectComposer;
     private readonly highlightOutlinePass: OutlinePass;
     private readonly controls: OrbitControls;
+    private readonly oldControls: OrbitControls;
     private stats: Stats;
     private readonly structure: Structure;
 
@@ -45,9 +48,13 @@ export class ODC {
 
         this.camera = this.initCamera();
 
+        this.oldCamera = this.initCamera();
+
         this.scene = this.initScene();
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+        this.oldControls = new OrbitControls(this.camera, this.renderer.domElement);
 
         // @ts-ignore
         this.stats = new Stats();
@@ -76,15 +83,21 @@ export class ODC {
         this.animate();
     }
 
+    public refresh() {
+        animateOrbitCamera(
+            { camera: this.camera, controls: this.controls },
+            {
+                cameraPosition: this.camera.position,
+                orbitTargetPosition: this.controls.target,
+            },
+            {
+                cameraPosition: this.oldCamera.position,
+                orbitTargetPosition: this.oldControls.target,
+            },
+        );
+    }
+
     private initEvent() {
-        // TODO
-        // document.getElementById('#switch-btn').addEventListener( 'click', (event) => {
-        // 	animateOrbitCamera(
-        // 		{camera: this.camera, controls: this.controls},
-        // 		{cameraPosition: this.camera.position, orbitTargetPosition: this.controls.target },
-        // 		{ cameraPosition: this.oldCamera.position, orbitTargetPosition: this.oldControls.target }
-        // 	)
-        // });
         window.addEventListener('resize', (event) => {
             if (this.camera && this.renderer) {
                 this.camera.aspect = window.innerWidth / window.innerHeight;
