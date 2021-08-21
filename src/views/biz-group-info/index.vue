@@ -49,11 +49,14 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 .info-container {
-    left: 0;
+    left: 20px;
     top: 66px;
     max-height: calc(100% - 66px);
     overflow: hidden;
     width: 280px;
+    background: transparent;
+    border: 1px solid #0f375a;
+    border-radius: 8px;
     .group-container {
         max-height: calc(100% - 100px);
         .groups {
@@ -67,17 +70,19 @@ export default defineComponent({
                         float: left;
                         display: block;
                         width: 180px;
+                        color: #afe5f3;
                     }
                     .people-count {
                         display: block;
                         float: right;
                         font-weight: 600;
-                        color: #409eff;
+                        color: #afe5f3;
                     }
                 }
                 .seat-tag {
                     cursor: pointer;
                     margin: 2px 2px;
+                    color: #459eef;
                 }
             }
         }

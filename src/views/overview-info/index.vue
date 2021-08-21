@@ -6,6 +6,7 @@
                 :stroke-width="12"
                 type="circle"
                 :percentage="usageRate"
+                color="#459eff"
             >
                 <template #default="{ percentage }">
                     <span class="percentage-value">{{ percentage }}%</span>
@@ -47,11 +48,14 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 .info-container {
-    right: 0;
+    right: 20px;
     top: 66px;
     max-height: calc(100% - 66px);
     overflow: hidden;
     width: 280px;
+    background: transparent;
+    border: 1px solid #0f375a;
+    border-radius: 8px;
     .panel-split {
         margin: 18px 0 8px 0;
         text-align: left;
@@ -78,11 +82,12 @@ export default defineComponent({
                 overflow: auto;
                 .label {
                     margin-right: 20px;
+                    color: #afe5f3;
                 }
                 .value-use {
                     font-size: 16px;
                     font-weight: 600;
-                    color: #409eff;
+                    color: #459eff;
                     float: right;
                 }
                 .value-no-use {

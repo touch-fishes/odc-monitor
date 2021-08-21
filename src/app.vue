@@ -67,7 +67,7 @@ export default defineComponent({
             option: number;
         }) => {
             const currentCameraMonitor = getCurrentCameraMonitor({ index, area });
-            const hex = option === 0 ? 0xffffff : 0xd4237a;
+            const hex = option === 0 ? 0xffffff : 0x459eef;
             currentCameraMonitor?.setColor(hex);
             const scale = option === 0 ? 30 : 40;
             currentCameraMonitor?.setScale(scale);

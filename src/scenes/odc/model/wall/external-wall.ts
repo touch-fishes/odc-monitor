@@ -12,7 +12,7 @@ export class ExternalWall extends Wall {
     }
     protected initMaterial() {
         return new THREE.MeshLambertMaterial({
-            color: '#56595c',
+            color: '#2f6186',
             transparent: true,
             opacity: 1,
         });

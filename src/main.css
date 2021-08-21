@@ -1,8 +1,20 @@
 body {
     margin: 0;
-    background-color: #000;
+    background: url("./assets/bg.png") no-repeat center center fixed;
+    background-size: cover;
     color: #a1a1a6;
     font-size: 13px;
     line-height: 24px;
     overscroll-behavior: none;
+}
+
+.el-card__header {
+    background-image: radial-gradient(#2e6890, #153e61, #12395c);
+    text-align: center;
+    color: #a3d7ec;
+}
+
+.el-carousel__container {
+    position: relative;
+    left: 14%;
 }

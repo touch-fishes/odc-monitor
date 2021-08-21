@@ -1,8 +1,8 @@
 <template>
     <el-button-group class="toolbar">
-        <el-button icon="el-icon-refresh" size="mini" @click="refresh"> 刷新 </el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="refresh"> 重置 </el-button>
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(0, seatAreaType.north)"
             @mouseenter="handleMouseMove(0, seatAreaType.north)"
@@ -10,7 +10,7 @@
             >北1观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(1, seatAreaType.north)"
             @mouseenter="handleMouseMove(1, seatAreaType.north)"
@@ -18,7 +18,7 @@
             >北2观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(2, seatAreaType.north)"
             @mouseenter="handleMouseMove(2, seatAreaType.north)"
@@ -26,7 +26,7 @@
             >北3观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(3, seatAreaType.north)"
             @mouseenter="handleMouseMove(3, seatAreaType.north)"
@@ -34,7 +34,7 @@
             >北4观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(2, seatAreaType.south)"
             @mouseenter="handleMouseMove(2, seatAreaType.south)"
@@ -42,7 +42,7 @@
             >南3观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(1, seatAreaType.south)"
             @mouseenter="handleMouseMove(1, seatAreaType.south)"
@@ -50,7 +50,7 @@
             >南2观测点</el-button
         >
         <el-button
-            icon="el-icon-view"
+            icon="el-icon-location"
             size="mini"
             @click="handleClick(0, seatAreaType.south)"
             @mouseenter="handleMouseMove(0, seatAreaType.south)"
@@ -97,8 +97,17 @@ export default defineComponent({
 <style scoped lang="scss">
 .toolbar {
     position: absolute;
-    bottom: 38px;
-    left: 35%;
+    top: 38px;
+    left: 50%;
     transform: translateX(-50%);
+}
+.el-button {
+    background: #2f6186;
+    border: 1px solid #2f6186;
+    &:hover {
+        background: #2f6186;
+        border: 1px solid #5e98c6;
+        color: #459eef;
+    }
 }
 </style>

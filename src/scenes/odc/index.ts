@@ -156,8 +156,8 @@ export class ODC {
 
     private initLight() {
         // 环境光源
-        // const ambientLight = new THREE.AmbientLight(0x606060, 2);
-        // this.scene.add(ambientLight);
+        const ambientLight = new THREE.AmbientLight(0x606060, 2);
+        this.scene.add(ambientLight);
 
         // const directionalLight = new THREE.DirectionalLight(0xffffff);
         // directionalLight.position.set(1, 0.75, 0.5).normalize();
@@ -177,13 +177,12 @@ export class ODC {
     }
 
     private initScene() {
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#0a0a0a');
-        return scene;
+        return new THREE.Scene();
     }
 
     private initRender() {
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setClearAlpha(0.2);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.append(renderer.domElement);

@@ -22,7 +22,7 @@ export class Floor extends THREE.Group {
         // uv两个方向纹理重复数量
         texture.repeat.set(2, 1);
         return new THREE.MeshLambertMaterial({
-            color: '#00032c',
+            color: '#5e98c6',
         });
     }
 
