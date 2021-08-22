@@ -30,7 +30,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .card-define {
     position: absolute;
-    max-width: 280px;
+    max-width: 300px;
     .card-header {
         font-size: 15px;
         font-weight: 600;

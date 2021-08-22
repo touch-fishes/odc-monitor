@@ -2,6 +2,8 @@ import { ModelLine } from '@/scenes/types';
 
 const sideSpacing = 1200;
 
+// TODO 使用标准的 mock 数据
+
 export enum SeatAreaType {
     north = 'north',
     south = 'south',
@@ -98,3 +100,28 @@ export const bizGroupInfo = [
         seats: ['sj1', 'sj5', 'sj9'],
     },
 ];
+
+export const getScreen = () => {
+    return {
+        total: 381,
+        usage: 100,
+        usageRate: Math.ceil((100 / 381) * 100),
+    };
+};
+
+export const getMacMini = () => {
+    return {
+        total: 190,
+        usage: 50,
+        usageRate: Math.ceil((50 / 190) * 100),
+    };
+};
+
+// eslint-disable-next-line sonarjs/no-identical-functions
+export const getPC = () => {
+    return {
+        total: 190,
+        usage: 50,
+        usageRate: Math.ceil((50 / 190) * 100),
+    };
+};

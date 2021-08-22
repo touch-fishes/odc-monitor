@@ -7,6 +7,7 @@
         "build": "vue-cli-service build --mode production"
     },
     "devDependencies": {
+        "@element-plus/icons": "^0.0.11",
         "@tweenjs/tween.js": "^18",
         "@types/three": "^0.131.0",
         "@vue/cli-plugin-babel": "~4.5.0",

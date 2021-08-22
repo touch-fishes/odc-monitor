@@ -4,8 +4,12 @@
             <div v-for="group in groups" :key="group.code" class="groups">
                 <div class="group-item">
                     <p class="group-base-info">
-                        <span class="group-name"> {{ group.code }}</span>
-                        <span class="people-count">{{ group.seats.length }}</span>
+                        <span class="group-name">
+                            <wind-power class="icon" />{{ group.code }}</span
+                        >
+                        <span class="people-count"
+                            ><user class="icon" />{{ group.seats.length }}</span
+                        >
                     </p>
                     <p class="group-seat">
                         <el-tag
@@ -15,7 +19,7 @@
                             size="mini"
                             effect="dark"
                             :disable-transitions="true"
-                            :color="activeSeat === item ? '#409EFF' : '#909399'"
+                            :color="activeSeat === item ? '#409EFF' : '#303133'"
                             @click="onSeatClick(item)"
                         >
                             {{ item.toUpperCase() }}
@@ -30,12 +34,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { ElTag } from 'element-plus';
+import { WindPower, User } from '@element-plus/icons';
 
 import OPanel from '@/components/panel/index.vue';
 import { odcInfo, bizGroupInfo } from '@/data/workstations-data';
 
 export default defineComponent({
-    components: { OPanel, ElTag },
+    components: { OPanel, ElTag, WindPower, User },
     emits: ['seat-click'],
     setup(_props, context) {
         const activeSeat = ref<string>();
@@ -55,6 +60,13 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="scss">
+.icon {
+    width: 1em;
+    height: 1em;
+    margin-right: 6px;
+    position: relative;
+    top: 2px;
+}
 .info-container {
     left: 20px;
     top: 66px;
