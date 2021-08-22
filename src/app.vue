@@ -27,7 +27,7 @@ export default defineComponent({
         let odc: undefined | ODC;
         const loading = ElLoading.service({
             lock: true,
-            text: 'Loading',
+            text: 'ODC Loading',
             background: 'rgba(0, 0, 0, 0.7)',
         });
 
