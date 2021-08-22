@@ -3,7 +3,6 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'three/examples/jsm/libs/stats.module';
 
 import { Mousemove } from './event/mousemove';
 import { Click } from './event/click';
@@ -19,6 +18,11 @@ import { Structure } from './structure';
 import { createHighlightElement } from '@/scenes/util/highlight';
 import { animateOrbitCamera } from '@/scenes/util/camera';
 import { getObject3DChild, getObject3DChildren } from '@/scenes/util/object-3d';
+import { Helper } from '@/scenes/odc/helper';
+
+const isNeedHelp = () => {
+    return location.search.includes('help=1');
+};
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);
@@ -37,12 +41,12 @@ export class ODC {
     private readonly camera: THREE.PerspectiveCamera;
     private readonly oldCamera: THREE.PerspectiveCamera;
     private readonly scene: THREE.Scene;
-    private highlightComposer: EffectComposer;
+    private readonly highlightComposer: EffectComposer;
     private readonly highlightOutlinePass: OutlinePass;
     private readonly controls: OrbitControls;
-    private readonly oldControls: OrbitControls;
-    private stats: Stats;
     private readonly structure: Structure;
+    private readonly baseMonitorTarget: THREE.Vector3;
+    private readonly helper: Helper | undefined;
 
     public constructor() {
         this.renderer = this.initRender();
@@ -53,14 +57,15 @@ export class ODC {
 
         this.scene = this.initScene();
 
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls = this.initControls();
 
-        this.oldControls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.baseMonitorTarget = this.controls.target.copy(new THREE.Vector3());
 
-        // @ts-ignore
-        this.stats = new Stats();
-
-        this.initHelp();
+        // 正式情况无需展示
+        if (isNeedHelp()) {
+            this.helper = new Helper();
+            this.scene.add(this.helper);
+        }
 
         this.initLight();
 
@@ -104,7 +109,7 @@ export class ODC {
             },
             {
                 cameraPosition: this.oldCamera.position,
-                orbitTargetPosition: this.oldControls.target,
+                orbitTargetPosition: this.baseMonitorTarget,
             },
         );
     }
@@ -147,15 +152,12 @@ export class ODC {
         );
     }
 
-    private initHelp() {
-        this.controls.screenSpacePanning = false;
-        this.controls.maxPolarAngle = Math.PI / 2;
-        // 坐标轴
-        const axesHelper = new THREE.AxesHelper(100);
-        axesHelper.position.set(0, 100, 0);
-        this.scene.add(axesHelper);
-        document.body.append(this.stats.dom);
-        // this.scene.add(new THREE.GridHelper(2000, 50));
+    private initControls() {
+        const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        controls.maxDistance = 1800;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI / 2.06;
+        return controls;
     }
 
     private initLight() {
@@ -196,8 +198,10 @@ export class ODC {
     private animate() {
         requestAnimationFrame(this.animate.bind(this));
         TWEEN.update();
-        this.stats.update();
         this.highlightComposer.render();
+        if (isNeedHelp()) {
+            this.helper?.stats.update();
+        }
     }
 
     private locationODC() {

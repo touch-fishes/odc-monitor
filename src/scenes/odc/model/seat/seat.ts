@@ -54,11 +54,11 @@ export class Seat extends THREE.Group {
     }
 
     public lightOff() {
-      this.light.visible = false;
+        this.light.visible = false;
     }
 
     public lightOn() {
-      this.light.visible = true;
+        this.light.visible = true;
     }
 
     private locationKeyPoint() {
@@ -73,9 +73,9 @@ export class Seat extends THREE.Group {
         this.keyPoint.setLookAt(lockAtPosition);
     }
     private createLight() {
-        const topLight = new THREE.SpotLight(0x7f00ff, 2, 180);
+        const topLight = new THREE.SpotLight('rgb(245,108,108)', 2, 180);
         const { x: lookAtX, y: lookAtY, z: lookAtZ } = this.table.position;
-        topLight.position.set(lookAtX+2, lookAtY + 20, lookAtZ);
+        topLight.position.set(lookAtX + 2, lookAtY + 20, lookAtZ);
         topLight.target = this.table;
         // 光照强度
         topLight.decay = 2;

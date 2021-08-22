@@ -13,8 +13,9 @@
                             :key="item"
                             class="seat-tag"
                             size="mini"
-                            effect="plain"
-                            :type="activeSeat === item ? '' : 'info'"
+                            effect="dark"
+                            :disable-transitions="true"
+                            :color="activeSeat === item ? '#409EFF' : '#909399'"
                             @click="onSeatClick(item)"
                         >
                             {{ item.toUpperCase() }}
@@ -88,7 +89,7 @@ export default defineComponent({
                 .seat-tag {
                     cursor: pointer;
                     margin: 2px 2px;
-                    color: #459eef;
+                    color: #afe5f3;
                 }
             }
         }
