@@ -13,7 +13,8 @@
                             :key="item"
                             class="seat-tag"
                             size="mini"
-                            effect="dark"
+                            effect="plain"
+                            :type="activeSeat === item ? '' : 'info'"
                             @click="onSeatClick(item)"
                         >
                             {{ item.toUpperCase() }}
@@ -26,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { ElTag } from 'element-plus';
 
 import OPanel from '@/components/panel/index.vue';
@@ -36,12 +37,17 @@ export default defineComponent({
     components: { OPanel, ElTag },
     emits: ['seat-click'],
     setup(_props, context) {
-        const onSeatClick = (seat: string) => context.emit('seat-click', seat);
+        const activeSeat = ref<string>();
+        const onSeatClick = (seat: string) => {
+            activeSeat.value = seat;
+            context.emit('seat-click', seat);
+        };
         return {
             groups: bizGroupInfo,
             useSeat: odcInfo.useSeat,
             totalSeat: odcInfo.totalSeat,
             usageRate: Math.ceil((odcInfo.useSeat / odcInfo.totalSeat) * 100),
+            activeSeat: activeSeat,
             onSeatClick,
         };
     },

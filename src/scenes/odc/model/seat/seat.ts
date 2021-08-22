@@ -30,6 +30,7 @@ export class Seat extends THREE.Group {
     public readonly table: THREE.Object3D;
     public readonly keyPoint: KeyPoint;
     public readonly desktop: Desktop;
+    public readonly light: THREE.SpotLight;
 
     public constructor(seatInfo: SeatInfo) {
         const theSeatInfo = seatInfo || {};
@@ -38,11 +39,13 @@ export class Seat extends THREE.Group {
         this.table = this.createTable();
         this.keyPoint = this.createKeyPoint();
         this.desktop = this.createDeskTop(theSeatInfo);
+        this.light = this.createLight();
         this.userData.clazzName = Seat.clazzName;
         this.userData.id = `${seatInfo.code}`;
         this.add(this.table);
         this.add(this.keyPoint);
         this.add(this.desktop);
+        this.add(this.light);
         // TODO 延时加载观测点 注视方向
         // eslint-disable-next-line no-promise-executor-return
         new Promise((resolve) => resolve(true)).then(() => {
@@ -50,16 +53,12 @@ export class Seat extends THREE.Group {
         });
     }
 
-    public light() {
-        const { x, y } = getSize(this.desktop);
-        const topLight = new THREE.SpotLight(0x7f00ff, 1, 180, Math.PI / 4);
+    public lightOff() {
+      this.light.visible = false;
+    }
 
-        const { x: lookAtX, y: lookAtY, z: lookAtZ } = this.desktop.position;
-        topLight.position.set(lookAtX, lookAtY + 20, lookAtZ);
-        topLight.target = this.desktop;
-        this.add(topLight);
-        // this.add(new RectAreaLightHelper(topLight));
-        console.log(666, 'light');
+    public lightOn() {
+      this.light.visible = true;
     }
 
     private locationKeyPoint() {
@@ -72,6 +71,16 @@ export class Seat extends THREE.Group {
             keyPointZ,
         );
         this.keyPoint.setLookAt(lockAtPosition);
+    }
+    private createLight() {
+        const topLight = new THREE.SpotLight(0x7f00ff, 2, 180);
+        const { x: lookAtX, y: lookAtY, z: lookAtZ } = this.table.position;
+        topLight.position.set(lookAtX+2, lookAtY + 20, lookAtZ);
+        topLight.target = this.table;
+        // 光照强度
+        topLight.decay = 2;
+        topLight.visible = false;
+        return topLight;
     }
     private createKeyPoint() {
         const keyPoint = new KeyPoint(16);

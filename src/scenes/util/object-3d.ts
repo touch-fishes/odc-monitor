@@ -35,6 +35,19 @@ export const getDefinedObject3DByName = (
     }
 };
 
+export const getObject3DChildren = (obj: THREE.Object3D, clazzName: string) => {
+    const collection: THREE.Object3D[] = [];
+    const collectObj = (obj: THREE.Object3D) => {
+        if (obj.userData?.clazzName === clazzName) {
+            collection.push(obj);
+        } else {
+            if (obj.children) obj.children.forEach((child) => collectObj(child));
+        }
+    };
+    collectObj(obj);
+    return collection;
+};
+
 export const getObject3DChild = (
     obj: THREE.Object3D,
     clazzName: string,

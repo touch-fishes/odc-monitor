@@ -18,7 +18,7 @@ import { Structure } from './structure';
 
 import { createHighlightElement } from '@/scenes/util/highlight';
 import { animateOrbitCamera } from '@/scenes/util/camera';
-import { getObject3DChild } from '@/scenes/util/object-3d';
+import { getObject3DChild, getObject3DChildren } from '@/scenes/util/object-3d';
 
 export const loadODCResource = (onLoad: () => void) => {
     const loadingManager = new THREE.LoadingManager(onLoad);
@@ -110,9 +110,13 @@ export class ODC {
     }
 
     public lightSeat(seats: string[]) {
+        const allSeats = getObject3DChildren(this.structure, Seat.clazzName);
+        allSeats.forEach((seat) => {
+            (seat as Seat).lightOff();
+        });
         seats.forEach((seatCode) => {
             const seat = getObject3DChild(this.structure, Seat.clazzName, seatCode);
-            if (seat) (seat as Seat).light();
+            if (seat) (seat as Seat).lightOn();
         });
     }
 

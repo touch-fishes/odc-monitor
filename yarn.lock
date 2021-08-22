@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"-@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/-/-/--0.0.1.tgz#db6db7cd866142880dd03e5b8781d1b4fac0e5bd"
-  integrity sha512-3HfneK3DGAm05fpyj20sT3apkNcvPpCuccOThOPdzz8sY7GgQGe0l93XH9bt+YzibcTIgUAIMoyVJI740RtgyQ==
-
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -4017,11 +4012,6 @@ element-plus@^1.0.2-beta.71:
     mitt "^2.1.0"
     normalize-wheel "^1.0.1"
     resize-observer-polyfill "^1.5.1"
-
-element-theme-chalk@^2.15.5:
-  version "2.15.5"
-  resolved "https://registry.yarnpkg.com/element-theme-chalk/-/element-theme-chalk-2.15.5.tgz#c1b7f8b35f3f1d573dd7d3064a0171d2049e1e8e"
-  integrity sha512-mbJKpnj0gTPRz3VPFeklzm/DxuQ2MuipSAdOw6YrMPEKgW+0Eur5o64ZbFssp/GpRvjsI8gSOyeU/ZiM0qfocA==
 
 element-theme-dark@^1.0.3:
   version "1.0.3"
