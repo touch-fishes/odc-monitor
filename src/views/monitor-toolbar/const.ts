@@ -2,10 +2,6 @@ import { SeatAreaType } from '@/data/workstations-data';
 
 export const ObserveAreaOpts = [
     {
-        label: '重置',
-        type: 'refresh',
-    },
-    {
         label: '北1观测点',
         type: 'monitor',
         observeIndex: 0,

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { Sprite } from 'three';
 
 import { animateOrbitCamera } from '@/scenes/util/camera';
 import { ClickObserver } from '@/scenes/odc/event/click';
@@ -10,12 +11,12 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
     public static clazzName = 'keyPoint';
 
     private looAtPosition: THREE.Vector3;
-    private readonly keyPoint: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
+    private readonly keyPoint: Sprite;
 
     public constructor(size: number) {
         super();
         this.looAtPosition = new THREE.Vector3(0, 0, 0);
-        this.keyPoint = new THREE.Mesh(this.createGeometry(size), this.createMaterial());
+        this.keyPoint = this.createKeypoint();
         this.keyPoint.userData.type = 'keypoint';
         this.userData.clazzName = KeyPoint.clazzName;
         this.add(this.keyPoint);
@@ -45,7 +46,9 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
         activeMesh: THREE.Mesh,
     ) {
         const { x, y, z } = activeMesh.getWorldPosition(new THREE.Vector3());
-        const basePosition = new THREE.Vector3(x, y, z);
+        const basePosition = activeMesh.parent?.userData.isSideKeypoint
+            ? new THREE.Vector3(x, y + 800, z - 100)
+            : new THREE.Vector3(x, y, z);
         animateOrbitCamera(
             { camera, controls },
             { cameraPosition: camera.position, orbitTargetPosition: controls.target },
@@ -61,19 +64,13 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
         this.looAtPosition = lookAt;
     }
 
-    private createMaterial() {
+    private createKeypoint() {
         const loader = new THREE.TextureLoader();
         const texture = loader.load(p('/texture/key-point.png'));
-        return new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            side: THREE.DoubleSide,
-        });
-    }
-
-    private createGeometry(size: number) {
-        const geometry = new THREE.PlaneGeometry(size, size);
-        geometry.rotateX(Math.PI / 2);
-        return geometry;
+        const material = new THREE.SpriteMaterial({ map: texture });
+        const sprite = new THREE.Sprite(material);
+        const scale = 20;
+        sprite.scale.set(scale, scale, scale);
+        return sprite;
     }
 }

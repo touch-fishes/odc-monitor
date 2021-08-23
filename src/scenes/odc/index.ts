@@ -39,7 +39,7 @@ export const loadODCResource = (onLoad: () => void) => {
 export class ODC {
     private readonly renderer: THREE.WebGLRenderer;
     private readonly camera: THREE.PerspectiveCamera;
-    private readonly oldCamera: THREE.PerspectiveCamera;
+    private readonly baseCamera: THREE.PerspectiveCamera;
     private readonly scene: THREE.Scene;
     private readonly highlightComposer: EffectComposer;
     private readonly highlightOutlinePass: OutlinePass;
@@ -53,13 +53,13 @@ export class ODC {
 
         this.camera = this.initCamera();
 
-        this.oldCamera = this.initCamera();
+        this.baseCamera = this.camera.clone();
 
         this.scene = this.initScene();
 
         this.controls = this.initControls();
 
-        this.baseMonitorTarget = this.controls.target.copy(new THREE.Vector3());
+        this.baseMonitorTarget = this.controls.target.clone();
 
         // 正式情况无需展示
         if (isNeedHelp()) {
@@ -108,7 +108,7 @@ export class ODC {
                 orbitTargetPosition: this.controls.target,
             },
             {
-                cameraPosition: this.oldCamera.position,
+                cameraPosition: this.baseCamera.position,
                 orbitTargetPosition: this.baseMonitorTarget,
             },
         );

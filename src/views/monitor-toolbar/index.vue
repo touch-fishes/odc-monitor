@@ -1,5 +1,8 @@
 <template>
     <div class="toolbar">
+        <el-button class="toolbar__reset-btn" icon="el-icon-refresh" @click="refresh">
+            重置
+        </el-button>
         <el-dropdown>
             <el-button icon="el-icon-location">
                 切换观测点<i class="el-icon-arrow-down el-icon--right"></i>
@@ -8,9 +11,7 @@
                 <el-dropdown-menu>
                     <el-dropdown-item v-for="item in ObserveAreaOpts" :key="item">
                         <div
-                            @click="
-                                handleMenuItemClick(item.type, item?.observeIndex, item?.areaType)
-                            "
+                            @click="handleMenuItemClick(item?.observeIndex, item?.areaType)"
                             @mouseenter="handleMouseMove(item?.observeIndex, item?.areaType)"
                             @mouseleave="handleMouseMove(item?.observeIndex, item?.areaType, 0)"
                         >
@@ -39,19 +40,20 @@ export default defineComponent({
     },
     emits: ['click-monitor-btn', 'monitor-mouse-move', 'refresh'],
     setup(props, context) {
-        const handleMenuItemClick = (type: string, index: number, area: SeatAreaType) => {
-            if (type === 'refresh') {
-                context.emit('refresh');
-            } else {
-                context.emit('click-monitor-btn', { index, area });
-            }
+        const handleMenuItemClick = (index?: number, area?: SeatAreaType) => {
+            context.emit('click-monitor-btn', { index, area });
         };
         const handleMouseMove = (index: number, area?: string, option?: 0 | 1) => {
             context.emit('monitor-mouse-move', { index, area, option });
         };
+
+        const refresh = () => {
+            context.emit('refresh');
+        };
         return {
             handleMenuItemClick,
             handleMouseMove,
+            refresh,
             seatAreaType: SeatAreaType,
             ObserveAreaOpts: ObserveAreaOpts,
         };
@@ -62,10 +64,14 @@ export default defineComponent({
 .toolbar {
     position: absolute;
     top: 66px;
-    left: 20%;
+    left: 22%;
     margin-left: 20px;
     transform: translateX(-50%);
+    &__reset-btn {
+        margin-right: 10px;
+    }
 }
+
 .el-button {
     background: #2f6186;
     border: 1px solid #2f6186;

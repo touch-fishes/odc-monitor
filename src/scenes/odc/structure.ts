@@ -140,8 +140,7 @@ export class Structure extends THREE.Group {
             keyPoint.position.z = z;
             keyPoint.position.y = scale(WALL_HEIGHT);
             keyPoint.position.x = x;
-            // TODO error word
-            keyPoint.userData.isNeedLiftCamera = item.type === 'hight';
+            keyPoint.userData.isSideKeypoint = item.type === 'side';
             return keyPoint;
         });
     }
