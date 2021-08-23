@@ -13,8 +13,3 @@ body {
     text-align: center;
     color: #a3d7ec;
 }
-
-.el-carousel__container {
-    position: relative;
-    left: 14%;
-}

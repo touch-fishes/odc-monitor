@@ -1,73 +1,37 @@
 <template>
-    <el-button-group class="toolbar">
-        <el-button icon="el-icon-refresh" size="mini" @click="refresh"> 重置 </el-button>
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(0, seatAreaType.north)"
-            @mouseenter="handleMouseMove(0, seatAreaType.north)"
-            @mouseleave="handleMouseMove(0, seatAreaType.north, 0)"
-            >北1观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(1, seatAreaType.north)"
-            @mouseenter="handleMouseMove(1, seatAreaType.north)"
-            @mouseleave="handleMouseMove(1, seatAreaType.north, 0)"
-            >北2观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(2, seatAreaType.north)"
-            @mouseenter="handleMouseMove(2, seatAreaType.north)"
-            @mouseleave="handleMouseMove(2, seatAreaType.north, 0)"
-            >北3观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(3, seatAreaType.north)"
-            @mouseenter="handleMouseMove(3, seatAreaType.north)"
-            @mouseleave="handleMouseMove(3, seatAreaType.north, 0)"
-            >北4观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(2, seatAreaType.south)"
-            @mouseenter="handleMouseMove(2, seatAreaType.south)"
-            @mouseleave="handleMouseMove(2, seatAreaType.south, 0)"
-            >南3观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(1, seatAreaType.south)"
-            @mouseenter="handleMouseMove(1, seatAreaType.south)"
-            @mouseleave="handleMouseMove(1, seatAreaType.south, 0)"
-            >南2观测点</el-button
-        >
-        <el-button
-            icon="el-icon-location"
-            size="mini"
-            @click="handleClick(0, seatAreaType.south)"
-            @mouseenter="handleMouseMove(0, seatAreaType.south)"
-            @mouseleave="handleMouseMove(0, seatAreaType.south, 0)"
-            >南1观测点</el-button
-        >
-    </el-button-group>
+    <div class="toolbar">
+        <el-dropdown>
+            <el-button icon="el-icon-location">
+                切换观测点<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item v-for="item in ObserveAreaOpts" :key="item">
+                        <div
+                            @click="
+                                handleMenuItemClick(item.type, item?.observeIndex, item?.areaType)
+                            "
+                            @mouseenter="handleMouseMove(item?.observeIndex, item?.areaType)"
+                            @mouseleave="handleMouseMove(item?.observeIndex, item?.areaType, 0)"
+                        >
+                            {{ item.label }}
+                        </div>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
+    </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { ElButton, ElButtonGroup } from 'element-plus';
+import { defineComponent } from 'vue';
+import { ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu } from 'element-plus';
 
 import { SeatAreaType } from '@/data/workstations-data';
+import { ObserveAreaOpts } from '@/views/monitor-toolbar/const';
 
 export default defineComponent({
-    components: { ElButtonGroup, ElButton },
+    components: { ElDropdownMenu, ElButton, ElDropdownItem, ElDropdown },
     props: {
         odcInstance: {
             type: Object,
@@ -75,21 +39,21 @@ export default defineComponent({
     },
     emits: ['click-monitor-btn', 'monitor-mouse-move', 'refresh'],
     setup(props, context) {
-        const handleClick = (index: number, area?: string) => {
-            context.emit('click-monitor-btn', { index, area });
-        };
-
-        const refresh = () => {
-            context.emit('refresh');
+        const handleMenuItemClick = (type: string, index: number, area: SeatAreaType) => {
+            if (type === 'refresh') {
+                context.emit('refresh');
+            } else {
+                context.emit('click-monitor-btn', { index, area });
+            }
         };
         const handleMouseMove = (index: number, area?: string, option?: 0 | 1) => {
             context.emit('monitor-mouse-move', { index, area, option });
         };
         return {
-            handleClick,
+            handleMenuItemClick,
             handleMouseMove,
-            refresh: refresh,
             seatAreaType: SeatAreaType,
+            ObserveAreaOpts: ObserveAreaOpts,
         };
     },
 });
@@ -97,17 +61,33 @@ export default defineComponent({
 <style scoped lang="scss">
 .toolbar {
     position: absolute;
-    top: 38px;
-    left: 50%;
+    top: 66px;
+    left: 20%;
+    margin-left: 20px;
     transform: translateX(-50%);
 }
 .el-button {
     background: #2f6186;
     border: 1px solid #2f6186;
-    &:hover {
+    &:hover,
+    &:focus {
         background: #2f6186;
         border: 1px solid #5e98c6;
         color: #459eef;
+    }
+}
+
+.el-dropdown-menu {
+    position: relative;
+    width: 150px;
+    top: -10px;
+    left: -20px;
+    background: #2f6186;
+    border: 1px solid #2f6186;
+}
+.el-dropdown-menu__item {
+    &:hover {
+        background-color: #2f6186 !important;
     }
 }
 </style>
