@@ -120,7 +120,11 @@ export class ODC {
             (seat as Seat).lightOff();
         });
         seats.forEach((seatCode) => {
-            const seat = getObject3DChild(this.structure, Seat.clazzName, seatCode);
+            const seat = getObject3DChild(this.structure, Seat.clazzName, seatCode) as Seat;
+            seat?.keyPoint?.observationArea(
+                { camera: this.camera, controls: this.controls },
+                seat.keyPoint.children[0] as THREE.Mesh,
+            );
             if (seat) (seat as Seat).lightOn();
         });
     }

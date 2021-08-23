@@ -40,6 +40,19 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
         }
     }
 
+    public observationArea(
+        { camera, controls }: { camera: THREE.Camera; controls: OrbitControls },
+        activeMesh: THREE.Mesh,
+    ) {
+        const { x, y, z } = activeMesh.getWorldPosition(new THREE.Vector3());
+        const basePosition = new THREE.Vector3(x, y, z);
+        animateOrbitCamera(
+            { camera, controls },
+            { cameraPosition: camera.position, orbitTargetPosition: controls.target },
+            { cameraPosition: basePosition, orbitTargetPosition: this.looAtPosition },
+        );
+    }
+
     public getClickObserveObjects() {
         return this.children;
     }
@@ -62,18 +75,5 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
         const geometry = new THREE.PlaneGeometry(size, size);
         geometry.rotateX(Math.PI / 2);
         return geometry;
-    }
-
-    private observationArea(
-        { camera, controls }: { camera: THREE.Camera; controls: OrbitControls },
-        activeMesh: THREE.Mesh,
-    ) {
-        const { x, y, z } = activeMesh.getWorldPosition(new THREE.Vector3());
-        const basePosition = new THREE.Vector3(x, y, z);
-        animateOrbitCamera(
-            { camera, controls },
-            { cameraPosition: camera.position, orbitTargetPosition: controls.target },
-            { cameraPosition: basePosition, orbitTargetPosition: this.looAtPosition },
-        );
     }
 }
