@@ -78,26 +78,38 @@ export const bizGroupInfo = [
     {
         code: 'E-commerce Frontend',
         seats: ['sa1', 'sa5', 'sb9'],
+        begin: [16800 + sideSpacing, 32800],
+        end: [16800 + sideSpacing, 34000],
     },
     {
         code: 'Car Network',
         seats: ['sc1', 'sc2', 'sc3', 'sc4', 'sc5', 'sc6', 'sc7', 'sc8', 'sc9', 'sd6'],
+        begin: [16800 + sideSpacing, 40600],
+        end: [16800 + sideSpacing, 41800],
     },
     {
         code: 'Low Code',
         seats: ['se1', 'se2', 'se3', 'se4', 'se5', 'se6', 'se7'],
+        begin: [16800 + sideSpacing, 47200],
+        end: [16800 + sideSpacing, 48400],
     },
     {
         code: 'E-commerce Backend',
         seats: ['sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6', 'sf7'],
+        begin: [16800 + sideSpacing, 51400],
+        end: [16800 + sideSpacing, 52600],
     },
     {
         code: 'Express',
         seats: ['sg1', 'sg2', 'sg3', 'sg4', 'sg5', 'sg6', 'sg7'],
+        begin: [16800 + sideSpacing, 57600],
+        end: [16800 + sideSpacing, 59000],
     },
     {
         code: 'IT Security',
         seats: ['sj1', 'sj5', 'sj9'],
+        begin: [16800 + sideSpacing, 61200],
+        end: [16800 + sideSpacing, 63600],
     },
 ];
 

@@ -37,6 +37,7 @@ import {
     southCameraMonitors,
 } from '@/data/camera-monitor-data';
 import { CameraMonitor } from '@/scenes/odc/model/camera-monitor/camera-monitor';
+import { ProjectBrands } from '@/scenes/odc/model/project-brand/project-brand';
 
 export class Structure extends THREE.Group {
     private readonly kitchen: Kitchen;
@@ -50,6 +51,7 @@ export class Structure extends THREE.Group {
     private readonly keyPoints: KeyPoint[];
     private readonly southCameraMonitors: CameraMonitor[];
     private readonly northCameraMonitors: CameraMonitor[];
+    private readonly projectBrands: ProjectBrands;
 
     public constructor() {
         super();
@@ -71,12 +73,14 @@ export class Structure extends THREE.Group {
             southWorkstation,
             SeatAreaType.south,
         );
+        this.projectBrands = this.renderProjectBrands();
         this.add(this.kitchen);
         this.add(this.northSofa);
         this.add(this.coffeeTable);
         this.add(this.floor);
         this.add(this.northWorkstation);
         this.add(this.southWorkstation);
+        this.add(this.projectBrands);
         this.keyPoints.forEach((keyPoint) => this.add(keyPoint));
         this.walls.forEach((wall) => this.add(wall));
         this.southCameraMonitors.forEach((cameraMonitor) => this.add(cameraMonitor));
@@ -206,5 +210,9 @@ export class Structure extends THREE.Group {
                 { areaType, observedSeatRowIndex },
             );
         });
+    }
+
+    private renderProjectBrands() {
+        return new ProjectBrands();
     }
 }

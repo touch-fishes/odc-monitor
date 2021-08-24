@@ -51,8 +51,8 @@ export const generateTextSprite = function (text, config) {
 
     // texture canvas
     let canvas = document.createElement('canvas');
-    canvas.width = _ceilPow2(textWidth);
-    canvas.height = _ceilPow2(textHeight);
+    // canvas.width = _ceilPow2(textWidth);
+    // canvas.height = _ceilPow2(textHeight);
     let context = canvas.getContext('2d');
 
     // draw background
