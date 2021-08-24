@@ -168,7 +168,7 @@ export default defineComponent({
             .device-box {
                 height: 80px;
                 text-align: left;
-                overflow: auto;
+                overflow: hidden;
                 margin: 12px 0;
                 background: #1e5e8e;
                 padding: 0 16px;
@@ -177,7 +177,7 @@ export default defineComponent({
                     line-height: 80px;
                     display: inline-block;
                     width: 42%;
-                    font-size: 16px;
+                    font-size: 15px;
                     float: left;
                 }
                 .device-info {
