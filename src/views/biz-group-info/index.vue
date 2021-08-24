@@ -95,6 +95,7 @@ export default defineComponent({
                         display: block;
                         float: right;
                         font-weight: 600;
+                        font-size: 16px;
                         color: #afe5f3;
                     }
                 }

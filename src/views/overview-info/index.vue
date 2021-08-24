@@ -149,7 +149,7 @@ export default defineComponent({
                         color: #afe5f3;
                     }
                     .value-use {
-                        font-size: 18px;
+                        font-size: 16px;
                         font-weight: 600;
                         color: #459eff;
                         float: right;
@@ -177,8 +177,8 @@ export default defineComponent({
                     line-height: 80px;
                     display: inline-block;
                     width: 42%;
-                    font-size: 15px;
                     float: left;
+                    color: #afe5f3;
                 }
                 .device-info {
                     line-height: 80px;
@@ -190,7 +190,7 @@ export default defineComponent({
                     .device-number {
                         text-align: right;
                         display: inline-block;
-                        font-size: 18px;
+                        font-size: 16px;
                         color: #ffffff;
                         font-weight: 600;
                         padding-right: 50px;
