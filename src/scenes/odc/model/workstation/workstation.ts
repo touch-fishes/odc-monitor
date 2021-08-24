@@ -65,6 +65,7 @@ export class Workstation extends THREE.Group implements MousemoveObserver, Click
             }
             // this.seatInfoPlan.show(definedObject3D.userData.data, definedObject3D.userData.type);
         }
+        return true;
     }
 
     public getMousemoveObserveObjects() {

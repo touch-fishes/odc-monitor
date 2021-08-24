@@ -43,6 +43,7 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
         if (activeMesh.userData.type === 'cameraMonitor') {
             this.observationArea({ camera, controls });
         }
+        return false;
     }
 
     public getClickObserveObjects() {

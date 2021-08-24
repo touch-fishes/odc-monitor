@@ -39,6 +39,7 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
         if (activeMesh.userData.type === 'keypoint') {
             this.observationArea({ camera, controls }, activeMesh);
         }
+        return true;
     }
 
     public observationArea(

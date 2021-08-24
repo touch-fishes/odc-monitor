@@ -9,6 +9,7 @@
     "devDependencies": {
         "@element-plus/icons": "^0.0.11",
         "@tweenjs/tween.js": "^18",
+        "@types/lodash": "^4.14.172",
         "@types/three": "^0.131.0",
         "@vue/cli-plugin-babel": "~4.5.0",
         "@vue/cli-plugin-typescript": "~4.5.0",
@@ -28,6 +29,7 @@
         "eslint-plugin-vue": "^7.0.0",
         "eslint-sundries": "0.0.5",
         "lint-staged": "^9.5.0",
+        "lodash": "^4.17.21",
         "prettier": "^2.3.2",
         "sass": "^1.38.0",
         "sass-loader": "^10",
