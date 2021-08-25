@@ -1,4 +1,4 @@
-import { ModelPointer } from '@/scenes/types';
+import { ModelPointer } from '../odc/types';
 
 export const clientX2X = (clientX: number) => {
     return (clientX / window.innerWidth) * 2 - 1;
