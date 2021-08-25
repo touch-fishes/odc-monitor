@@ -12,8 +12,6 @@ module.exports = {
     },
     extends: ['./node_modules/eslint-sundries/solutions/vue-ts.js'],
     rules: {
-        'unicorn/numeric-separators-style': 'off',
-        'unicorn/no-array-for-each': 'off',
         'unicorn/number-literal-case': 'off',
     },
 };

@@ -4317,10 +4317,10 @@ eslint-scope@^5.1.1:
     esrecurse "^4.3.0"
     estraverse "^4.1.1"
 
-eslint-sundries@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-sundries/-/eslint-sundries-0.0.6.tgz#084ede42a972dbfcbf2899aac808f0a4c7ae4b1c"
-  integrity sha512-94e1eNZQm9TrXzmc25WtgkJCAZnD8KXMzf9OxCP6l4XXpsprxodBm3pHkEuATXVJ1h6S+Y6FBLXa+aQf0vi2eA==
+eslint-sundries@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/eslint-sundries/-/eslint-sundries-0.0.8.tgz#6bfa990bacbecad5f8197e03b054390c3c4ad281"
+  integrity sha512-GkLjy8z1xbzSRiFxrix8aL/zxQ2Hd4NCJzY57/1cC6xP3XkyitDLAkd3vlv7PWY6WnSagGMSuMVShCjVUxQtKg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.28.3"
     "@typescript-eslint/parser" "^4.28.3"
