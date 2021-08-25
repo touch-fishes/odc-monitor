@@ -1,4 +1,4 @@
-import { ModelLine } from '@/scenes/types';
+import { ModelLine } from '@/scenes/odc/types';
 
 export interface WallData extends ModelLine {
     type: string;

@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 
 // @ts-ignore
+import { ModelPointer } from '../../types';
+
 import { generateTextSprite } from '@/scenes/util/generate-text-sprite';
 import { bizGroupInfo } from '@/data/workstations-data';
 import { getCenterOfModelArea, scale } from '@/scenes/util/location';
-import { ModelPointer } from '@/scenes/types';
 import { WALL_HEIGHT } from '@/data/buildings-data';
 
 export class ProjectBrands extends THREE.Group {

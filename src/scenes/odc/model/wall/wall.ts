@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Group, Material } from 'three';
 
-import { ModelPointer } from '@/scenes/types';
+import { ModelPointer } from '../../types';
 
 /**
  * 墙体 仅支持笔直的墙，不打弯

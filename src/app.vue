@@ -16,15 +16,14 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { ElLoading } from 'element-plus';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as THREE from 'three';
 
-import { EventType, loadODCResource, ODC } from '@/scenes/odc';
+import { loadODCResource, ODC } from '@/scenes/odc';
 import BizGroupInfo from '@/views/biz-group-info/index.vue';
 import OverviewInfo from '@/views/overview-info/index.vue';
 import MonitorToolbar from '@/views/monitor-toolbar/index.vue';
 import SeatInfo from '@/views/seat-info/index.vue';
 import { SeatAreaType, SeatInfo as SeatDataInfo } from '@/data/workstations-data';
+import { EventType } from '@/scenes/odc/types';
 
 export default defineComponent({
     name: 'App',

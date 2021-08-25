@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
+import { ModelPointer } from '../../types';
+
 import { Wall } from './wall';
 
-import { ModelPointer } from '@/scenes/types';
 
 export class ExternalWall extends Wall {
     // TODO

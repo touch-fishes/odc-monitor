@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
-import { ModelPointer } from '@/scenes/types';
+import { ModelPointer } from '../../types';
+
 import { p } from '@/scenes/util/path';
 
 // TODO
