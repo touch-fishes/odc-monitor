@@ -86,9 +86,9 @@ export class CameraMonitor extends THREE.Group implements ClickObserver {
     }
 
     protected initCameraMonitor(map: THREE.Texture) {
-        const material = new THREE.SpriteMaterial({ map });
+        const material = new THREE.SpriteMaterial({ map, sizeAttenuation: false });
         const sprite = new THREE.Sprite(material);
-        const scale = 30;
+        const scale = .05;
         sprite.scale.set(scale, scale, scale);
         sprite.userData.type = 'cameraMonitor';
         return sprite;

@@ -1,4 +1,4 @@
-import { ModelLine } from '@/scenes/types';
+import { ModelLine } from '@/scenes/odc/types';
 
 const sideSpacing = 1200;
 
@@ -10,6 +10,7 @@ export enum SeatAreaType {
 }
 
 export interface SeatInfo {
+    user: string;
     code: string;
     rowCode: string;
     monitor: string[];
@@ -45,6 +46,7 @@ const generateWorkstationData = (row: number, type: SeatAreaType): AreaSeats => 
         const currentRow = [];
         for (let j = 0; j < 10; j++) {
             currentRow.push({
+                user: `张${i}${j}`,
                 code: `${areaCode}${rowCode[i]}${j}`,
                 rowCode: `${areaCode}${rowCode[i]}`,
                 monitor: [`${pre}6${i}${j}${j}`, `${pre}6${i + 1}${j + 1}${j + 1}`],

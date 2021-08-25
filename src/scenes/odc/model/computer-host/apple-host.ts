@@ -36,7 +36,7 @@ export class AppleHost extends Host {
     }
 
     protected createHostMaterial() {
-        return new THREE.MeshLambertMaterial({});
+        return new THREE.MeshLambertMaterial({ color: 'rgb(224,224,224)' });
     }
 
     private createLogo() {

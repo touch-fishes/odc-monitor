@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 
 import { Desktop } from '../desktop/desktop';
 import { KeyPoint } from '../key-point/key-point';
@@ -9,6 +8,7 @@ import { globalEvent } from '../../event';
 import { getSize } from '@/scenes/util/object-3d';
 import { SeatInfo } from '@/data/workstations-data';
 import { p } from '@/scenes/util/path';
+import {EventType} from "@/scenes/odc/types";
 
 export class Seat extends THREE.Group {
     public static clazzName = 'seat';
@@ -37,7 +37,7 @@ export class Seat extends THREE.Group {
         super();
         // 桌子为外部模型
         this.table = this.createTable();
-        this.keyPoint = this.createKeyPoint();
+        this.keyPoint = this.createKeyPoint(theSeatInfo);
         this.desktop = this.createDeskTop(theSeatInfo);
         this.light = this.createLight();
         this.userData.clazzName = Seat.clazzName;
@@ -82,8 +82,11 @@ export class Seat extends THREE.Group {
         topLight.visible = false;
         return topLight;
     }
-    private createKeyPoint() {
-        const keyPoint = new KeyPoint(16);
+    private createKeyPoint(theSeatInfo: SeatInfo) {
+        const keyPoint = new KeyPoint();
+        keyPoint.addClickCallback(() =>
+            globalEvent.dispatchEvent({ type: EventType.showSeatInfo, message: theSeatInfo }),
+        );
         const { x: tableX } = getSize(this.table);
         keyPoint.position.y = 10;
         keyPoint.position.x = -tableX - 6;

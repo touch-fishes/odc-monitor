@@ -5,3 +5,7 @@ export interface ModelLine {
     begin: ModelPointer;
     end: ModelPointer;
 }
+
+export enum EventType {
+    showSeatInfo = 'showSeatInfo',
+}

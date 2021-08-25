@@ -19,6 +19,8 @@ import { createHighlightElement } from '@/scenes/util/highlight';
 import { animateOrbitCamera } from '@/scenes/util/camera';
 import { getObject3DChild, getObject3DChildren } from '@/scenes/util/object-3d';
 import { Helper } from '@/scenes/odc/helper';
+import { SeatAreaType } from '@/data/workstations-data';
+import { EventType } from '@/scenes/odc/types';
 
 const isNeedHelp = () => {
     return location.search.includes('help=1');
@@ -87,6 +89,38 @@ export class ODC {
         this.locationODC();
 
         this.animate();
+    }
+
+    public addEvent(name: EventType, event: (...arg: any) => void) {
+        globalEvent.addEventListener(name, ({ message }) => event(message));
+    }
+
+    public activeCamera({ index, area }: { index: number; area: SeatAreaType }) {
+        const currentCameraMonitor =
+            area === SeatAreaType.north
+                ? this.structure.getMonitors().north[index]
+                : this.structure.getMonitors().south[index];
+        currentCameraMonitor?.observationArea({
+            camera: this.camera,
+            controls: this.controls,
+        });
+    }
+
+    public highLightCamera({
+        index,
+        area,
+        option,
+    }: {
+        index: number;
+        area: SeatAreaType;
+        option: number;
+    }) {
+        const currentCameraMonitor =
+            area === SeatAreaType.north
+                ? this.structure.getMonitors().north[index]
+                : this.structure.getMonitors().south[index];
+        const hex = option === 0 ? 0xffffff : 0x459eef;
+        currentCameraMonitor?.setColor(hex);
     }
 
     public getStructure() {

@@ -12,14 +12,20 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
 
     private looAtPosition: THREE.Vector3;
     private readonly keyPoint: Sprite;
+    private readonly clickCallback: (() => void)[];
 
-    public constructor(size: number) {
+    public constructor() {
         super();
+        this.clickCallback = [];
         this.looAtPosition = new THREE.Vector3(0, 0, 0);
         this.keyPoint = this.createKeypoint();
         this.keyPoint.userData.type = 'keypoint';
         this.userData.clazzName = KeyPoint.clazzName;
         this.add(this.keyPoint);
+    }
+
+    public addClickCallback(event: () => void) {
+        this.clickCallback.push(event);
     }
 
     public beforeClick() {}
@@ -38,6 +44,7 @@ export class KeyPoint extends THREE.Group implements ClickObserver {
     ) {
         if (activeMesh.userData.type === 'keypoint') {
             this.observationArea({ camera, controls }, activeMesh);
+            this.clickCallback.forEach((item) => item());
         }
         return true;
     }

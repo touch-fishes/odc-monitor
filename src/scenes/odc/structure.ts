@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { ModelLine, ModelPointer } from './types';
+
 import {
     coffeeTableStation,
     floor,
@@ -17,7 +19,6 @@ import {
     southWorkstation,
     southWorkstationArea,
 } from '@/data/workstations-data';
-import { ModelLine, ModelPointer } from '@/scenes/types';
 import { Kitchen } from '@/scenes/odc/model/kitchen/kitchen';
 import { Sofa } from '@/scenes/odc/model/sofa/sofa';
 import { CoffeeTable } from '@/scenes/odc/model/coffee-table/coffee-table';
@@ -140,7 +141,7 @@ export class Structure extends THREE.Group {
         return keyPointPositions.map((item) => {
             const { begin, end } = item;
             const { x, z } = getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
-            const keyPoint = new KeyPoint(20);
+            const keyPoint = new KeyPoint();
             keyPoint.position.z = z;
             keyPoint.position.y = scale(WALL_HEIGHT);
             keyPoint.position.x = x;
