@@ -12,13 +12,8 @@ module.exports = {
     },
     extends: ['./node_modules/eslint-sundries/solutions/vue-ts.js'],
     rules: {
-        'unicorn/number-literal-case': 'off',
         'unicorn/numeric-separators-style': 'off',
         'unicorn/no-array-for-each': 'off',
-        'vue/no-multiple-template-root': 'off',
-        'import/named': 'off',
-    },
-    globals: {
-        JSX: true,
+        'unicorn/number-literal-case': 'off',
     },
 };

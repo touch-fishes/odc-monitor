@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+// eslint-disable-next-line import/named
 import { defineComponent, PropType } from 'vue';
 import { ElCard } from 'element-plus';
 
@@ -34,7 +35,6 @@ export default defineComponent({
     .card-header {
         font-size: 15px;
         font-weight: 600;
-
     }
 }
 </style>
