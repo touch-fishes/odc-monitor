@@ -139,13 +139,13 @@ export class Structure extends THREE.Group {
 
     private renderKeyPoints() {
         return keyPointPositions.map((item) => {
-            const { begin, end } = item;
+            const { begin, end, type } = item;
             const { x, z } = getCenterOfModelArea(begin as ModelPointer, end as ModelPointer);
             const keyPoint = new KeyPoint();
             keyPoint.position.z = z;
             keyPoint.position.y = scale(WALL_HEIGHT);
             keyPoint.position.x = x;
-            keyPoint.userData.isSideKeypoint = item.type === 'side';
+            keyPoint.userData.isSideKeypoint = type === 'side';
             return keyPoint;
         });
     }
