@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
-// @ts-ignore
 import { ModelPointer } from '../../types';
 
+// @ts-ignore
 import { generateTextSprite } from '@/scenes/util/generate-text-sprite';
 import { bizGroupInfo } from '@/data/workstations-data';
 import { getCenterOfModelArea, scale } from '@/scenes/util/location';
