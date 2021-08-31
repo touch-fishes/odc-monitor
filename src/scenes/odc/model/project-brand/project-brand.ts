@@ -27,7 +27,7 @@ export class ProjectBrands extends THREE.Group {
                 textAlign: 'center',
                 borderThickness: 3,
                 borderColor: '#afe5f3',
-                borderRadius: 6,
+                borderRadius: 8,
                 backgroundColor: '#afe5f3',
             });
             const { begin, end } = project;

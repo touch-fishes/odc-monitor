@@ -81,7 +81,7 @@ export class Structure extends THREE.Group {
         this.add(this.floor);
         this.add(this.northWorkstation);
         this.add(this.southWorkstation);
-        this.add(this.projectBrands);
+        // this.add(this.projectBrands);
         this.keyPoints.forEach((keyPoint) => this.add(keyPoint));
         this.walls.forEach((wall) => this.add(wall));
         this.southCameraMonitors.forEach((cameraMonitor) => this.add(cameraMonitor));
