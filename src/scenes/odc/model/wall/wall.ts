@@ -53,3 +53,15 @@ export class Wall extends Group {
         return Math.atan2(endY - beginY, endX - beginX);
     }
 }
+
+export const calculatePosition = (begin: [number, number], end: [number, number]) => {
+    const [beginX, beginY] = begin;
+    const [endX, endY] = end;
+    return [(endY + beginY) / 2, 0, (endX + beginX) / 2];
+};
+
+export const calculateRotation = (begin: [number, number], end: [number, number]) => {
+    const [beginX, beginY] = begin;
+    const [endX, endY] = end;
+    return Math.atan2(endY - beginY, endX - beginX);
+};

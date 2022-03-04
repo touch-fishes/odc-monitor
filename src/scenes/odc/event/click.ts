@@ -19,7 +19,7 @@ export interface ClickObserver {
         },
         activeMesh: THREE.Mesh,
     ) => boolean;
-    beforeClick: () => void;
+    beforeClick?: () => void;
     getClickObserveObjects: () => THREE.Object3D[];
 }
 interface ClickObserverGroup {
